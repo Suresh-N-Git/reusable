@@ -1,0 +1,208 @@
+
+Copy the pack file
+from Z:\AngularLibs\reusabletable (The network Computer)
+
+reusabletable-0.0.1.tgz   
+
+-- Below Uninstall is required only if you have an earlier one installed
+npm uninstall reusabletable    
+
+npm install reusabletable-0.0.1.tgz   
+
+
+To use in the new project the following npm packages must be available
+
+npm install bootstarp 
+(must be installed and included in angular.json styles)
+
+
+npm install xlsx jspdf jspdf-autotable file-saver  -- need for export of table
+
+
+import { ReusableTableModule } from 'reusable-table';
+
+@import 'reusable-table/styles';
+add the above in the styles.scss -- Global style sheet
+
+
+Usage in component.ts
+
+import { ReusableTableModule } from '../reusabletable/reusabletable.module';
+import { ReUsableTableColumn, ReusableTableConfig } from '../reusabletable/reusabletable.component';
+
+Declaration
+
+ reUsableTableConfig!: ReusableTableConfig;
+ reUsableTableColumn: ReUsableTableColumn[] = [];
+ 
+ 
+ The structure of the interfaces
+ 
+ export interface ReUsableTableColumn {
+  id: string;
+  name: string;
+  width?: string;
+  type?: 'text' | 'integer' | 'number' | 'currency' | 'date' | 'actions' | 'chip';
+  align?: 'left' | 'center' | 'right';
+  digits?: string;
+  style?: Record<string, any>;
+  chipStyle?: Record<string, any>;
+
+  actions?: {
+    select?: { show?: boolean; color?: 'primary' | 'accent' | 'warn' };
+    edit?: { show?: boolean; color?: 'primary' | 'accent' | 'warn' };
+    delete?: { show?: boolean; color?: 'primary' | 'accent' | 'warn' };
+  };
+}
+
+export interface ReusableTableConfig {
+
+  appearance?: {
+    zebraColor?: string;
+    hoverColor?: string;
+    selectedRowColor?: string;
+  };
+
+  pagination?: {
+    enabled?: boolean;
+    threshold?: number;
+    defaultPageSize?: number;
+  };
+
+  sorting?: {
+    enabled?: boolean;
+  };
+
+  toolbar?: {
+    showSearch: true,
+    showColumnToggle?: boolean;
+    showCsv?: boolean;
+    showExcel?: boolean;
+    showPdf?: boolean;
+    showPrint?: boolean;
+  };
+}
+
+
+ 
+Dummy data
+ pumpData = [
+    { id: 1, name: 'Pump, A', flow: 1000.9999, col4: 'some text', col5: 'more text' },
+    { id: 2, name: 'Pump B', flow: 120.88, col4: 'some text', col5: 'more text' },
+    { id: 3, name: 'Pump C', flow: 95.66, col4: 'some text', col5: 'more text' },
+    { id: 4, name: 'Pump D', flow: 140.6, col4: 'some text', col5: 'more text' },
+    { id: 5, name: 'Pump E', flow: 110.06, col4: 'some text', col5: 'more text' },
+    { id: 6, name: 'Pump F', flow: 130, col4: 'some text', col5: 'more text' },
+    { id: 1, name: 'Pump, A', flow: 1000, col4: 'some text', col5: 'more text' },
+    { id: 2, name: 'Pump B', flow: 120, col4: 'some text', col5: 'more text' },
+    { id: 3, name: 'Pump C', flow: 95, col4: 'some text', col5: 'more text' },
+    { id: 4, name: 'Pump D', flow: 140, col4: 'some text', col5: 'more text' },
+    { id: 5, name: 'Pump E', flow: 110, col4: 'some text', col5: 'more text' },
+    { id: 6, name: 'Pump F', flow: 130, col4: 'some text', col5: 'more text' },
+    { id: 1, name: 'Pump, A', flow: 1000, col4: 'some text', col5: 'more text' },
+    { id: 2, name: 'Pump B', flow: 120, col4: 'some text', col5: 'more text' },
+    { id: 3, name: 'Pump C', flow: 95, col4: 'some text', col5: 'more text' },
+    { id: 4, name: 'Pump D', flow: 140, col4: 'some text', col5: 'more text' },
+    { id: 5, name: 'Pump E', flow: 110, col4: 'some text', col5: 'more text' },
+    { id: 6, name: 'Pump F', flow: 130, col4: 'some text', col5: 'more text' }
+
+  ];
+  
+  Sample of the reUsableTableColumn
+  
+      this.reUsableTableColumn = [
+
+      { id: 'id', name: 'Id', width: '5%', type: 'integer', align: 'right' },
+
+      // {
+      //   id: 'name', name: 'Name', width: '20%',
+      // },
+
+      {
+        id: 'name', name: 'Name', width: '20%', type: 'chip',
+        chipStyle: {
+          fontFamily: 'monospace',
+          fontWeight: '800',
+          fontSize: '24px',
+          color: '#0d47a1',
+          backgroundColor: '#fff3cd'
+        }
+      },
+
+      {
+        id: 'flow', name: 'Flow', width: '10%', type: 'number', align: 'right', digits: '1.2-2',
+        style: {
+          fontFamily: 'monospace',
+          fontWeight: '600',
+          fontSize: '20px',
+          color: '#0d47a1',
+          // backgroundColor: '#fff3cd',
+        },
+      },
+      {
+        id: 'col4', name: 'Col4', width: '20%',
+
+      },
+      { id: 'col5', name: 'Col5', width: '20%' },
+      {
+        id: 'actions',
+        name: 'Actions',
+        width: '5%',
+        type: 'actions',
+        align: 'center',
+        actions: {
+          select: { show: true, color: 'primary' },
+          edit: { show: true, color: 'accent' },
+          delete: { show: true, color: 'warn' }
+        }
+      }
+    ];
+	
+	Sample of the tableConfig
+	
+	
+    this.reUsableTableConfig = {
+      appearance: {
+        zebraColor: '#bfd4f1',
+        hoverColor: 'e3f2fd',
+        selectedRowColor: 'ffe0b2',
+      },
+      pagination: {
+        enabled: true,
+        threshold: 50,
+        defaultPageSize: 10,
+      },
+
+      sorting: {
+        enabled: true,
+      },
+
+      toolbar: {
+        showColumnToggle: true,
+        showCsv: true,
+        showExcel: true,
+        showPdf: true,
+        showPrint: true,
+      }
+
+    }
+
+
+
+
+
+Usage in the component.html
+
+<div style="margin-top:20px">
+
+<app-reusabletable
+    [data]="pumpData"
+    [columns]="reUsableTableColumn"
+    (rowEdit)="onEdit($event)"
+    (rowDelete)="onDelete($event)"
+    (rowSelect)="onSelect($event)"
+    [tableConfig]="reUsableTableConfig">
+</app-reusabletable>
+
+
+</div>
