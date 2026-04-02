@@ -1,16 +1,64 @@
+ng generate library reusable-table
+it will create a folder project/reusable-table
+Under src/lib
+Copy paste all the files that are used in the development
+reusabletable.component.html
+reusabletable.component.ts
+reusabletable.component.scs
+reusabletable.module.ts --- 
+reusabletable.styles.scss -- To be included in the global style sheet in the imported project
+table-export.service.ts  -- Other files used
 
+
+public.api.ts
+contains exports which are available in the new project
+export * from './lib/reusabletable.module';
+export * from './lib/reusabletable.component';
+
+in package.json include the peerDependencies
+
+{
+  "name": "reusabletable",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@angular/common": "^18.2.0",
+    "@angular/core": "^18.2.0",
+    "@angular/material": "^18.0.0",
+    "jspdf": "^2.5.1",
+    "jspdf-autotable" : "^5.0.7",
+    "xlsx": "^0.18.5",
+    "file-saver": "^2.0.5"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "sideEffects": false
+}
+
+
+
+
+ng build reusabletable
+
+
+cd dist/reusabletable
+npm pack
+
+
+
+Now in another project
 Copy the pack file
-from Z:\AngularLibs\reusabletable (The network Computer)
 
 reusabletable-0.0.1.tgz   
 
--- Below Uninstall is required only if you have an earlier one installed
 npm uninstall reusabletable    
 
 npm install reusabletable-0.0.1.tgz   
 
 
-To use in the new project the following npm packages must be available
+
+To use in the new project the following must be available
+
 
 npm install bootstarp 
 (must be installed and included in angular.json styles)
@@ -74,7 +122,6 @@ export interface ReusableTableConfig {
   };
 
   toolbar?: {
-    showSearch: true,
     showColumnToggle?: boolean;
     showCsv?: boolean;
     showExcel?: boolean;
@@ -188,7 +235,6 @@ Dummy data
     }
 
 
-
 Two more type of columns have been added
 
 'multiline' and 'link'
@@ -254,9 +300,6 @@ The data for this column should be an array. Array can contain one or more objec
     },
 	
 	
-
-
-
 
 Usage in the component.html
 
