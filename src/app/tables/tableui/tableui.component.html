@@ -1,0 +1,13 @@
+<div style="margin-top:20px">
+
+<app-reusabletable
+    [data]="pumpData"
+    [columns]="reUsableTableColumn"
+    (rowEdit)="onEdit($event)"
+    (rowDelete)="onDelete($event)"
+    (rowSelect)="onSelect($event)"
+    [tableConfig]="reUsableTableConfig">
+</app-reusabletable>
+
+
+</div>

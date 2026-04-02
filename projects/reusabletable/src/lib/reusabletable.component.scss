@@ -1,0 +1,407 @@
+@use './reusabletable.styles';
+
+/* ============================================================
+   TABLE WRAPPER
+   Outer container styling for reusable table component.
+   Provides elevation, rounded corners and full-width layout.
+   ============================================================ */
+.table-wrapper {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  width: 100%;
+}
+
+
+/* ============================================================
+   TABLE CONTAINER (Scrollable area)
+   Controls scroll region for table body.
+   ============================================================ */
+.table-container {
+  height: 500px;
+  overflow: auto;
+  border: 1px solid #ddd;
+}
+
+
+/* ============================================================
+   SEARCH FIELD STYLING
+   Minor visual refinements for global search box.
+   ============================================================ */
+.search-field {
+  width: 100%;
+}
+
+/* tighter vertical padding for compact input */
+.search-field .mat-mdc-form-field-infix {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+/* ============================================================
+   HEADER ROW STYLING
+   Controls header background, typography, and separation.
+   ============================================================ */
+.mat-mdc-header-row .mat-mdc-header-cell {
+  background: #94baf3;
+  font-weight: 600;
+  letter-spacing: 3px;
+  border-bottom: 1px solid #dcdcdc;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Sticky header elevation */
+.mat-mdc-header-row {
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.08);
+  background: white;
+  z-index: 10;
+}
+
+/* Maintain numeric alignment */
+.mat-mdc-cell {
+  font-variant-numeric: tabular-nums;
+}
+
+.mat-mdc-header-cell {
+  letter-spacing: 3px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Ensure sort header respects inherited spacing */
+.mat-sort-header-content {
+  letter-spacing: inherit;
+}
+
+
+/* ============================================================
+   ZEBRA & HOVER ROW EFFECTS
+   Controlled via CSS variables from tableConfig.
+   ============================================================ */
+
+/* Zebra striping */
+.table-container .mat-mdc-row:nth-child(even) {
+  background: var(--zebra-color);
+}
+
+/* Hover color applied at cell level due to MDC behavior */
+.table-container .mat-mdc-row:hover .mat-mdc-cell {
+  background: var(--hover-color) !important;
+}
+
+.table-container .mat-mdc-row.row-selected .mat-mdc-cell {
+  background: var(--selected-row-color) !important;
+}
+
+.table-container .mat-mdc-row.row-selected:hover .mat-mdc-cell {
+  background: var(--selected-row-color) !important;
+}
+
+/* ============================================================
+   CELL PADDING NORMALIZATION
+   Removes vertical padding so row height becomes compact.
+   Overrides Material defaults intentionally.
+   ============================================================ */
+.table-container .mat-mdc-cell,
+.table-container .mat-mdc-header-cell {
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+}
+
+/* Standard horizontal padding */
+.mdc-data-table__cell,
+.mat-mdc-header-cell {
+  padding: 12px 16px;
+}
+
+.row-selected {
+  background-color: #ffe0b2 !important;
+}
+
+// tr.mat-mdc-row.row-selected:hover {
+//   background-color: #ffd699 !important;
+// }
+
+/* ============================================================
+   FOOTER ROW STYLING
+   ============================================================ */
+.mat-mdc-footer-row .mdc-data-table__cell {
+  background: #f7f7f7;
+  font-weight: 600;
+}
+
+
+/* ============================================================
+   MOBILE STACKED CELL SUPPORT
+   Labels used only in responsive stacked layouts.
+   ============================================================ */
+.cell-label {
+  display: none;
+}
+
+
+/* ============================================================
+   DEFAULT CELL VALUE CONTAINER
+   Acts as layout wrapper for content.
+   ============================================================ */
+.cell-value {
+  margin-top: 0px;
+  display: block;
+  width: 100%;
+}
+
+/* Column-specific tweak */
+.mat-column-flow .cell-value,
+.mat-column-id .cell-value {
+  padding-right: 0;
+}
+
+
+/* ============================================================
+   ACTION COLUMN ALIGNMENT
+   Ensures action icons are centered.
+   ============================================================ */
+.table-container .mat-column-actions .cell-value {
+  margin-top: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+mark {
+  background: #ffeb3b;
+  padding: 0 2px;
+  border-radius: 2px;
+}
+
+/* ============================================================
+   ICON BUTTON VISUAL TUNING
+   Makes action buttons compact inside table rows.
+   ============================================================ */
+button.mat-icon-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Icon text label under icons */
+.icon-text {
+  font-size: 14px;
+  line-height: 14px;
+}
+
+/* Adjust icon baseline spacing */
+.mat-icon {
+  margin-bottom: -10px;
+}
+
+/* Icon sizing inside action buttons */
+.action-buttons mat-icon {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+}
+
+/* Compact button size */
+.action-buttons .mat-mdc-icon-button {
+  width: 28px;
+  height: 28px;
+  padding: 2px;
+}
+
+
+/* ============================================================
+   ACTION BUTTON CONTAINER
+   Aligns buttons horizontally.
+   ============================================================ */
+.action-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+
+/* ============================================================
+   PRINT & MENU STYLING
+   ============================================================ */
+.print-hint {
+  font-size: 12px;
+  color: #555;
+  margin-top: 6px;
+}
+
+.column-menu {
+  padding: 8px 0;
+}
+
+.menu-header {
+  font-weight: 600;
+  padding: 8px 16px;
+  border-bottom: 1px solid #ddd;
+}
+
+.mat-menu-item {
+  height: auto;
+}
+
+
+/* ============================================================
+   MOBILE RESPONSIVE MODE
+   Converts table rows into stacked "cards".
+   Activated below tablet width.
+   ============================================================ */
+@media screen and (max-width: 768px) {
+
+  /* ----------------------------------------------------------
+     Hide header row.
+     Mobile cards display labels per cell instead.
+     ---------------------------------------------------------- */
+  .mat-mdc-header-row {
+    display: none !important;
+  }
+
+  mat-form-field {
+    width: 100%
+  }
+
+  /* ----------------------------------------------------------
+     Each table row becomes a card block.
+     Removes fixed table-row height to prevent overlap.
+     ---------------------------------------------------------- */
+  .mat-mdc-row {
+    display: block !important;
+
+    /* Spacing between cards */
+    margin: 16px 0;
+
+    /* Card padding */
+    padding: 12px;
+
+    /* Light card border */
+    border: 1px solid #e0e0e0;
+
+    /* Rounded corners */
+    border-radius: 8px;
+
+    /* Card background */
+    background: #fff;
+
+    /* Remove Material fixed row height */
+    height: auto !important;
+    min-height: unset !important;
+  }
+
+  /* ----------------------------------------------------------
+     Stack cells vertically within card.
+     Flex allows label + value alignment.
+     ---------------------------------------------------------- */
+  .mat-mdc-cell {
+    display: flex !important;
+
+    /* Label left, value right */
+    // justify-content: space-between;
+    justify-content: flex-start !important;
+
+    text-align: left !important;
+    /* Align vertically */
+    // align-items: center;
+
+    /* Full card width */
+    width: 100%;
+
+    /* Smaller vertical padding */
+    padding: 8px 0 !important;
+
+    /* Divider between fields */
+    border-bottom: 1px solid #eee;
+  }
+
+
+  /* Remove divider for last item in card */
+  .mat-mdc-cell:last-child {
+    border-bottom: none;
+  }
+
+  /* Disable previous pseudo-label approach */
+  .mat-mdc-cell::before {
+    content: none;
+  }
+
+  /* ----------------------------------------------------------
+     Footer row hidden on mobile
+     Pagination remains outside table.
+     ---------------------------------------------------------- */
+  .mat-mdc-footer-row {
+    display: none !important;
+  }
+
+  /* ----------------------------------------------------------
+     Explicit label column inside cell
+     (replaces pseudo-element method).
+     ---------------------------------------------------------- */
+  .cell-label {
+    /* Label occupies fixed portion of row */
+    flex: 0 0 40%;
+    display: block;
+
+    font-weight: 600;
+    color: #666;
+
+    /* Consistent uppercase mobile style */
+    text-transform: uppercase;
+
+    font-size: 0.75rem;
+  }
+
+  /* ----------------------------------------------------------
+     Value portion of stacked cell
+     ---------------------------------------------------------- */
+  .cell-value {
+    /* Value takes remaining width */
+    margin-left: auto !important;
+    /* Align numbers/text to right */
+    text-align: right !important;
+    /* Allow wrapping instead of overflow */
+    min-width: 0;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@media print {
+
+  /* Hide everything */
+  body * {
+    display: none !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .mat-column-actions {
+    display: none !important;
+  }
+
+  /* Show printable area only */
+  .print-area,
+  .print-area * {
+    visibility: visible;
+  }
+
+  /* Position printable content */
+  .print-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+
+  /* Remove scroll constraints */
+  .table-container {
+    height: auto !important;
+    overflow: visible !important;
+  }
+}

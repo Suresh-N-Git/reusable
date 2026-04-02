@@ -1,0 +1,237 @@
+<div class="row w-100 align-items-center mt-3">
+
+  <div class="col-md-3 col-sm-12" *ngIf="resolvedConfig.toolbar.showSearch">
+
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Search</mat-label>
+
+      <mat-icon matSuffix>search</mat-icon>
+
+      <input matInput (keyup)="applyGlobalFilter($event)" placeholder="Search all columns">
+
+    </mat-form-field>
+
+  </div>
+
+
+  <!-- Spacer -->
+
+  <div class="col-md-9 d-flex justify-content-end gap-2">
+
+    <button *ngIf="resolvedConfig.toolbar.showColumnToggle !== false" mat-icon-button color="primary"
+      [matMenuTriggerFor]="columnMenu" matTooltip="Show/Hide Columns">
+      <mat-icon>view_week</mat-icon>
+      <span class="icon-text">shc</span>
+    </button>
+
+    <button *ngIf="resolvedConfig.toolbar.showCsv" mat-icon-button color="primary" matTooltip="Download CSV"
+      (click)="downloadCSV()">
+      <mat-icon> description</mat-icon>
+      <span class="icon-text">csv</span>
+    </button>
+
+    <button *ngIf="resolvedConfig.toolbar.showExcel !== false" mat-icon-button color="primary"
+      matTooltip="Download Excel" (click)="downloadExcel()">
+      <mat-icon>table_view</mat-icon>
+      <span class="icon-text">xls</span>
+    </button>
+
+    <button *ngIf="resolvedConfig.toolbar.showPdf !== false" mat-icon-button color="primary" matTooltip="Download PDF"
+      (click)="downloadPdf()">
+      <mat-icon>picture_as_pdf</mat-icon>
+      <span class="icon-text">pdf</span>
+    </button>
+
+    <button *ngIf="resolvedConfig.toolbar.showPrint" mat-icon-button color="primary" matTooltip="Print Table"
+      (click)="printTable()">
+      <mat-icon>print</mat-icon>
+      <span class="icon-text">prn</span>
+    </button>
+
+  </div>
+
+  <mat-menu #columnMenu="matMenu" class="column-menu">
+
+    <div class="menu-header">
+      <span>Show Columns</span>
+    </div>
+
+    @for (col of displayedColumnsExtended; track col.id) {
+
+    <button mat-menu-item (click)="$event.stopPropagation()">
+
+      <mat-checkbox [checked]="visibleColumnIds.includes(col.id)" (change)="toggleColumn(col.id)"
+        [disabled]="col.id === 'actions'">
+
+        {{ col.name }}
+
+      </mat-checkbox>
+
+    </button>
+
+    }
+
+  </mat-menu>
+
+</div>
+
+
+
+<div #printSection class="table-container print-area" [style.--zebra-color]="resolvedConfig.appearance.zebraColor"
+  [style.--hover-color]="resolvedConfig.appearance.hoverColor || '#e3f2fd'"
+  [style.--selected-row-color]="resolvedConfig.appearance.selectedRowColor || '#ffe0b2'">
+
+  <table mat-table [dataSource]="dataSource" matSort>
+
+    @for (col of displayedColumnsExtended; track col.id) {
+
+    <ng-container [matColumnDef]="col.id">
+
+      <!-- HEADER -->
+      @if (col.id !== 'actions') {
+      <th mat-header-cell *matHeaderCellDef [style.width]="col.width" mat-sort-header
+        [disabled]="!resolvedConfig.sorting.enabled" [arrowPosition]="col.align === 'right' ? 'before' : 'after'"
+        [ngClass]="{
+      'right-aligned-header': col.align === 'right',
+      'center-aligned-header': col.align === 'center',
+      'left-aligned-header': !col.align || col.align === 'left'
+    }">
+        {{ col.name }}
+      </th>
+      } @else {
+      <th mat-header-cell *matHeaderCellDef [style.width]="col.width" [style.text-align]="col.align || 'left'">
+        {{ col.name }}
+      </th>
+      }
+
+      <!-- CELL -->
+      <td mat-cell *matCellDef="let row" [attr.data-label]="col.name" [ngStyle]="getCellStyle(col)">
+
+        @if (col.id === 'actions') {
+
+
+        @if (isMobileView) {
+        <span class="cell-label">{{ col.name }}</span>
+        }
+
+        <!-- <span class="cell-value action-buttons"> -->
+
+        <div class="cell-value action-buttons">
+          @if (col.actions?.select?.show) {
+          <button mat-icon-button [color]="col.actions?.select?.color" (click)="setSelectedRow(row); onSelect(row)">
+            <mat-icon>check_box</mat-icon>
+          </button>
+          }
+
+          @if (col.actions?.edit?.show) {
+          <button mat-icon-button [color]="col.actions?.edit?.color" (click)="setSelectedRow(row); onEdit(row)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          }
+
+          @if (col.actions?.delete?.show) {
+          <button mat-icon-button [color]="col.actions?.delete?.color" (click)="setSelectedRow(row); onDelete(row)">
+            <mat-icon>delete</mat-icon>
+          </button>
+          }
+        </div>
+        <!-- </span> -->
+
+        } @else {
+
+        @if (isMobileView) {
+        <span class="cell-label">{{ col.name }}</span>
+        }
+
+        <span class="cell-value">
+
+          @switch (col.type) {
+
+          @case ('integer') {
+          {{ row[col.id] | number:'1.0-0' }}
+          }
+
+          @case ('number') {
+          <span [innerHTML]="highlightSearchedText(row[col.id] | number:(col.digits || '1.2-2'))"></span>
+          }
+
+          @case ('currency') {
+          {{ row[col.id] | currency:'INR' }}
+          }
+
+          @case ('date') {
+          {{ row[col.id] | date:'dd-MM-yyyy' }}
+          }
+
+          @case ('chip') {
+          <mat-chip selected [ngStyle]="getChipContainerStyle(col)">
+            <span [ngStyle]="getChipTextStyle(col)">
+              {{ row[col.id] }}
+            </span>
+          </mat-chip>
+          }
+
+          @case ('multiline') {
+
+          <ng-container *ngIf="row[col.id]?.length; else noData">
+
+            <div *ngFor="let item of row[col.id]">
+              {{ getDisplayValue(item, col) }}
+            </div>
+
+          </ng-container>
+
+          <ng-template #noData>-</ng-template>
+          }
+
+          @case ('link') {
+
+          <ng-container *ngIf="row[col.id]?.length; else noData">
+
+            <div *ngFor="let item of row[col.id]">
+              <a [href]="getLinkValue(item, col)" target="_blank">
+                {{ getDisplayValue(item, col) }}
+              </a>
+            </div>
+
+          </ng-container>
+
+          <ng-template #noData>-</ng-template>
+          }
+
+          @default {
+          <span [innerHTML]="highlightSearchedText(row[col.id])"></span>
+          }
+
+          }
+
+        </span>
+
+
+        }
+
+      </td>
+
+    </ng-container>
+
+    }
+
+    <!-- IMPORTANT: row definitions need column IDs -->
+    <tr mat-header-row *matHeaderRowDef="displayedColumnIds;  sticky: true">
+    </tr>
+
+    <tr mat-row *matRowDef="let row; columns: displayedColumnIds" [class.row-selected]="row === selectedRow">
+    </tr>
+
+  </table>
+</div>
+
+<div class="no-print" *ngIf="resolvedConfig.pagination.enabled">
+  <mat-paginator [pageSizeOptions]="[5,10,20]" showFirstLastButtons>
+  </mat-paginator>
+</div>
+
+<div class="print-hint no-print" *ngIf="(displayedColumnIds.length || 0) > 7">
+  For reports with more than 7 columns, select
+  <b>Landscape</b> in the print dialog.
+</div>

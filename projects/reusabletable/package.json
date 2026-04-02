@@ -1,0 +1,17 @@
+{
+  "name": "reusabletable",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@angular/common": "^18.2.0",
+    "@angular/core": "^18.2.0",
+    "@angular/material": "^18.0.0",
+    "jspdf": "^2.5.1",
+    "jspdf-autotable" : "^5.0.7",
+    "xlsx": "^0.18.5",
+    "file-saver": "^2.0.5"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "sideEffects": false
+}
