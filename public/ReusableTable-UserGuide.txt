@@ -1,52 +1,50 @@
-
-Copy the pack file
-from Z:\AngularLibs\reusabletable (The network Computer)
-
-reusabletable-0.0.1.tgz   
-
--- Below Uninstall is required only if you have an earlier one installed
-npm uninstall reusabletable    
-
-npm install reusabletable-0.0.1.tgz   
-
-
-To use in the new project the following npm packages must be available
-
-npm install bootstarp 
-(must be installed and included in angular.json styles)
-
-
-npm install xlsx jspdf jspdf-autotable file-saver  -- need for export of table
-
-
-import { ReusableTableModule } from 'reusable-table';
-
+📊 Reusable Table (Angular)
+A flexible, configurable Angular table component supporting dynamic columns, multiple data types, and export capabilities (CSV, Excel, PDF, Print).
+________________________________________
+🚀 Features
+•	Dynamic column configuration
+•	Multiple column types (text, number, chip, multiline, link, etc.)
+•	Built-in actions (edit, delete, select)
+•	Export support:
+o	CSV
+o	Excel
+o	PDF
+o	Print
+•	Pagination, sorting, search
+•	Fully configurable UI behavior
+________________________________________
+📦 Installation
+1. Install Package
+npm uninstall reusabletable   # if older version exists
+npm install reusabletable-0.0.1.tgz
+________________________________________
+2. Install Required Dependencies
+npm install bootstrap
+npm install xlsx jspdf jspdf-autotable file-saver
+________________________________________
+3. Add Styles
+In styles.scss:
 @import 'reusable-table/styles';
-add the above in the styles.scss -- Global style sheet
-
-
-Usage in component.ts
-
-import { ReusableTableModule } from '../reusabletable/reusabletable.module';
-import { ReUsableTableColumn, ReusableTableConfig } from '../reusabletable/reusabletable.component';
-
-Declaration
-
- reUsableTableConfig!: ReusableTableConfig;
- reUsableTableColumn: ReUsableTableColumn[] = [];
- 
- 
- The structure of the interfaces
- 
- export interface ReUsableTableColumn {
+Also ensure Bootstrap is included in angular.json.
+________________________________________
+📥 Import Module
+import { ReusableTableModule } from 'reusable-table';
+________________________________________
+🧱 Interfaces
+Column Definition
+export interface ReUsableTableColumn {
   id: string;
   name: string;
   width?: string;
-  type?: 'text' | 'integer' | 'number' | 'currency' | 'date' | 'actions' | 'chip';
+  type?: 'text' | 'integer' | 'number' | 'currency' | 'date' | 'actions' | 'chip' | 'multiline' | 'link';
   align?: 'left' | 'center' | 'right';
   digits?: string;
   style?: Record<string, any>;
   chipStyle?: Record<string, any>;
+
+  displayField?: string;
+  linkField?: string;
+  exportFormatter?: (value: any) => string;
 
   actions?: {
     select?: { show?: boolean; color?: 'primary' | 'accent' | 'warn' };
@@ -54,9 +52,9 @@ Declaration
     delete?: { show?: boolean; color?: 'primary' | 'accent' | 'warn' };
   };
 }
-
+________________________________________
+Table Configuration
 export interface ReusableTableConfig {
-
   appearance?: {
     zebraColor?: string;
     hoverColor?: string;
@@ -74,7 +72,7 @@ export interface ReusableTableConfig {
   };
 
   toolbar?: {
-    showSearch: true,
+    showSearch?: boolean;
     showColumnToggle?: boolean;
     showCsv?: boolean;
     showExcel?: boolean;
@@ -82,127 +80,52 @@ export interface ReusableTableConfig {
     showPrint?: boolean;
   };
 }
+________________________________________
+📊 Sample Data
+pumpData = [
+  { id: 1, name: 'Pump A', flow: 1000.99, col4: 'text', col5: 'text' },
+  { id: 2, name: 'Pump B', flow: 120.88, col4: 'text', col5: 'text' }
+];
+________________________________________
+📐 Column Configuration
+this.reUsableTableColumn = [
+  { id: 'id', name: 'Id', type: 'integer', align: 'right' },
 
+  {
+    id: 'name',
+    name: 'Name',
+    type: 'chip',
+    chipStyle: { fontWeight: 'bold' }
+  },
 
- 
-Dummy data
- pumpData = [
-    { id: 1, name: 'Pump, A', flow: 1000.9999, col4: 'some text', col5: 'more text' },
-    { id: 2, name: 'Pump B', flow: 120.88, col4: 'some text', col5: 'more text' },
-    { id: 3, name: 'Pump C', flow: 95.66, col4: 'some text', col5: 'more text' },
-    { id: 4, name: 'Pump D', flow: 140.6, col4: 'some text', col5: 'more text' },
-    { id: 5, name: 'Pump E', flow: 110.06, col4: 'some text', col5: 'more text' },
-    { id: 6, name: 'Pump F', flow: 130, col4: 'some text', col5: 'more text' },
-    { id: 1, name: 'Pump, A', flow: 1000, col4: 'some text', col5: 'more text' },
-    { id: 2, name: 'Pump B', flow: 120, col4: 'some text', col5: 'more text' },
-    { id: 3, name: 'Pump C', flow: 95, col4: 'some text', col5: 'more text' },
-    { id: 4, name: 'Pump D', flow: 140, col4: 'some text', col5: 'more text' },
-    { id: 5, name: 'Pump E', flow: 110, col4: 'some text', col5: 'more text' },
-    { id: 6, name: 'Pump F', flow: 130, col4: 'some text', col5: 'more text' },
-    { id: 1, name: 'Pump, A', flow: 1000, col4: 'some text', col5: 'more text' },
-    { id: 2, name: 'Pump B', flow: 120, col4: 'some text', col5: 'more text' },
-    { id: 3, name: 'Pump C', flow: 95, col4: 'some text', col5: 'more text' },
-    { id: 4, name: 'Pump D', flow: 140, col4: 'some text', col5: 'more text' },
-    { id: 5, name: 'Pump E', flow: 110, col4: 'some text', col5: 'more text' },
-    { id: 6, name: 'Pump F', flow: 130, col4: 'some text', col5: 'more text' }
+  {
+    id: 'flow',
+    name: 'Flow',
+    type: 'number',
+    digits: '1.2-2',
+    align: 'right'
+  },
 
-  ];
-  
-  Sample of the reUsableTableColumn
-  
-      this.reUsableTableColumn = [
+  { id: 'col4', name: 'Col4' },
 
-      { id: 'id', name: 'Id', width: '5%', type: 'integer', align: 'right' },
-
-      // {
-      //   id: 'name', name: 'Name', width: '20%',
-      // },
-
-      {
-        id: 'name', name: 'Name', width: '20%', type: 'chip',
-        chipStyle: {
-          fontFamily: 'monospace',
-          fontWeight: '800',
-          fontSize: '24px',
-          color: '#0d47a1',
-          backgroundColor: '#fff3cd'
-        }
-      },
-
-      {
-        id: 'flow', name: 'Flow', width: '10%', type: 'number', align: 'right', digits: '1.2-2',
-        style: {
-          fontFamily: 'monospace',
-          fontWeight: '600',
-          fontSize: '20px',
-          color: '#0d47a1',
-          // backgroundColor: '#fff3cd',
-        },
-      },
-      {
-        id: 'col4', name: 'Col4', width: '20%',
-
-      },
-      { id: 'col5', name: 'Col5', width: '20%' },
-      {
-        id: 'actions',
-        name: 'Actions',
-        width: '5%',
-        type: 'actions',
-        align: 'center',
-        actions: {
-          select: { show: true, color: 'primary' },
-          edit: { show: true, color: 'accent' },
-          delete: { show: true, color: 'warn' }
-        }
-      }
-    ];
-	
-	Sample of the tableConfig
-	
-	
-    this.reUsableTableConfig = {
-      appearance: {
-        zebraColor: '#bfd4f1',
-        hoverColor: 'e3f2fd',
-        selectedRowColor: 'ffe0b2',
-      },
-      pagination: {
-        enabled: true,
-        threshold: 50,
-        defaultPageSize: 10,
-      },
-
-      sorting: {
-        enabled: true,
-      },
-
-      toolbar: {
-        showColumnToggle: true,
-        showCsv: true,
-        showExcel: true,
-        showPdf: true,
-        showPrint: true,
-      }
-
+  {
+    id: 'actions',
+    name: 'Actions',
+    type: 'actions',
+    actions: {
+      edit: { show: true },
+      delete: { show: true }
     }
-
-
-
-Two more type of columns have been added
-
-'multiline' and 'link'
-
-multiline can be used to display multipe lines of text in a td if the data source contains a json as a data for that column 
-
+  }
+];
 
 The column for link must be declared as below
 
 {
-        id: 'col6', name: 'col6', width: '20%', type: 'link', displayField: 'UploadedFileName', linkField: 'RelativeFilePath',
-        exportFormatter: (val: any[]) =>
-          val?.map(v => v.UploadedFileName).join(', ') || ''
-      },
+	id: 'col6', name: 'col6', width: '20%', type: 'link', displayField: 'UploadedFileName', linkField: 'RelativeFilePath',
+	exportFormatter: (val: any[]) =>
+	  val?.map(v => v.UploadedFileName).join(', ') || ''
+},
 
 DisplayField is the text to be displayed to user and linkField is the href for the <a> tag
 
@@ -210,71 +133,145 @@ The two columns may be named anything in our json data for that column, but it m
 
 Sample data must be as below  - here col6 contains the array of display names and the endpoint 
 
+
+{
+  id: 10, name: 'New Name', flow: 130, col4: 'some text', col5: 'more text', "col6": [
+	{
+	  "UploadedFileName": "table-export (5).pdf",
+	  "RelativeFilePath": "https://ttapi.ipmsbmc.com/uploads/1/t_task/49_3b95dd0c-0bf4-4f48-93c8-6880ecfee166_table-export (5).pdf"
+	},
+	{
+	  "UploadedFileName": "table-export (4).pdf",
+	  "RelativeFilePath": "https://ttapi.ipmsbmc.com/uploads/1/t_task/49_f58c62d6-72f0-4f84-af47-0d3ae2a029b5_table-export (4).pdf"
+	},
+	{
+	  "UploadedFileName": "table-export.pdf",
+	  "RelativeFilePath": "https://ttapi.ipmsbmc.com/uploads/1/t_task/49_8e707fea-9820-4855-98e9-3510e687dacf_table-export.pdf"
+	}
+  ]
+}
+
 On clicking the file will be displayed in another tab or it will be downloaded, depending on the type of file
 
-
- {
-      id: 10, name: 'New Name', flow: 130, col4: 'some text', col5: 'more text', "col6": [
-        {
-          "UploadedFileName": "table-export (5).pdf",
-          "RelativeFilePath": "https://ttapi.ipmsbmc.com/uploads/1/t_task/49_3b95dd0c-0bf4-4f48-93c8-6880ecfee166_table-export (5).pdf"
-        },
-        {
-          "UploadedFileName": "table-export (4).pdf",
-          "RelativeFilePath": "https://ttapi.ipmsbmc.com/uploads/1/t_task/49_f58c62d6-72f0-4f84-af47-0d3ae2a029b5_table-export (4).pdf"
-        },
-        {
-          "UploadedFileName": "table-export.pdf",
-          "RelativeFilePath": "https://ttapi.ipmsbmc.com/uploads/1/t_task/49_8e707fea-9820-4855-98e9-3510e687dacf_table-export.pdf"
-        }
-      ]
-    }
-
-
-
+_______________
 
 The column for multiline must be declared as below
 
 
 The declaration is as below
 
-      { id: 'col5', name: 'Col5', width: '20%', type: 'multiline', displayField: 'TextToDisplay',
-        exportFormatter: (val: any[]) =>
-          val?.map(v => v.TextToDisplay).join(', ') || ''
-       },  Here the key in the object is TextToDisplay
+{ 
+	id: 'col5', name: 'Col5', width: '20%', type: 'multiline', displayField: 'TextToDisplay',
+	exportFormatter: (val: any[]) =>
+	val?.map(v => v.TextToDisplay).join(', ') || ''
+},  Here the key in the object is TextToDisplay
 	  
 	  
 The data for this column should be an array. Array can contain one or more objects
 
- {
-      id: 1, name: 'Pump, A', flow: 1000.9999, col4: 'some text', col5: [{ "TextToDisplay": "Plain text" }]
-    },
+{
+  id: 1, name: 'Pump, A', flow: 1000.9999, col4: 'some text', col5: [{ "TextToDisplay": "Plain text" }]
+},
 
-
+Can be one or more objects in each row
+{
+  id: 5, name: 'Pump E', flow: 110.06, col4: 'some text', col5: [
+	{ "TextToDisplay": "table-export (5).pdf" },
+	{ "TextToDisplay": "table-export (4).pdf" }
+  ]
+},
+	
+	_________________________
+⚙️ Table Configuration
+this.reUsableTableConfig = {
+  pagination: {
+    enabled: true,
+    defaultPageSize: 10
+  },
+  sorting: {
+    enabled: true
+  },
+  toolbar: {
+    showCsv: true,
+    showExcel: true,
+    showPdf: true,
+    showPrint: true
+  }
+};
+________________________________________
+🔗 Link Column
+Column Definition
+{
+  id: 'files',
+  name: 'Files',
+  type: 'link',
+  displayField: 'UploadedFileName',
+  linkField: 'RelativeFilePath',
+  exportFormatter: (val: any[]) =>
+    val?.map(v => v.UploadedFileName).join(', ') || ''
+}
+________________________________________
+Data Format
+files: [
   {
-      id: 5, name: 'Pump E', flow: 110.06, col4: 'some text', col5: [
-        { "TextToDisplay": "table-export (5).pdf" },
-        { "TextToDisplay": "table-export (4).pdf" }
-      ]
-    },
-	
-	
-
-
-
-
-Usage in the component.html
-
-<div style="margin-top:20px">
-
+    UploadedFileName: 'file1.pdf',
+    RelativeFilePath: 'https://example.com/file1.pdf'
+  }
+]
+________________________________________
+📄 Multiline Column
+Column Definition
+{
+  id: 'notes',
+  name: 'Notes',
+  type: 'multiline',
+  displayField: 'TextToDisplay',
+  exportFormatter: (val: any[]) =>
+    val?.map(v => v.TextToDisplay).join(', ') || ''
+}
+________________________________________
+Data Format
+notes: [
+  { TextToDisplay: 'Line 1' },
+  { TextToDisplay: 'Line 2' }
+]
+________________________________________
+📤 Export Behavior
+Format	Behavior
+CSV	Uses exportFormatter
+Excel	Uses exportFormatter
+PDF	Uses exportFormatter + numeric formatting
+Print	Uses UI rendering
+________________________________________
+⚠️ Important
+•	link and multiline columns must receive arrays
+•	Links must be full URLs
+•	Always use exportFormatter for complex data
+________________________________________
+🧩 Usage
 <app-reusabletable
-    [data]="pumpData"
-    [columns]="reUsableTableColumn"
-    (rowEdit)="onEdit($event)"
-    (rowDelete)="onDelete($event)"
-    (rowSelect)="onSelect($event)"
-    [tableConfig]="reUsableTableConfig">
+  [data]="pumpData"
+  [columns]="reUsableTableColumn"
+  [tableConfig]="reUsableTableConfig"
+  (rowEdit)="onEdit($event)"
+  (rowDelete)="onDelete($event)"
+  (rowSelect)="onSelect($event)">
 </app-reusabletable>
+________________________________________
+✅ Summary
+This reusable table provides:
+•	Dynamic rendering
+•	Clean separation of concerns
+•	Consistent export handling
+•	Support for complex data structures
+________________________________________
+📌 Future Enhancements
+•	Template-based column rendering
+•	Inline editing
+•	Server-side pagination
+•	Column grouping
+________________________________________
+👨‍💻 Author
+Internal Angular Utility Library
+________________________________________
 
-
-</div>
