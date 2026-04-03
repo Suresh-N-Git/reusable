@@ -21,6 +21,10 @@ export class TableExportService {
       columns.map(col => {
         let value = row[col.id];
 
+        if (col.exportFormatter) {
+          value = col.exportFormatter(value);
+        }
+
         if (value == null) return '';
 
         if (col.type === 'integer' || col.type === 'number' || col.type === 'currency')
@@ -45,7 +49,26 @@ export class TableExportService {
 
     const exportData = rows.map(row => {
       const obj: any = {};
-      columns.forEach(col => obj[col.name] = row[col.id]);
+
+      // this is needed of there are objects like for multiline and link
+      columns.forEach(col => {
+
+        let value = row[col.id];
+
+        if (col.exportFormatter) {
+          value = col.exportFormatter(value);
+        } else if (Array.isArray(value)) {
+          value = value.join(', ');
+        } else if (value && typeof value === 'object') {
+          value = JSON.stringify(value);
+        }
+
+        obj[col.name] = value;
+      });
+
+      // columns.forEach(col => obj[col.name] = row[col.id]);   // This is enough for straight data
+
+
       return obj;
     });
 
@@ -73,60 +96,87 @@ export class TableExportService {
 
 
   exportPdf(
-  columns: ReUsableTableColumn[],
-  rows: any[],
-  formatter?: (value: any, col: ReUsableTableColumn) => string
-): void {
+    columns: ReUsableTableColumn[],
+    rows: any[],
+    formatter?: (value: any, col: ReUsableTableColumn) => string
+  ): void {
 
-  const head = [columns.map(c => c.name)];
+    const head = [columns.map(c => c.name)];
 
-  const body = rows.map(row =>
-    columns.map(col => {
-      const raw = row[col.id];
-      return formatter ? formatter(raw, col) : (raw ?? '');
-    })
-  );
+    const body = rows.map(row =>
+      columns.map(col => {
+        const raw = row[col.id];
 
-  const doc = new jsPDF({
-    orientation: columns.length > 6 ? 'landscape' : 'portrait'
-  });
+        let value = raw;
 
-  // ✅ Restore alignment logic
-  const columnStyles: any = {};
+        // 1. Column-specific export logic (FILES, ARRAYS, etc.)
+        if (col.exportFormatter) {
+          value = col.exportFormatter(raw);
+        }
 
-  columns.forEach((col, index) => {
-    columnStyles[index] = {
-      halign: col.align || 'left'
-    };
-  });
+        // 2. Your existing number/date formatter
+        else if (formatter) {
+          value = formatter(raw, col);
+        }
 
-  autoTable(doc, {
-    head,
-    body,
-    styles: { fontSize: 9 },
-    columnStyles,
-    headStyles: {
-      fillColor: [41, 128, 185]
-    },
-    margin: { top: 20 },
+        // 3. Fallbacks (safety net)
+        else if (Array.isArray(raw)) {
+          value = raw.join(', ');
+        }
+        else if (raw && typeof raw === 'object') {
+          value = JSON.stringify(raw);
+        }
+        else {
+          value = raw ?? '';
+        }
+        return value;
+        // return formatter ? formatter(raw, col) : (raw ?? '');
 
-    // ✅ Keep header alignment consistent
-    didParseCell: (data: any) => {
-      if (data.section === 'head') {
-        const colIndex = data.column.index;
-        data.cell.styles.halign =
-          columnStyles[colIndex]?.halign || 'left';
+
+
+      })
+    );
+
+    const doc = new jsPDF({
+      orientation: columns.length > 6 ? 'landscape' : 'portrait'
+    });
+
+    // ✅ Restore alignment logic
+    const columnStyles: any = {};
+
+    columns.forEach((col, index) => {
+      columnStyles[index] = {
+        halign: col.align || 'left'
+      };
+    });
+
+    autoTable(doc, {
+      head,
+      body,
+      styles: { fontSize: 9 },
+      columnStyles,
+      headStyles: {
+        fillColor: [41, 128, 185]
+      },
+      margin: { top: 20 },
+
+      // ✅ Keep header alignment consistent
+      didParseCell: (data: any) => {
+        if (data.section === 'head') {
+          const colIndex = data.column.index;
+          data.cell.styles.halign =
+            columnStyles[colIndex]?.halign || 'left';
+        }
+      },
+
+      didDrawPage: () => {
+        doc.setFontSize(12);
+        doc.text('Table Export', 14, 15);
       }
-    },
+    });
 
-    didDrawPage: () => {
-      doc.setFontSize(12);
-      doc.text('Table Export', 14, 15);
-    }
-  });
-
-  doc.save('table-export.pdf');
-}
+    doc.save('table-export.pdf');
+  }
 
   // exportPdf(columns: ReUsableTableColumn[], rows: any[]): void {
 
@@ -157,11 +207,11 @@ export class TableExportService {
 
   printTable(html: string): void {
 
-  const popup = window.open('', '_blank', 'width=1000,height=700');
-  if (!popup) return;
+    const popup = window.open('', '_blank', 'width=1000,height=700');
+    if (!popup) return;
 
-  popup.document.open();
-  popup.document.write(`
+    popup.document.open();
+    popup.document.write(`
     <html>
       <head>
         <title>Print Table</title>
@@ -176,8 +226,8 @@ export class TableExportService {
     </html>
   `);
 
-  popup.document.close();
-  popup.print();
-  popup.close();
-}
+    popup.document.close();
+    popup.print();
+    popup.close();
+  }
 }

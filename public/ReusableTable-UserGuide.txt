@@ -199,8 +199,10 @@ multiline can be used to display multipe lines of text in a td if the data sourc
 The column for link must be declared as below
 
 {
-        id: 'col6', name: 'col6', width: '20%', type: 'link', displayField: 'UploadedFileName', linkField: 'RelativeFilePath'
-},
+        id: 'col6', name: 'col6', width: '20%', type: 'link', displayField: 'UploadedFileName', linkField: 'RelativeFilePath',
+        exportFormatter: (val: any[]) =>
+          val?.map(v => v.UploadedFileName).join(', ') || ''
+      },
 
 DisplayField is the text to be displayed to user and linkField is the href for the <a> tag
 
@@ -236,7 +238,10 @@ The column for multiline must be declared as below
 
 The declaration is as below
 
-      { id: 'col5', name: 'Col5', width: '20%', type: 'multiline', displayField: 'TextToDisplay' },  Here the key in the object is TextToDisplay
+      { id: 'col5', name: 'Col5', width: '20%', type: 'multiline', displayField: 'TextToDisplay',
+        exportFormatter: (val: any[]) =>
+          val?.map(v => v.TextToDisplay).join(', ') || ''
+       },  Here the key in the object is TextToDisplay
 	  
 	  
 The data for this column should be an array. Array can contain one or more objects

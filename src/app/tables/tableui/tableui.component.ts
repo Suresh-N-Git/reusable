@@ -95,9 +95,14 @@ export class TableuiComponent {
         id: 'col4', name: 'Col4', width: '20%',
 
       },
-      { id: 'col5', name: 'Col5', width: '20%', type: 'multiline', displayField: 'TextToDisplay' },
+      { id: 'col5', name: 'Col5', width: '20%', type: 'multiline', displayField: 'TextToDisplay',
+        exportFormatter: (val: any[]) =>
+          val?.map(v => v.TextToDisplay).join(', ') || ''
+       },
       {
-        id: 'col6', name: 'col6', width: '20%', type: 'link', displayField: 'UploadedFileName', linkField: 'RelativeFilePath'
+        id: 'col6', name: 'col6', width: '20%', type: 'link', displayField: 'UploadedFileName', linkField: 'RelativeFilePath',
+        exportFormatter: (val: any[]) =>
+          val?.map(v => v.UploadedFileName).join(', ') || ''
       },
 
       {

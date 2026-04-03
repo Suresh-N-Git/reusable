@@ -16,6 +16,8 @@ export interface ReUsableTableColumn {
   name: string;
   width?: string;
   type?: 'text' | 'integer' | 'number' | 'currency' | 'date' | 'actions' | 'chip' | 'multiline' | 'link';
+  exportFormatter?: (value: any) => string;
+  
   align?: 'left' | 'center' | 'right';
   digits?: string;
   style?: Record<string, any>;
