@@ -1,28 +1,70 @@
 /* Sort Header CSS Block For mat-table*/
 
-  /* Target the internal sort container and the button itself */
-  .mat-mdc-header-cell .mat-sort-header-container {
-    display: flex !important;
-    width: 100%;
+/* Target the internal sort container and the button itself */
+.mat-mdc-header-cell .mat-sort-header-container {
+  display: flex !important;
+  width: 100%;
+}
+
+/* Use specific alignment classes with higher specificity */
+th.right-aligned-header .mat-sort-header-container {
+  justify-content: flex-end !important;
+}
+
+th.center-aligned-header .mat-sort-header-container {
+  justify-content: center !important;
+}
+
+th.left-aligned-header .mat-sort-header-container {
+  justify-content: flex-start !important;
+}
+
+/* IMPORTANT: The sort header is a button. Ensure it doesn't have fixed alignment */
+.mat-mdc-header-cell .mat-sort-header-button {
+  text-align: inherit !important;
+  justify-content: inherit !important;
+}
+
+
+.icon-text {
+  display: inline-block;
+}
+
+
+/* Sort Header CSS Block For mat-table*/
+
+/* 🔥 mobile fix */
+@media (max-width: 768px) {
+
+  // .icon-text {
+  //   display: none;
+  //   /* hide labels */
+  // }
+  .icon-text {
+    display: none !important;
   }
 
-  /* Use specific alignment classes with higher specificity */
-  th.right-aligned-header .mat-sort-header-container {
-    justify-content: flex-end !important;
+  .table-toolbar,
+  .col-md-9 {
+    display: flex;
+    align-items: center;
+    height: 48px;
+    /* 🔥 fix height */
+    overflow: hidden;
   }
 
-  th.center-aligned-header .mat-sort-header-container {
-    justify-content: center !important;
+  .col-md-9 button {
+    height: 36px;
+    /* reduce button height */
+    line-height: 36px;
+    padding: 4px;
   }
 
-  th.left-aligned-header .mat-sort-header-container {
-    justify-content: flex-start !important;
+  .col-md-9 {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    /* prevent breaking */
   }
 
-  /* IMPORTANT: The sort header is a button. Ensure it doesn't have fixed alignment */
-  .mat-mdc-header-cell .mat-sort-header-button {
-    text-align: inherit !important;
-    justify-content: inherit !important;
-  }
 
-  /* Sort Header CSS Block For mat-table*/
+}
