@@ -1,254 +1,78 @@
-📊 Reusable Table (Angular)
-A flexible, configurable Angular table component supporting dynamic columns, multiple data types, and export capabilities (CSV, Excel, PDF, Print).
-________________________________________
-🚀 Features
-•	Dynamic column configuration
-•	Multiple column types (text, number, chip, multiline, link, etc.)
-•	Built-in actions (edit, delete, select)
-•	Export support:
-o	CSV
-o	Excel
-o	PDF
-o	Print
-•	Pagination, sorting, search
-•	Fully configurable UI behavior
-________________________________________
-📦 Installation
-1. Install Package
-npm uninstall reusabletable   # if older version exists
-npm install reusabletable-0.0.1.tgz
-________________________________________
-2. Install Required Dependencies
-npm install bootstrap
-npm install xlsx jspdf jspdf-autotable file-saver
-________________________________________
-3. Add Styles
-In styles.scss:
-@import 'reusable-table/styles';
-Also ensure Bootstrap is included in angular.json.
-________________________________________
-📥 Import Module
+Reusable Table User Guide
+
+Package name: `reusable-table`
+Library path: `projects/reusable-table`
+
+Install from a packed tarball:
+```bash
+npm uninstall reusable-table
+npm install reusable-table-0.0.1.tgz
+```
+
+Import the module:
+```ts
 import { ReusableTableModule } from 'reusable-table';
-________________________________________
-🧱 Interfaces
-Column Definition
-export interface ReUsableTableColumn {
-  id: string;
-  name: string;
-  width?: string;
-  type?: 'text' | 'integer' | 'number' | 'currency' | 'date' | 'actions' | 'chip' | 'multiline' | 'link';
-  align?: 'left' | 'center' | 'right';
-  digits?: string;
-  style?: Record<string, any>;
-  chipStyle?: Record<string, any>;
+```
 
-  displayField?: string;
-  linkField?: string;
-  exportFormatter?: (value: any) => string;
+Add styles:
+```scss
+@import 'reusable-table/styles';
+```
 
-  actions?: {
-    select?: { show?: boolean; color?: 'primary' | 'accent' | 'warn' };
-    edit?: { show?: boolean; color?: 'primary' | 'accent' | 'warn' };
-    delete?: { show?: boolean; color?: 'primary' | 'accent' | 'warn' };
-  };
-}
-________________________________________
-Table Configuration
-export interface ReusableTableConfig {
-  appearance?: {
-    zebraColor?: string;
-    hoverColor?: string;
-    selectedRowColor?: string;
-  };
+Column types supported:
+- `text`
+- `integer`
+- `number`
+- `currency`
+- `date`
+- `actions`
+- `chip`
+- `multiline`
+- `link`
 
-  pagination?: {
-    enabled?: boolean;
-    threshold?: number;
-    defaultPageSize?: number;
-  };
-
-  sorting?: {
-    enabled?: boolean;
-  };
-
-  toolbar?: {
-    showSearch?: boolean;
-    showColumnToggle?: boolean;
-    showCsv?: boolean;
-    showExcel?: boolean;
-    showPdf?: boolean;
-    showPrint?: boolean;
-  };
-}
-________________________________________
-📊 Sample Data
-pumpData = [
-  { id: 1, name: 'Pump A', flow: 1000.99, col4: 'text', col5: 'text' },
-  { id: 2, name: 'Pump B', flow: 120.88, col4: 'text', col5: 'text' }
-];
-________________________________________
-📐 Column Configuration
-this.reUsableTableColumn = [
-  { id: 'id', name: 'Id', type: 'integer', align: 'right' },
-
-  {
-    id: 'name',
-    name: 'Name',
-    type: 'chip',
-    chipStyle: { fontWeight: 'bold' }
-  },
-
-  {
-    id: 'flow',
-    name: 'Flow',
-    type: 'number',
-    digits: '1.2-2',
-    align: 'right'
-  },
-
-  { id: 'col4', name: 'Col4' },
-
-  {
-    id: 'actions',
-    name: 'Actions',
-    type: 'actions',
-    actions: {
-      edit: { show: true },
-      delete: { show: true }
-    }
-  }
-];
-
-The column for link must be declared as below
-
+Example column config:
+```ts
 {
-	id: 'col6', name: 'col6', width: '20%', type: 'link', displayField: 'UploadedFileName', linkField: 'RelativeFilePath',
-	exportFormatter: (val: any[]) =>
-	  val?.map(v => v.UploadedFileName).join(', ') || ''
-},
-
-DisplayField is the text to be displayed to user and linkField is the href for the <a> tag
-
-The two columns may be named anything in our json data for that column, but it must be declared here
-
-Sample data must be as below  - here col6 contains the array of display names and the endpoint 
-
-
-{
-  id: 10, name: 'New Name', flow: 130, col4: 'some text', col5: 'more text', "col6": [
-	{
-	  "UploadedFileName": "table-export (5).pdf",
-	  "RelativeFilePath": "https://ttapi.ipmsbmc.com/uploads/1/t_task/49_3b95dd0c-0bf4-4f48-93c8-6880ecfee166_table-export (5).pdf"
-	},
-	{
-	  "UploadedFileName": "table-export (4).pdf",
-	  "RelativeFilePath": "https://ttapi.ipmsbmc.com/uploads/1/t_task/49_f58c62d6-72f0-4f84-af47-0d3ae2a029b5_table-export (4).pdf"
-	},
-	{
-	  "UploadedFileName": "table-export.pdf",
-	  "RelativeFilePath": "https://ttapi.ipmsbmc.com/uploads/1/t_task/49_8e707fea-9820-4855-98e9-3510e687dacf_table-export.pdf"
-	}
-  ]
-}
-
-On clicking the file will be displayed in another tab or it will be downloaded, depending on the type of file
-
-_______________
-
-The column for multiline must be declared as below
-
-
-The declaration is as below
-
-{ 
-	id: 'col5', name: 'Col5', width: '20%', type: 'multiline', displayField: 'TextToDisplay',
-	exportFormatter: (val: any[]) =>
-	val?.map(v => v.TextToDisplay).join(', ') || ''
-},  Here the key in the object is TextToDisplay
-	  
-	  
-The data for this column should be an array. Array can contain one or more objects
-
-{
-  id: 1, name: 'Pump, A', flow: 1000.9999, col4: 'some text', col5: [{ "TextToDisplay": "Plain text" }]
-},
-
-Can be one or more objects in each row
-{
-  id: 5, name: 'Pump E', flow: 110.06, col4: 'some text', col5: [
-	{ "TextToDisplay": "table-export (5).pdf" },
-	{ "TextToDisplay": "table-export (4).pdf" }
-  ]
-},
-	
-	_________________________
-⚙️ Table Configuration
-this.reUsableTableConfig = {
-  pagination: {
-    enabled: true,
-    defaultPageSize: 10
-  },
-  sorting: {
-    enabled: true
-  },
-  toolbar: {
-    showCsv: true,
-    showExcel: true,
-    showPdf: true,
-    showPrint: true
-  }
-};
-________________________________________
-🔗 Link Column
-Column Definition
-{
-  id: 'files',
+  id: 'col6',
   name: 'Files',
+  width: '20%',
   type: 'link',
   displayField: 'UploadedFileName',
-  linkField: 'RelativeFilePath',
-  exportFormatter: (val: any[]) =>
-    val?.map(v => v.UploadedFileName).join(', ') || ''
+  linkField: 'RelativeFilePath'
 }
-________________________________________
-Data Format
-files: [
-  {
-    UploadedFileName: 'file1.pdf',
-    RelativeFilePath: 'https://example.com/file1.pdf'
-  }
-]
-________________________________________
-📄 Multiline Column
-Column Definition
+```
+
+Example multiline config:
+```ts
 {
-  id: 'notes',
+  id: 'col5',
   name: 'Notes',
+  width: '20%',
   type: 'multiline',
-  displayField: 'TextToDisplay',
-  exportFormatter: (val: any[]) =>
-    val?.map(v => v.TextToDisplay).join(', ') || ''
+  displayField: 'TextToDisplay'
 }
-________________________________________
-Data Format
-notes: [
-  { TextToDisplay: 'Line 1' },
-  { TextToDisplay: 'Line 2' }
-]
-________________________________________
-📤 Export Behavior
-Format	Behavior
-CSV	Uses exportFormatter
-Excel	Uses exportFormatter
-PDF	Uses exportFormatter + numeric formatting
-Print	Uses UI rendering
-________________________________________
-⚠️ Important
-•	link and multiline columns must receive arrays
-•	Links must be full URLs
-•	Always use exportFormatter for complex data
-________________________________________
-🧩 Usage
+```
+
+Example data:
+```ts
+const pumpData = [
+  {
+    id: 1,
+    name: 'Pump A',
+    flow: 1000.99,
+    col5: [{ TextToDisplay: 'Plain text' }],
+    col6: [
+      {
+        UploadedFileName: 'table-export.pdf',
+        RelativeFilePath: 'https://example.com/table-export.pdf'
+      }
+    ]
+  }
+];
+```
+
+Component usage:
+```html
 <app-reusabletable
   [data]="pumpData"
   [columns]="reUsableTableColumn"
@@ -257,21 +81,4 @@ ________________________________________
   (rowDelete)="onDelete($event)"
   (rowSelect)="onSelect($event)">
 </app-reusabletable>
-________________________________________
-✅ Summary
-This reusable table provides:
-•	Dynamic rendering
-•	Clean separation of concerns
-•	Consistent export handling
-•	Support for complex data structures
-________________________________________
-📌 Future Enhancements
-•	Template-based column rendering
-•	Inline editing
-•	Server-side pagination
-•	Column grouping
-________________________________________
-👨‍💻 Author
-Internal Angular Utility Library
-________________________________________
-
+```

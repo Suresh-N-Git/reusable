@@ -1,6 +1,9 @@
 {
   "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
   "dest": "../../dist/reusable-table",
+  "assets": [
+    "src/lib/reusable-table.styles.scss"
+  ],
   "lib": {
     "entryFile": "src/public-api.ts"
   }

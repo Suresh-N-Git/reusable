@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { ReusableTableModule } from '../reusabletable/reusabletable.module';
-import { ReUsableTableColumn, ReusableTableConfig } from '../reusabletable/reusabletable.component';
+import { ReusableTableModule, ReUsableTableColumn, ReusableTableConfig } from 'reusable-table';
 
 @Component({
   selector: 'app-tableui',

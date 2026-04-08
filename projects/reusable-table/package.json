@@ -2,8 +2,15 @@
   "name": "reusable-table",
   "version": "0.0.1",
   "peerDependencies": {
+    "@angular/animations": "^18.2.0",
     "@angular/common": "^18.2.0",
-    "@angular/core": "^18.2.0"
+    "@angular/core": "^18.2.0",
+    "@angular/material": "^18.2.14",
+    "bootstrap": "^5.3.8",
+    "file-saver": "^2.0.5",
+    "jspdf": "^4.2.0",
+    "jspdf-autotable": "^5.0.7",
+    "xlsx": "^0.18.5"
   },
   "dependencies": {
     "tslib": "^2.3.0"

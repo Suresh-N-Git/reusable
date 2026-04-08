@@ -13,9 +13,6 @@
 
   </div>
 
-
-  <!-- Spacer -->
-
   <div class="col-md-9 d-flex justify-content-end gap-2">
 
     <button *ngIf="resolvedConfig.toolbar.showColumnToggle !== false" mat-icon-button color="primary"
@@ -26,7 +23,7 @@
 
     <button *ngIf="resolvedConfig.toolbar.showCsv" mat-icon-button color="primary" matTooltip="Download CSV"
       (click)="downloadCSV()">
-      <mat-icon> description</mat-icon>
+      <mat-icon>description</mat-icon>
       <span class="icon-text">csv</span>
     </button>
 
@@ -57,25 +54,17 @@
     </div>
 
     @for (col of displayedColumnsExtended; track col.id) {
-
     <button mat-menu-item (click)="$event.stopPropagation()">
-
       <mat-checkbox [checked]="visibleColumnIds.includes(col.id)" (change)="toggleColumn(col.id)"
         [disabled]="col.id === 'actions'">
-
         {{ col.name }}
-
       </mat-checkbox>
-
     </button>
-
     }
 
   </mat-menu>
 
 </div>
-
-
 
 <div #printSection class="table-container print-area" [style.--zebra-color]="resolvedConfig.appearance.zebraColor"
   [style.--hover-color]="resolvedConfig.appearance.hoverColor || '#e3f2fd'"
@@ -87,15 +76,14 @@
 
     <ng-container [matColumnDef]="col.id">
 
-      <!-- HEADER -->
       @if (col.id !== 'actions') {
       <th mat-header-cell *matHeaderCellDef [style.width]="col.width" mat-sort-header
         [disabled]="!resolvedConfig.sorting.enabled" [arrowPosition]="col.align === 'right' ? 'before' : 'after'"
         [ngClass]="{
-      'right-aligned-header': col.align === 'right',
-      'center-aligned-header': col.align === 'center',
-      'left-aligned-header': !col.align || col.align === 'left'
-    }">
+          'right-aligned-header': col.align === 'right',
+          'center-aligned-header': col.align === 'center',
+          'left-aligned-header': !col.align || col.align === 'left'
+        }">
         {{ col.name }}
       </th>
       } @else {
@@ -104,17 +92,13 @@
       </th>
       }
 
-      <!-- CELL -->
       <td mat-cell *matCellDef="let row" [attr.data-label]="col.name" [ngStyle]="getCellStyle(col)">
 
         @if (col.id === 'actions') {
 
-
         @if (isMobileView) {
         <span class="cell-label">{{ col.name }}</span>
         }
-
-        <!-- <span class="cell-value action-buttons"> -->
 
         <div class="cell-value action-buttons">
           @if (col.actions?.select?.show) {
@@ -135,7 +119,6 @@
           </button>
           }
         </div>
-        <!-- </span> -->
 
         } @else {
 
@@ -172,30 +155,22 @@
           }
 
           @case ('multiline') {
-
           <ng-container *ngIf="row[col.id]?.length; else noData">
-
             <div *ngFor="let item of row[col.id]">
               {{ getDisplayValue(item, col) }}
             </div>
-
           </ng-container>
-
           <ng-template #noData>-</ng-template>
           }
 
           @case ('link') {
-
           <ng-container *ngIf="row[col.id]?.length; else noData">
-
             <div *ngFor="let item of row[col.id]">
               <a [href]="getLinkValue(item, col)" target="_blank">
                 {{ getDisplayValue(item, col) }}
               </a>
             </div>
-
           </ng-container>
-
           <ng-template #noData>-</ng-template>
           }
 
@@ -207,7 +182,6 @@
 
         </span>
 
-
         }
 
       </td>
@@ -216,19 +190,14 @@
 
     }
 
-    <!-- IMPORTANT: row definitions need column IDs -->
-    <tr mat-header-row *matHeaderRowDef="displayedColumnIds;  sticky: true">
-    </tr>
-
-    <tr mat-row *matRowDef="let row; columns: displayedColumnIds" [class.row-selected]="row === selectedRow">
-    </tr>
+    <tr mat-header-row *matHeaderRowDef="displayedColumnIds; sticky: true"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumnIds" [class.row-selected]="row === selectedRow"></tr>
 
   </table>
 </div>
 
 <div class="no-print" *ngIf="resolvedConfig.pagination.enabled">
-  <mat-paginator [pageSizeOptions]="[5,10,20]" showFirstLastButtons>
-  </mat-paginator>
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
 </div>
 
 <div class="print-hint no-print" *ngIf="(displayedColumnIds.length || 0) > 7">

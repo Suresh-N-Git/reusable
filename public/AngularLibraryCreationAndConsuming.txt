@@ -1,31 +1,31 @@
 ng generate library reusable-table
-it will create a folder project/reusable-table
-Under src/lib
-Copy paste all the files that are used in the development
-reusabletable.component.html
-reusabletable.component.ts
-reusabletable.component.scs
-reusabletable.module.ts --- 
-reusabletable.styles.scss -- To be included in the global style sheet in the imported project
-table-export.service.ts  -- Other files used
+It creates the library under `projects/reusable-table`.
 
+Files to keep in `src/lib`:
+- `reusable-table.component.html`
+- `reusable-table.component.ts`
+- `reusable-table.component.scss`
+- `reusable-table.module.ts`
+- `reusable-table.styles.scss`
+- `table-export.service.ts`
 
-public.api.ts
-contains exports which are available in the new project
-export * from './lib/reusabletable.module';
-export * from './lib/reusabletable.component';
+`public-api.ts` exports the package surface:
+```ts
+export * from './lib/reusable-table.module';
+export * from './lib/reusable-table.component';
+```
 
-in package.json include the peerDependencies
-
+Package metadata:
+```json
 {
-  "name": "reusabletable",
+  "name": "reusable-table",
   "version": "0.0.1",
   "peerDependencies": {
     "@angular/common": "^18.2.0",
     "@angular/core": "^18.2.0",
     "@angular/material": "^18.0.0",
     "jspdf": "^2.5.1",
-    "jspdf-autotable" : "^5.0.7",
+    "jspdf-autotable": "^5.0.7",
     "xlsx": "^0.18.5",
     "file-saver": "^2.0.5"
   },
@@ -34,285 +34,49 @@ in package.json include the peerDependencies
   },
   "sideEffects": false
 }
+```
 
-
-
-
-ng build reusabletable
-
-
-cd dist/reusabletable
+Build and pack:
+```bash
+ng build reusable-table
+cd dist/reusable-table
 npm pack
+```
 
+Install in another project:
+```bash
+npm uninstall reusable-table
+npm install reusable-table-0.0.1.tgz
+```
 
+Required dependencies:
+```bash
+npm install bootstrap
+npm install xlsx jspdf jspdf-autotable file-saver
+```
 
-Now in another project
-Copy the pack file
-
-reusabletable-0.0.1.tgz   
-
-npm uninstall reusabletable    
-
-npm install reusabletable-0.0.1.tgz   
-
-
-
-To use in the new project the following must be available
-
-
-npm install bootstarp 
-(must be installed and included in angular.json styles)
-
-
-npm install xlsx jspdf jspdf-autotable file-saver  -- need for export of table
-
-
+Import and styles:
+```ts
 import { ReusableTableModule } from 'reusable-table';
-
+```
+```scss
 @import 'reusable-table/styles';
-add the above in the styles.scss -- Global style sheet
+```
 
+Component usage:
+```ts
+import { ReusableTableModule } from '../reusable-table/reusable-table.module';
+import { ReUsableTableColumn, ReusableTableConfig } from '../reusable-table/reusable-table.component';
+```
 
-Usage in component.ts
-
-import { ReusableTableModule } from '../reusabletable/reusabletable.module';
-import { ReUsableTableColumn, ReusableTableConfig } from '../reusabletable/reusabletable.component';
-
-Declaration
-
- reUsableTableConfig!: ReusableTableConfig;
- reUsableTableColumn: ReUsableTableColumn[] = [];
- 
- 
- The structure of the interfaces
- 
- export interface ReUsableTableColumn {
-  id: string;
-  name: string;
-  width?: string;
-  type?: 'text' | 'integer' | 'number' | 'currency' | 'date' | 'actions' | 'chip';
-  align?: 'left' | 'center' | 'right';
-  digits?: string;
-  style?: Record<string, any>;
-  chipStyle?: Record<string, any>;
-
-  actions?: {
-    select?: { show?: boolean; color?: 'primary' | 'accent' | 'warn' };
-    edit?: { show?: boolean; color?: 'primary' | 'accent' | 'warn' };
-    delete?: { show?: boolean; color?: 'primary' | 'accent' | 'warn' };
-  };
-}
-
-export interface ReusableTableConfig {
-
-  appearance?: {
-    zebraColor?: string;
-    hoverColor?: string;
-    selectedRowColor?: string;
-  };
-
-  pagination?: {
-    enabled?: boolean;
-    threshold?: number;
-    defaultPageSize?: number;
-  };
-
-  sorting?: {
-    enabled?: boolean;
-  };
-
-  toolbar?: {
-    showColumnToggle?: boolean;
-    showCsv?: boolean;
-    showExcel?: boolean;
-    showPdf?: boolean;
-    showPrint?: boolean;
-  };
-}
-
-
- 
-Dummy data
- pumpData = [
-    { id: 1, name: 'Pump, A', flow: 1000.9999, col4: 'some text', col5: 'more text' },
-    { id: 2, name: 'Pump B', flow: 120.88, col4: 'some text', col5: 'more text' },
-    { id: 3, name: 'Pump C', flow: 95.66, col4: 'some text', col5: 'more text' },
-    { id: 4, name: 'Pump D', flow: 140.6, col4: 'some text', col5: 'more text' },
-    { id: 5, name: 'Pump E', flow: 110.06, col4: 'some text', col5: 'more text' },
-    { id: 6, name: 'Pump F', flow: 130, col4: 'some text', col5: 'more text' },
-    { id: 1, name: 'Pump, A', flow: 1000, col4: 'some text', col5: 'more text' },
-    { id: 2, name: 'Pump B', flow: 120, col4: 'some text', col5: 'more text' },
-    { id: 3, name: 'Pump C', flow: 95, col4: 'some text', col5: 'more text' },
-    { id: 4, name: 'Pump D', flow: 140, col4: 'some text', col5: 'more text' },
-    { id: 5, name: 'Pump E', flow: 110, col4: 'some text', col5: 'more text' },
-    { id: 6, name: 'Pump F', flow: 130, col4: 'some text', col5: 'more text' },
-    { id: 1, name: 'Pump, A', flow: 1000, col4: 'some text', col5: 'more text' },
-    { id: 2, name: 'Pump B', flow: 120, col4: 'some text', col5: 'more text' },
-    { id: 3, name: 'Pump C', flow: 95, col4: 'some text', col5: 'more text' },
-    { id: 4, name: 'Pump D', flow: 140, col4: 'some text', col5: 'more text' },
-    { id: 5, name: 'Pump E', flow: 110, col4: 'some text', col5: 'more text' },
-    { id: 6, name: 'Pump F', flow: 130, col4: 'some text', col5: 'more text' }
-
-  ];
-  
-  Sample of the reUsableTableColumn
-  
-      this.reUsableTableColumn = [
-
-      { id: 'id', name: 'Id', width: '5%', type: 'integer', align: 'right' },
-
-      // {
-      //   id: 'name', name: 'Name', width: '20%',
-      // },
-
-      {
-        id: 'name', name: 'Name', width: '20%', type: 'chip',
-        chipStyle: {
-          fontFamily: 'monospace',
-          fontWeight: '800',
-          fontSize: '24px',
-          color: '#0d47a1',
-          backgroundColor: '#fff3cd'
-        }
-      },
-
-      {
-        id: 'flow', name: 'Flow', width: '10%', type: 'number', align: 'right', digits: '1.2-2',
-        style: {
-          fontFamily: 'monospace',
-          fontWeight: '600',
-          fontSize: '20px',
-          color: '#0d47a1',
-          // backgroundColor: '#fff3cd',
-        },
-      },
-      {
-        id: 'col4', name: 'Col4', width: '20%',
-
-      },
-      { id: 'col5', name: 'Col5', width: '20%' },
-      {
-        id: 'actions',
-        name: 'Actions',
-        width: '5%',
-        type: 'actions',
-        align: 'center',
-        actions: {
-          select: { show: true, color: 'primary' },
-          edit: { show: true, color: 'accent' },
-          delete: { show: true, color: 'warn' }
-        }
-      }
-    ];
-	
-	Sample of the tableConfig
-	
-	
-    this.reUsableTableConfig = {
-      appearance: {
-        zebraColor: '#bfd4f1',
-        hoverColor: 'e3f2fd',
-        selectedRowColor: 'ffe0b2',
-      },
-      pagination: {
-        enabled: true,
-        threshold: 50,
-        defaultPageSize: 10,
-      },
-
-      sorting: {
-        enabled: true,
-      },
-
-      toolbar: {
-        showColumnToggle: true,
-        showCsv: true,
-        showExcel: true,
-        showPdf: true,
-        showPrint: true,
-      }
-
-    }
-
-
-Two more type of columns have been added
-
-'multiline' and 'link'
-
-multiline can be used to display multipe lines of text in a td if the data source contains a json as a data for that column 
-
-
-The column for link must be declared as below
-
-{
-        id: 'col6', name: 'col6', width: '20%', type: 'link', displayField: 'UploadedFileName', linkField: 'RelativeFilePath'
-},
-
-DisplayField is the text to be displayed to user and linkField is the href for the <a> tag
-
-The two columns may be named anything in our json data for that column, but it must be declared here
-
-Sample data must be as below  - here col6 contains the array of display names and the endpoint 
-
-On clicking the file will be displayed in another tab or it will be downloaded, depending on the type of file
-
-
- {
-      id: 10, name: 'New Name', flow: 130, col4: 'some text', col5: 'more text', "col6": [
-        {
-          "UploadedFileName": "table-export (5).pdf",
-          "RelativeFilePath": "https://ttapi.ipmsbmc.com/uploads/1/t_task/49_3b95dd0c-0bf4-4f48-93c8-6880ecfee166_table-export (5).pdf"
-        },
-        {
-          "UploadedFileName": "table-export (4).pdf",
-          "RelativeFilePath": "https://ttapi.ipmsbmc.com/uploads/1/t_task/49_f58c62d6-72f0-4f84-af47-0d3ae2a029b5_table-export (4).pdf"
-        },
-        {
-          "UploadedFileName": "table-export.pdf",
-          "RelativeFilePath": "https://ttapi.ipmsbmc.com/uploads/1/t_task/49_8e707fea-9820-4855-98e9-3510e687dacf_table-export.pdf"
-        }
-      ]
-    }
-
-
-
-
-The column for multiline must be declared as below
-
-
-The declaration is as below
-
-      { id: 'col5', name: 'Col5', width: '20%', type: 'multiline', displayField: 'TextToDisplay' },  Here the key in the object is TextToDisplay
-	  
-	  
-The data for this column should be an array. Array can contain one or more objects
-
- {
-      id: 1, name: 'Pump, A', flow: 1000.9999, col4: 'some text', col5: [{ "TextToDisplay": "Plain text" }]
-    },
-
-
-  {
-      id: 5, name: 'Pump E', flow: 110.06, col4: 'some text', col5: [
-        { "TextToDisplay": "table-export (5).pdf" },
-        { "TextToDisplay": "table-export (4).pdf" }
-      ]
-    },
-	
-	
-
-Usage in the component.html
-
-<div style="margin-top:20px">
-
+Example usage:
+```html
 <app-reusabletable
-    [data]="pumpData"
-    [columns]="reUsableTableColumn"
-    (rowEdit)="onEdit($event)"
-    (rowDelete)="onDelete($event)"
-    (rowSelect)="onSelect($event)"
-    [tableConfig]="reUsableTableConfig">
+  [data]="pumpData"
+  [columns]="reUsableTableColumn"
+  [tableConfig]="reUsableTableConfig"
+  (rowEdit)="onEdit($event)"
+  (rowDelete)="onDelete($event)"
+  (rowSelect)="onSelect($event)">
 </app-reusabletable>
-
-
-</div>
+```
