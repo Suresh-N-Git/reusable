@@ -1,4 +1,6 @@
-ng generate library reusable-table
+npx ng build reusable-table
+
+
 It creates the library under `projects/reusable-table`.
 
 Files to keep in `src/lib`:
@@ -38,7 +40,9 @@ Package metadata:
 
 Build and pack:
 ```bash
-ng build reusable-table
+
+npx ng build reusable-table
+
 cd dist/reusable-table
 npm pack
 ```

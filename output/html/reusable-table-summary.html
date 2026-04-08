@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ReusableTable App Summary</title>
+  <style>
+    :root {
+      --ink: #1f2937;
+      --muted: #5b6472;
+      --line: #d7dde6;
+      --accent: #0f4c81;
+      --soft: #f4f7fb;
+    }
+
+    @page {
+      size: letter;
+      margin: 0.45in;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--ink);
+      background: #fff;
+      line-height: 1.28;
+    }
+
+    .page {
+      max-width: 8.5in;
+      margin: 0 auto;
+      padding: 0;
+    }
+
+    .header {
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, #ffffff 0%, var(--soft) 100%);
+      border-radius: 12px;
+      padding: 14px 16px 12px;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      margin: 0 0 4px 0;
+      font-size: 22px;
+      line-height: 1.05;
+      color: var(--accent);
+      letter-spacing: 0.2px;
+    }
+
+    .subtitle {
+      margin: 0;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px 14px 10px;
+      background: #fff;
+    }
+
+    .card.full {
+      grid-column: 1 / -1;
+    }
+
+    h2 {
+      margin: 0 0 6px 0;
+      font-size: 13px;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+    }
+
+    p {
+      margin: 0;
+      font-size: 11.5px;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 16px;
+      font-size: 11.5px;
+    }
+
+    li + li { margin-top: 4px; }
+
+    .meta {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px dashed var(--line);
+      font-size: 10.5px;
+      color: var(--muted);
+    }
+
+    .label {
+      font-weight: bold;
+      color: var(--ink);
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 2px 7px;
+      margin-right: 6px;
+      border-radius: 999px;
+      border: 1px solid #bfd0e4;
+      background: #edf4fb;
+      font-size: 10px;
+      color: #24496a;
+      vertical-align: middle;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    @media print {
+      body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .page { max-width: none; }
+      .card, .header { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="header">
+      <h1>ReusableTable App Summary</h1>
+      <p class="subtitle">One-page overview based only on repository evidence</p>
+    </div>
+
+    <div class="grid">
+      <section class="card">
+        <h2>What It Is</h2>
+        <p>
+          ReusableTable is an Angular 18 app plus a publishable library that demonstrates a configurable Material data table.
+          The repo also includes a sample <code>tableui</code> page that wires demo data into the reusable component.
+        </p>
+      </section>
+
+      <section class="card">
+        <h2>Who It's For</h2>
+        <p>
+          <span class="pill">Primary</span> Angular developers or teams that need a reusable, configurable table component for internal apps or libraries.
+        </p>
+        <p class="meta">
+          <span class="label">Not found in repo:</span> a formal end-user persona or business audience.
+        </p>
+      </section>
+
+      <section class="card full">
+        <h2>What It Does</h2>
+        <ul>
+          <li>Displays tabular data with configurable columns, widths, alignment, and per-column types.</li>
+          <li>Supports sorting, pagination, and global search across rows.</li>
+          <li>Lets users show or hide columns from a toolbar menu.</li>
+          <li>Exports the current table view to CSV, Excel, or PDF.</li>
+          <li>Prints the table through a dedicated print flow.</li>
+          <li>Handles integer, number, currency, date, chip, multiline, link, and actions cells.</li>
+          <li>Emits row-level select, edit, and delete events for host apps.</li>
+        </ul>
+      </section>
+
+      <section class="card full">
+        <h2>How It Works</h2>
+        <ul>
+          <li><code>src/app/tables/tableui/tableui.component.ts</code> builds sample data and column config, then passes both into <code>app-reusabletable</code>.</li>
+          <li><code>projects/reusable-table/src/lib/reusable-table.component.ts</code> renders the table with <code>MatTableDataSource</code>, <code>MatPaginator</code>, and <code>MatSort</code>.</li>
+          <li>The component merges runtime <code>tableConfig</code> values with defaults, filters rows with a custom search predicate, and keeps the visible-column list in sync with the column menu.</li>
+          <li><code>projects/reusable-table/src/lib/table-export.service.ts</code> handles CSV, Excel, PDF, and print output.</li>
+          <li>The library module imports Angular Material table, paginator, sort, form-field, input, icon, menu, checkbox, button, tooltip, and chips modules.</li>
+          <li>The root route redirects to <code>/tableui</code>.</li>
+        </ul>
+      </section>
+
+      <section class="card full">
+        <h2>How To Run</h2>
+        <ul>
+          <li><code>npm install</code></li>
+          <li><code>npm start</code></li>
+          <li>Open <code>http://localhost:4200/</code> and use <code>/tableui</code> as the demo route.</li>
+          <li class="muted">Optional: <code>npm run build</code> and <code>npm test</code>.</li>
+        </ul>
+      </section>
+    </div>
+  </div>
+</body>
+</html>

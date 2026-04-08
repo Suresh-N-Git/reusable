@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ReusableTable User Guide</title>
+  <style>
+    :root {
+      --ink: #1f2937;
+      --muted: #5b6472;
+      --line: #d7dde6;
+      --accent: #0f4c81;
+      --bg: #f7f9fc;
+      --code: #eef3f8;
+    }
+
+    @page { size: letter; margin: 0.5in; }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--ink);
+      background: #fff;
+      line-height: 1.35;
+    }
+
+    .page {
+      max-width: 8.5in;
+      margin: 0 auto;
+      padding: 0;
+    }
+
+    .hero {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: linear-gradient(180deg, #fff 0%, var(--bg) 100%);
+      padding: 16px;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      margin: 0 0 6px 0;
+      color: var(--accent);
+      font-size: 24px;
+      line-height: 1.05;
+    }
+
+    .subtitle {
+      margin: 0;
+      font-size: 11.5px;
+      color: var(--muted);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px 14px;
+      background: #fff;
+    }
+
+    .full { grid-column: 1 / -1; }
+
+    h2 {
+      margin: 0 0 8px 0;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      color: var(--accent);
+    }
+
+    p, li {
+      font-size: 11.5px;
+      margin: 0;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    li + li { margin-top: 4px; }
+
+    .step {
+      border-left: 3px solid #bfd0e4;
+      padding-left: 10px;
+      margin-bottom: 8px;
+    }
+
+    code, pre {
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 10.5px;
+    }
+
+    pre {
+      margin: 8px 0 0;
+      padding: 10px 12px;
+      background: var(--code);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      overflow: hidden;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .note {
+      font-size: 10.5px;
+      color: var(--muted);
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px dashed var(--line);
+    }
+
+    .label {
+      font-weight: bold;
+    }
+
+    @media print {
+      body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .card, .hero { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <section class="hero">
+      <h1>ReusableTable User Guide</h1>
+      <p class="subtitle">Install and use the reusable Angular Material table library</p>
+    </section>
+
+    <div class="grid">
+      <section class="card">
+        <h2>What It Is</h2>
+        <p>
+          ReusableTable is an Angular library that provides a configurable Material table with search, sorting,
+          pagination, column toggling, export, and row actions.
+        </p>
+      </section>
+
+      <section class="card">
+        <h2>What You Need</h2>
+        <ul>
+          <li>Angular 18 project</li>
+          <li>Node.js and npm</li>
+          <li>Material and Bootstrap styles, as used by the repo</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Required Packages</h2>
+        <ul>
+          <li><code>@angular/material</code> and <code>@angular/cdk</code> for the table UI</li>
+          <li><code>bootstrap</code> for the styling included in the app</li>
+          <li><code>xlsx</code> for Excel export</li>
+          <li><code>jspdf</code> and <code>jspdf-autotable</code> for PDF export</li>
+          <li><code>file-saver</code> for download flows used by the app</li>
+        </ul>
+      </section>
+
+      <section class="card full">
+        <h2>Install</h2>
+        <div class="step">
+          <p><span class="label">1.</span> Install the package and its dependencies.</p>
+          <pre>npm install reusable-table-0.0.1.tgz</pre>
+        </div>
+        <div class="step">
+          <p><span class="label">2.</span> Import the library module.</p>
+          <pre>import { ReusableTableModule } from 'reusable-table';</pre>
+        </div>
+        <div class="step">
+          <p><span class="label">3.</span> Add the shared styles from the library.</p>
+          <pre>@import 'reusable-table/styles';</pre>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Configure Columns</h2>
+        <p>
+          Define a column array and choose the type for each field. The most important part is matching the column
+          type to the shape of data your users will pass in. The guide and repo support:
+          <code>text</code>, <code>integer</code>, <code>number</code>, <code>currency</code>, <code>date</code>,
+          <code>actions</code>, <code>chip</code>, <code>multiline</code>, and <code>link</code>.
+        </p>
+        <pre>{
+  id: 'col6',
+  name: 'Files',
+  width: '20%',
+  type: 'link',
+  displayField: 'UploadedFileName',
+  linkField: 'RelativeFilePath'
+}</pre>
+      </section>
+
+      <section class="card full">
+        <h2>Supported Data Shapes</h2>
+        <p>
+          These examples show the values users should provide for each common column type. The raw object shape matters,
+          especially for multiline rows and link rows.
+        </p>
+        <pre>// Text / regular string
+{
+  id: 'name',
+  name: 'Name',
+  width: '20%'
+}
+// Data: { name: 'Pump A' }
+
+// Integer
+{
+  id: 'id',
+  name: 'Id',
+  width: '5%',
+  type: 'integer',
+  align: 'right'
+}
+// Data: { id: 1 }
+
+// Number with decimal places
+{
+  id: 'flow',
+  name: 'Flow',
+  width: '10%',
+  type: 'number',
+  align: 'right',
+  digits: '1.2-2'
+}
+// Data: { flow: 1000.9999 }
+
+// Multiline array
+{
+  id: 'col5',
+  name: 'Notes',
+  width: '20%',
+  type: 'multiline',
+  displayField: 'TextToDisplay'
+}
+// Data: {
+//   col5: [
+//     { TextToDisplay: 'Plain text' },
+//     { TextToDisplay: 'Second line' }
+//   ]
+// }
+
+// Link array
+{
+  id: 'col6',
+  name: 'Files',
+  width: '20%',
+  type: 'link',
+  displayField: 'UploadedFileName',
+  linkField: 'RelativeFilePath'
+}
+// Data: {
+//   col6: [
+//     {
+//       UploadedFileName: 'table-export.pdf',
+//       RelativeFilePath: 'https://example.com/table-export.pdf'
+//     }
+//   ]
+// }
+
+// Actions
+{
+  id: 'actions',
+  name: 'Actions',
+  width: '5%',
+  type: 'actions',
+  align: 'center',
+  actions: {
+    select: { show: true, color: 'primary' },
+    edit: { show: true, color: 'accent' },
+    delete: { show: true, color: 'warn' }
+  }
+}</pre>
+      </section>
+
+      <section class="card">
+        <h2>Prepare Data</h2>
+        <p>
+          Pass a normal array of objects into the table. For nested values, use <code>displayField</code> and
+          <code>linkField</code> to control what appears and where it links. For decimals, use
+          <code>type: 'number'</code> and <code>digits</code> such as <code>'1.2-2'</code>.
+        </p>
+        <pre>const pumpData = [
+  {
+    id: 1,
+    name: 'Pump A',
+    flow: 1000.99,
+    col5: [{ TextToDisplay: 'Plain text' }],
+    col6: [{ UploadedFileName: 'table-export.pdf', RelativeFilePath: 'https://example.com/table-export.pdf' }]
+  }
+];</pre>
+      </section>
+
+      <section class="card full">
+        <h2>Use The Component</h2>
+        <p>Bind your data, columns, table config, and row event handlers.</p>
+        <pre>&lt;app-reusabletable
+  [data]="pumpData"
+  [columns]="reUsableTableColumn"
+  [tableConfig]="reUsableTableConfig"
+  (rowEdit)="onEdit($event)"
+  (rowDelete)="onDelete($event)"
+  (rowSelect)="onSelect($event)"&gt;
+&lt;/app-reusabletable&gt;</pre>
+      </section>
+
+      <section class="card full">
+        <h2>Run The Demo App</h2>
+        <ul>
+          <li><code>npm install</code></li>
+          <li><code>npm start</code></li>
+          <li>Open <code>http://localhost:4200/</code></li>
+          <li>The root route redirects to <code>/tableui</code> in this repo.</li>
+        </ul>
+      </section>
+
+      <section class="card full">
+        <h2>Notes</h2>
+        <ul>
+          <li>The component supports search, sorting, pagination, column toggle, CSV/Excel/PDF export, and print.</li>
+          <li>Regular text columns use the raw field value unless you add a special type or formatter.</li>
+          <li>For multiline and link columns, the table expects arrays of objects, not a single string.</li>
+          <li>Export behavior in the repo depends on <code>xlsx</code>, <code>jspdf</code>, and <code>jspdf-autotable</code>.</li>
+          <li>The demo app also uses Angular Material icons, form-field, input, menu, checkbox, button, tooltip, chips, sort, and paginator modules.</li>
+          <li><span class="label">Not found in repo:</span> a published npm registry URL, versioned release notes, or an end-user onboarding flow.</li>
+        </ul>
+      </section>
+    </div>
+  </div>
+</body>
+</html>
