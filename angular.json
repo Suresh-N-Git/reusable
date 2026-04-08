@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "reusable-table": {
+    "reusable-app": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -66,10 +66,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "reusable-table:build:production"
+              "buildTarget": "reusable-app:build:production"
             },
             "development": {
-              "buildTarget": "reusable-table:build:development"
+              "buildTarget": "reusable-app:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -102,23 +102,23 @@
         }
       }
     },
-    "reusabletable": {
+    "reusable-table": {
       "projectType": "library",
-      "root": "projects/reusabletable",
-      "sourceRoot": "projects/reusabletable/src",
+      "root": "projects/reusable-table",
+      "sourceRoot": "projects/reusable-table/src",
       "prefix": "lib",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:ng-packagr",
           "options": {
-            "project": "projects/reusabletable/ng-package.json"
+            "project": "projects/reusable-table/ng-package.json"
           },
           "configurations": {
             "production": {
-              "tsConfig": "projects/reusabletable/tsconfig.lib.prod.json"
+              "tsConfig": "projects/reusable-table/tsconfig.lib.prod.json"
             },
             "development": {
-              "tsConfig": "projects/reusabletable/tsconfig.lib.json"
+              "tsConfig": "projects/reusable-table/tsconfig.lib.json"
             }
           },
           "defaultConfiguration": "production"
@@ -126,7 +126,7 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "tsConfig": "projects/reusabletable/tsconfig.spec.json",
+            "tsConfig": "projects/reusable-table/tsconfig.spec.json",
             "polyfills": [
               "zone.js",
               "zone.js/testing"
