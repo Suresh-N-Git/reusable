@@ -1,15 +1,22 @@
-import { AfterViewInit, Component, ElementRef, HostListener, inject, OnChanges, OnInit, ViewChild } from '@angular/core';
-import { ChangeDetectionStrategy } from '@angular/core';
-
-import { Input, Output, EventEmitter } from '@angular/core';
-import { SimpleChanges } from '@angular/core';
-
-import { MatTableDataSource } from '@angular/material/table';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 
 import { TableExportService } from './table-export.service';
-
 
 export interface ReUsableTableColumn {
   id: string;
@@ -17,16 +24,13 @@ export interface ReUsableTableColumn {
   width?: string;
   type?: 'text' | 'integer' | 'number' | 'currency' | 'date' | 'actions' | 'chip' | 'multiline' | 'link';
   exportFormatter?: (value: any) => string;
-  
   align?: 'left' | 'center' | 'right';
   digits?: string;
   style?: Record<string, any>;
   chipStyle?: Record<string, any>;
-
-  // NEW (used by multiline or future cases)
-  displayField?: string;   // for both types multiline and ling
-  linkField?: string;   // for type link
-
+  displayField?: string;
+  linkField?: string;
+  searchTextMode?: 'displayed' | 'all';
   actions?: {
     select?: { show?: boolean; color?: 'primary' | 'accent' | 'warn' };
     edit?: { show?: boolean; color?: 'primary' | 'accent' | 'warn' };
@@ -35,23 +39,20 @@ export interface ReUsableTableColumn {
 }
 
 export interface ReusableTableConfig {
-
+  searchTextMode?: 'displayed' | 'all';
   appearance?: {
     zebraColor?: string;
     hoverColor?: string;
     selectedRowColor?: string;
   };
-
   pagination?: {
     enabled?: boolean;
     threshold?: number;
     defaultPageSize?: number;
   };
-
   sorting?: {
     enabled?: boolean;
   };
-
   toolbar?: {
     showSearch?: boolean;
     showColumnToggle?: boolean;
@@ -63,18 +64,19 @@ export interface ReusableTableConfig {
 }
 
 const DEFAULT_TABLE_CONFIG: Required<ReusableTableConfig> = {
+  searchTextMode: 'all',
   appearance: {
     zebraColor: '#f5f5f5',
     hoverColor: '#e3f2fd',
-    selectedRowColor: '#ffe0b2'
+    selectedRowColor: '#ffe0b2',
   },
   pagination: {
     enabled: true,
     threshold: 100,
-    defaultPageSize: 25
+    defaultPageSize: 25,
   },
   sorting: {
-    enabled: true
+    enabled: true,
   },
   toolbar: {
     showSearch: true,
@@ -82,186 +84,103 @@ const DEFAULT_TABLE_CONFIG: Required<ReusableTableConfig> = {
     showCsv: true,
     showExcel: true,
     showPdf: true,
-    showPrint: true
-  }
+    showPrint: true,
+  },
 };
-
 
 @Component({
   selector: 'app-reusabletable',
   templateUrl: './reusabletable.component.html',
   styleUrls: ['./reusabletable.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-
-
 export class ReusabletableComponent implements OnInit, OnChanges, AfterViewInit {
-
-  constructor(private exportService: TableExportService) { }
+  constructor(private readonly exportService: TableExportService) {}
 
   @Input() columns: ReUsableTableColumn[] = [];
   @Input() tableConfig: ReusableTableConfig = {};
-
-  resolvedConfig: Required<ReusableTableConfig> = DEFAULT_TABLE_CONFIG;  // Create with default. No need to null check
-
   @Input() data: any[] = [];
   @Input() enableActions = true;
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-
-  @ViewChild(MatSort) sort!: MatSort;
-  @ViewChild('printSection') printSection!: ElementRef;
+  @ViewChild(MatPaginator) paginator?: MatPaginator;
+  @ViewChild(MatSort) sort?: MatSort;
+  @ViewChild('printSection') printSection?: ElementRef;
 
   @Output() rowEdit = new EventEmitter<any>();
   @Output() rowSelect = new EventEmitter<any>();
   @Output() rowDelete = new EventEmitter<any>();
 
-  columnFilters: any = {};
-  globalFilter = '';
-
+  resolvedConfig: Required<ReusableTableConfig> = DEFAULT_TABLE_CONFIG;
   isMobileView = false;
-
-  displayedColumns: string[] = [];
   displayedColumnIds: string[] = [];
   displayedColumnsExtended: ReUsableTableColumn[] = [];
-
   visibleColumnIds: string[] = [];
-
-  dataSource: MatTableDataSource<any> = new MatTableDataSource<any>([]);
+  dataSource = new MatTableDataSource<any>([]);
   selectedRow: any = null;
   currentFilter = '';
 
   ngOnInit(): void {
-    // this.isMobileView = window.innerWidth <= 768;
     this.updateViewMode();
-
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-
-    const config = this.tableConfig ?? {};
-
-    this.resolvedConfig = {
-      appearance: {
-        ...DEFAULT_TABLE_CONFIG.appearance,
-        ...(config.appearance ?? {})
-      },
-      pagination: {
-        ...DEFAULT_TABLE_CONFIG.pagination,
-        ...(config.pagination ?? {})
-      },
-      sorting: {
-        ...DEFAULT_TABLE_CONFIG.sorting,
-        ...(config.sorting ?? {})
-      },
-      toolbar: {
-        ...DEFAULT_TABLE_CONFIG.toolbar,
-        ...(config.toolbar ?? {})
-      }
-    };
-
-    this.tryInitialize();
+  ngOnChanges(_: SimpleChanges): void {
+    this.resolvedConfig = this.mergeConfig(this.tableConfig);
+    this.initializeTable();
   }
 
   @HostListener('window:resize')
-  updateViewMode() {
+  updateViewMode(): void {
     this.isMobileView = window.innerWidth <= 768;
-
   }
 
-  private tryInitialize() {
-
-    this.displayedColumnsExtended = this.columns;
-    this.displayedColumnIds = this.columns.map(c => c.id);
-    this.visibleColumnIds = [...this.displayedColumnIds];
-
-    this.dataSource.data = this.data || [];
-    this.buildDataSource();
-  }
-  ngAfterViewInit() {
-
-    if (!this.dataSource) return;
-
-    if (this.paginator && this.resolvedConfig.pagination?.enabled) {
-      this.dataSource.paginator = this.paginator;
-
-      const len = this.dataSource.data.length;
-      const threshold = this.resolvedConfig.pagination.defaultPageSize || 100;
-
-      if (len < threshold) {
-        this.paginator.pageSize = len || 1;
-      } else {
-        this.paginator.pageSize = 25;
-      }
-
-      this.paginator.firstPage(); // safer than _changePageSize
-    }
-
-    if (this.sort && this.resolvedConfig.sorting?.enabled) {
-      this.dataSource.sort = this.sort;
-    }
+  ngAfterViewInit(): void {
+    this.attachMaterialControllers();
   }
 
-  setSelectedRow(row: any) {
+  setSelectedRow(row: any): void {
     this.selectedRow = row;
   }
 
-
-  getCellStyle(col: any) {
+  getCellStyle(col: ReUsableTableColumn): Record<string, any> {
     return {
-      'text-align': col.align || 'left',
-      'vertical-align': 'middle',
-      ...col.style
+      textAlign: col.align || 'left',
+      verticalAlign: 'middle',
+      ...col.style,
     };
   }
 
-  getChipContainerStyle(col: any) {
+  getChipContainerStyle(col: ReUsableTableColumn): Record<string, any> | null {
     if (!col.chipStyle) return null;
 
-    const { backgroundColor, ...rest } = col.chipStyle;
-
     return {
-      backgroundColor
+      backgroundColor: col.chipStyle['backgroundColor'],
     };
   }
 
-  getChipTextStyle(col: any) {
+  getChipTextStyle(col: ReUsableTableColumn): Record<string, any> | null {
     if (!col.chipStyle) return null;
+
     const { backgroundColor, ...rest } = col.chipStyle;
     return rest;
   }
 
-
-  getDisplayValue(obj: any, col: any): any {
+  getDisplayValue(obj: any, col: ReUsableTableColumn): any {
     if (!obj) return '';
 
-    // Optional override
     if (col.displayField) {
       return obj[col.displayField];
     }
 
-    // Fallback
-    const values = Object.values(obj).filter(v => v != null);
-    return values[0] ?? '';
+    return Object.values(obj).find(value => value != null) ?? '';
   }
-
 
   getLinkValue(obj: any, col: ReUsableTableColumn): string {
     if (!obj) return '';
 
-    // If object-based
-    if (col.linkField) {
-      return obj[col.linkField];
-    }
-
-    // If direct string URL
-    return obj;
+    return col.linkField ? obj[col.linkField] : obj;
   }
 
-
-
-  toggleColumn(columnId: string) {
-
+  toggleColumn(columnId: string): void {
     const index = this.visibleColumnIds.indexOf(columnId);
 
     if (index >= 0) {
@@ -273,58 +192,25 @@ export class ReusabletableComponent implements OnInit, OnChanges, AfterViewInit 
     this.updateVisibleColumns();
   }
 
-  updateVisibleColumns() {
-
-    if (!this.visibleColumnIds.includes('actions')) {
-      this.visibleColumnIds.push('actions');
-    }
-
-    this.displayedColumnIds =
-      this.displayedColumnsExtended
-        .filter((c: { id: string; }) => this.visibleColumnIds.includes(c.id))
-        .map((c: { id: any; }) => c.id);
-  }
-
-
-  private buildDataSource() {
-    this.dataSource = new MatTableDataSource(this.data);
-
-    this.dataSource.filterPredicate = (data: any, filter: string) =>
-      Object.values(data)
-        .join(' ')
-        .toLowerCase()
-        .includes(filter);
-
-  }
-
-  onEdit(row: any) {
+  onEdit(row: any): void {
     this.rowEdit.emit(row);
   }
 
-  onSelect(row: any) {
+  onSelect(row: any): void {
     this.rowSelect.emit(row);
   }
 
-  onDelete(row: any) {
+  onDelete(row: any): void {
     this.rowDelete.emit(row);
   }
 
-  applyGlobalFilter(event: Event) {
-    const value = (event.target as HTMLInputElement)
-      .value
-      .trim()
-      .toLowerCase();
+  applyGlobalFilter(event: Event): void {
+    const value = (event.target as HTMLInputElement).value.trim().toLowerCase();
 
     this.currentFilter = value;
     this.dataSource.filter = value;
-
-    // Ensure filtering resets to first page: Else filter will only filter the visible rows and may throw empty rows
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
-
+    this.dataSource.paginator?.firstPage();
   }
-
 
   highlightSearchedText(value: any): string {
     if (!value || !this.currentFilter) return value;
@@ -333,43 +219,143 @@ export class ReusabletableComponent implements OnInit, OnChanges, AfterViewInit 
     return String(value).replace(regex, '<mark>$1</mark>');
   }
 
-
-
-  getFormatOfValue(value: any, col: any): string {
-    // returns the format  used in UI for display of a value in the table
-
+  getFormatOfValue(value: any, col: ReUsableTableColumn): string {
     if (value === null || value === undefined) return '';
 
     switch (col.type) {
-
       case 'integer':
         return Number(value).toLocaleString(undefined, {
-          maximumFractionDigits: 0
+          maximumFractionDigits: 0,
         });
-
-      case 'number':
+      case 'number': {
         if (!col.digits) return Number(value).toLocaleString();
 
-        // digits format: "1.2-2"
         const parts = col.digits.split('.');
         const fraction = parts[1]?.split('-');
-
         const minFraction = Number(fraction?.[0] ?? 0);
         const maxFraction = Number(fraction?.[1] ?? minFraction);
 
         return Number(value).toLocaleString(undefined, {
           minimumFractionDigits: minFraction,
-          maximumFractionDigits: maxFraction
+          maximumFractionDigits: maxFraction,
         });
-
+      }
       default:
-        return value.toString();
+        return String(value);
     }
   }
 
-  private getExportData() {
-    const columns = this.displayedColumnsExtended
-      .filter(c => this.displayedColumnIds.includes(c.id) && c.id !== 'actions');
+  printTable(): void {
+    const html = this.printSection?.nativeElement?.innerHTML;
+    if (!html) return;
+
+    this.exportService.printTable(html);
+  }
+
+  private mergeConfig(config: ReusableTableConfig): Required<ReusableTableConfig> {
+    return {
+      searchTextMode: config.searchTextMode ?? DEFAULT_TABLE_CONFIG.searchTextMode,
+      appearance: {
+        ...DEFAULT_TABLE_CONFIG.appearance,
+        ...(config.appearance ?? {}),
+      },
+      pagination: {
+        ...DEFAULT_TABLE_CONFIG.pagination,
+        ...(config.pagination ?? {}),
+      },
+      sorting: {
+        ...DEFAULT_TABLE_CONFIG.sorting,
+        ...(config.sorting ?? {}),
+      },
+      toolbar: {
+        ...DEFAULT_TABLE_CONFIG.toolbar,
+        ...(config.toolbar ?? {}),
+      },
+    };
+  }
+
+  private initializeTable(): void {
+    this.displayedColumnsExtended = [...this.columns];
+    this.displayedColumnIds = this.columns.map(column => column.id);
+    this.visibleColumnIds = [...this.displayedColumnIds];
+    this.dataSource = new MatTableDataSource(this.data ?? []);
+    this.dataSource.filterPredicate = (data: any, filter: string) =>
+      this.buildSearchableText(data).includes(filter);
+
+    this.updateVisibleColumns();
+    this.attachMaterialControllers();
+  }
+
+  private buildSearchableText(row: any): string {
+    return this.displayedColumnsExtended
+      .map(column => this.getSearchableCellText(row?.[column.id], column))
+      .join(' ')
+      .toLowerCase();
+  }
+
+  private getSearchableCellText(value: any, col: ReUsableTableColumn): string {
+    if (value === null || value === undefined) return '';
+
+    if (Array.isArray(value)) {
+      return value
+        .map(item => {
+          if (item && typeof item === 'object') {
+            return this.getSearchTextForObject(item, col);
+          }
+
+          return String(item);
+        })
+        .join(' ');
+    }
+
+    if (value && typeof value === 'object') {
+      return this.getSearchTextForObject(value, col);
+    }
+
+    return String(value);
+  }
+
+  private getSearchTextForObject(obj: any, col: ReUsableTableColumn): string {
+    const displayedText = String(this.getDisplayValue(obj, col) ?? '');
+    const hiddenText = String(this.getLinkValue(obj, col) ?? '');
+
+    if (this.resolvedConfig.searchTextMode === 'displayed') {
+      return displayedText;
+    }
+
+    return [displayedText, hiddenText].filter(Boolean).join(' ');
+  }
+
+  private attachMaterialControllers(): void {
+    if (this.paginator && this.resolvedConfig.pagination.enabled) {
+      this.dataSource.paginator = this.paginator;
+
+      const len = this.dataSource.data.length;
+      const threshold = this.resolvedConfig.pagination.defaultPageSize || 100;
+
+      this.paginator.pageSize = len < threshold ? len || 1 : 25;
+      this.paginator.firstPage();
+    }
+
+    if (this.sort && this.resolvedConfig.sorting.enabled) {
+      this.dataSource.sort = this.sort;
+    }
+  }
+
+  private updateVisibleColumns(): void {
+    if (!this.visibleColumnIds.includes('actions')) {
+      this.visibleColumnIds.push('actions');
+    }
+
+    this.displayedColumnIds = this.displayedColumnsExtended
+      .filter(column => this.visibleColumnIds.includes(column.id))
+      .map(column => column.id);
+  }
+
+  private getExportData(): { columns: ReUsableTableColumn[]; rows: any[] } {
+    const columns = this.displayedColumnsExtended.filter(
+      column => this.displayedColumnIds.includes(column.id) && column.id !== 'actions'
+    );
 
     const rows = this.dataSource.filteredData.length
       ? this.dataSource.filteredData
@@ -378,35 +364,22 @@ export class ReusabletableComponent implements OnInit, OnChanges, AfterViewInit 
     return { columns, rows };
   }
 
-  downloadCSV() {
+  downloadCSV(): void {
     const { columns, rows } = this.getExportData();
     this.exportService.exportCsv(columns, rows);
   }
 
-  downloadExcel() {
+  downloadExcel(): void {
     const { columns, rows } = this.getExportData();
     this.exportService.exportExcel(columns, rows);
   }
 
-
-  downloadPdf() {
+  downloadPdf(): void {
     const { columns, rows } = this.getExportData();
 
-    this.exportService.exportPdf(
-      columns,
-      rows,
-      (value, col) => this.getFormatOfValue(value, col)
+    this.exportService.exportPdf(columns, rows, (value, col) =>
+      this.getFormatOfValue(value, col)
     );
-  }
-
-  // downloadPdf() {
-  //   const { columns, rows } = this.getExportData();
-  //   this.exportService.exportPdf(columns, rows);
-  // }
-
-  printTable(): void {
-    const html = this.printSection.nativeElement.innerHTML;
-    this.exportService.printTable(html);
   }
 }
 

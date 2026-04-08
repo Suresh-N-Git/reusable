@@ -122,6 +122,7 @@ export class TableuiComponent {
 
 
     this.reUsableTableConfig = {
+      searchTextMode: 'displayed',
       appearance: {
         zebraColor: '#bfd4f1',
         hoverColor: 'e3f2fd',

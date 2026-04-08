@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Router } from '@angular/router';
-import { TableuiComponent } from './tables/tableui/tableui.component';
 
 
 @Component({
@@ -15,19 +13,5 @@ import { TableuiComponent } from './tables/tableui/tableui.component';
 
 export class AppComponent {
   title = 'reusable-table';
-
-  
-  constructor( private route: Router) {
-  }
-
-
-  openReusableTable() {
-    this.route.navigate(['tableui'])
-  }
-
-
 }
-
-
-
 
