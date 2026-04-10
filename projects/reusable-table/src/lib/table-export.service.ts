@@ -86,6 +86,7 @@ export class TableExportService {
   exportPdf(
     columns: ReUsableTableColumn[],
     rows: any[],
+    headingToPrint: string,
     formatter?: (value: any, col: ReUsableTableColumn) => string
   ): void {
     const head = [columns.map(c => c.name)];
@@ -141,14 +142,14 @@ export class TableExportService {
       },
       didDrawPage: () => {
         doc.setFontSize(12);
-        doc.text('Table Export', 14, 15);
+        doc.text(headingToPrint, 14, 15);
       },
     });
 
     doc.save('table-export.pdf');
   }
 
-  printTable(html: string): void {
+  printTable(headingToPrint: string, html: string): void {
     const popup = window.open('', '_blank', 'width=1000,height=700');
     if (!popup) return;
 
@@ -156,7 +157,7 @@ export class TableExportService {
     popup.document.write(`
     <html>
       <head>
-        <title>Print Table</title>
+        <title>${headingToPrint}</title>
         <style>
           body { font-family: Arial; margin:20px; }
           table { border-collapse: collapse; width:100%; }

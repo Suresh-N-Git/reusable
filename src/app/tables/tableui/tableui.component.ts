@@ -126,11 +126,12 @@ export class TableuiComponent {
         zebraColor: '#bfd4f1',
         hoverColor: 'e3f2fd',
         selectedRowColor: 'ffe0b2',
+        headingToPrint: 'Heading - My Own Heading'
       },
       pagination: {
         enabled: true,
         threshold: 50,
-        defaultPageSize: 10,
+        defaultPageSize: 5,
       },
 
       sorting: {

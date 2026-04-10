@@ -313,6 +313,40 @@
       </section>
 
       <section class="card full">
+        <h2>What The Host Component Must Declare</h2>
+        <p>
+          In the consuming component, users must declare the column definition array and the table config object.
+          These are the two key inputs the table needs to know what to render and which features to enable.
+        </p>
+        <pre>reUsableTableColumn: ReUsableTableColumn[] = [];
+reUsableTableConfig: ReusableTableConfig = {
+  searchTextMode: 'displayed',
+  appearance: {
+    zebraColor: '#bfd4f1',
+    hoverColor: '#e3f2fd',
+    selectedRowColor: '#ffe0b2',
+    headingToPrint: 'New Heading'
+  },
+  pagination: {
+    enabled: true,
+    threshold: 50,
+    defaultPageSize: 5
+  },
+  sorting: {
+    enabled: true
+  },
+  toolbar: {
+    showSearch: true,
+    showColumnToggle: true,
+    showCsv: true,
+    showExcel: true,
+    showPdf: true,
+    showPrint: true
+  }
+};</pre>
+      </section>
+
+      <section class="card full">
         <h2>Run The Demo App</h2>
         <ul>
           <li><code>npm install</code></li>

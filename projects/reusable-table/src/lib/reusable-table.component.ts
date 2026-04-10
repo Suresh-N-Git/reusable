@@ -44,6 +44,7 @@ export interface ReusableTableConfig {
     zebraColor?: string;
     hoverColor?: string;
     selectedRowColor?: string;
+    headingToPrint? :string;
   };
   pagination?: {
     enabled?: boolean;
@@ -69,6 +70,7 @@ const DEFAULT_TABLE_CONFIG: Required<ReusableTableConfig> = {
     zebraColor: '#f5f5f5',
     hoverColor: '#e3f2fd',
     selectedRowColor: '#ffe0b2',
+    headingToPrint: 'Print Table'
   },
   pagination: {
     enabled: true,
@@ -249,7 +251,7 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
     const html = this.printSection?.nativeElement?.innerHTML;
     if (!html) return;
 
-    this.exportService.printTable(html);
+    this.exportService.printTable(this.resolvedConfig.appearance.headingToPrint!, html);
   }
 
   private mergeConfig(config: ReusableTableConfig): Required<ReusableTableConfig> {
@@ -377,7 +379,7 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
   downloadPdf(): void {
     const { columns, rows } = this.getExportData();
 
-    this.exportService.exportPdf(columns, rows, (value, col) =>
+    this.exportService.exportPdf(columns, rows, this.resolvedConfig.appearance.headingToPrint!, (value, col) =>
       this.getFormatOfValue(value, col)
     );
   }
