@@ -40,7 +40,6 @@ Package metadata:
 
 Build and pack:
 ```bash
-
 npx ng build reusable-table
 
 cd dist/reusable-table
