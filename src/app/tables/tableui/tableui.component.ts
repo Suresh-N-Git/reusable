@@ -124,14 +124,14 @@ export class TableuiComponent {
       searchTextMode: 'displayed',
       appearance: {
         zebraColor: '#bfd4f1',
-        hoverColor: 'e3f2fd',
-        selectedRowColor: 'ffe0b2',
+        hoverColor: '#e3f2fd',
+        selectedRowColor: '#ffe0b2',
         headingToPrint: 'Heading - My Own Heading'
       },
       pagination: {
         enabled: true,
-        threshold: 50,
-        defaultPageSize: 5,
+        threshold: 100,
+        defaultPageSize: 100,
       },
 
       sorting: {

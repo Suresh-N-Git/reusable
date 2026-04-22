@@ -18,7 +18,7 @@
     "moduleResolution": "bundler",
     "paths": {
       "reusable-table": [
-        "./dist/reusable-table"
+        "./projects/reusable-table/src/public-api"
       ]
     },
     "importHelpers": true,

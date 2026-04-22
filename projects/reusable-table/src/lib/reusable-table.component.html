@@ -166,7 +166,7 @@
           @case ('link') {
           <ng-container *ngIf="row[col.id]?.length; else noData">
             <div *ngFor="let item of row[col.id]">
-              <a [href]="getLinkValue(item, col)" target="_blank">
+              <a [href]="getLinkValue(item, col)" target="_blank" rel="noopener noreferrer">
                 {{ getDisplayValue(item, col) }}
               </a>
             </div>
@@ -197,7 +197,7 @@
 </div>
 
 <div class="no-print" *ngIf="resolvedConfig.pagination.enabled">
-  <mat-paginator [pageSizeOptions]="[5, 10, 25]" showFirstLastButtons></mat-paginator>
+  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons></mat-paginator>
 </div>
 
 <div class="print-hint no-print" *ngIf="(displayedColumnIds.length || 0) > 7">

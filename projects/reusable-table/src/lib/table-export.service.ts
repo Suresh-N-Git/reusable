@@ -165,12 +165,13 @@ export class TableExportService {
           .mat-column-actions { display:none; }
         </style>
       </head>
-      <body>${html}</body>
+       <body onload="window.focus(); window.print();">${html}</body>
     </html>
   `);
 
     popup.document.close();
-    popup.print();
-    popup.close();
+    popup.onafterprint = () => popup.close();
+    // popup.print();
+    // popup.close();
   }
 }

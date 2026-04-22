@@ -44,12 +44,12 @@ export interface ReusableTableConfig {
     zebraColor?: string;
     hoverColor?: string;
     selectedRowColor?: string;
-    headingToPrint? :string;
+    headingToPrint?: string;
   };
   pagination?: {
     enabled?: boolean;
     threshold?: number;
-    defaultPageSize?: number;
+    defaultPageSize?: 5 | 10 | 25 | 100;
   };
   sorting?: {
     enabled?: boolean;
@@ -97,7 +97,7 @@ const DEFAULT_TABLE_CONFIG: Required<ReusableTableConfig> = {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit {
-  constructor(private readonly exportService: TableExportService) {}
+  constructor(private readonly exportService: TableExportService) { }
 
   @Input() columns: ReUsableTableColumn[] = [];
   @Input() tableConfig: ReusableTableConfig = {};
@@ -120,6 +120,7 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
   dataSource = new MatTableDataSource<any>([]);
   selectedRow: any = null;
   currentFilter = '';
+  headingForCtrlP: string = "Print Table";
 
   ngOnInit(): void {
     this.updateViewMode();
@@ -127,6 +128,7 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
 
   ngOnChanges(_: SimpleChanges): void {
     this.resolvedConfig = this.mergeConfig(this.tableConfig);
+    document.title = this.resolvedConfig.appearance.headingToPrint ?? this.headingForCtrlP;
     this.initializeTable();
   }
 
@@ -214,12 +216,46 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
     this.dataSource.paginator?.firstPage();
   }
 
-  highlightSearchedText(value: any): string {
-    if (!value || !this.currentFilter) return value;
 
-    const regex = new RegExp(`(${this.currentFilter})`, 'gi');
-    return String(value).replace(regex, '<mark>$1</mark>');
+  //  A few notes onn highlightSearchedText
+  // Order matters in escapeHtml. & has to be replaced first — otherwise escaping < to &lt; would double-encode any existing & in later passes.
+  // escapeRegex covers every regex metacharacter (. * + ? ^ $ { } ( ) | [ ] \). After this, a user typing (abc or . in the search box matches literal text instead of exploding or matching everything.
+  // Guard clause widened a bit. The old if (!value ...) treated 0 and '' as "nothing to do" and returned them unchanged, which then got run through [innerHTML]. The new check is explicit about null/undefined and always returns a string-safe result.
+  // Both helpers are private because they're implementation details, not part of the public API.
+  // The template binding stays the same. You don't need to touch any [innerHTML]="highlightSearchedText(...)" in the HTML — they just start emitting safe content.
+
+
+  highlightSearchedText(value: any): string {
+    if (value === null || value === undefined || !this.currentFilter) {
+      return value ?? '';
+    }
+
+    const escapedValue = this.escapeHtml(String(value));
+    const escapedFilter = this.escapeRegex(this.currentFilter);
+    const regex = new RegExp(`(${escapedFilter})`, 'gi');
+
+    return escapedValue.replace(regex, '<mark>$1</mark>');
   }
+
+  private escapeHtml(text: string): string {
+    return text
+      .replace(/&/g, '&amp;')   // must be first
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  private escapeRegex(text: string): string {
+    return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  // highlightSearchedText(value: any): string {
+  //   if (!value || !this.currentFilter) return value;
+
+  //   const regex = new RegExp(`(${this.currentFilter})`, 'gi');
+  //   return String(value).replace(regex, '<mark>$1</mark>');
+  // }
 
   getFormatOfValue(value: any, col: ReUsableTableColumn): string {
     if (value === null || value === undefined) return '';
@@ -248,6 +284,10 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
   }
 
   printTable(): void {
+
+    const { rows } = this.getExportData();
+    if (!this.assertHasRowsToExport(rows)) return;
+
     const html = this.printSection?.nativeElement?.innerHTML;
     if (!html) return;
 
@@ -354,33 +394,57 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
       .map(column => column.id);
   }
 
+  // private getExportData(): { columns: ReUsableTableColumn[]; rows: any[] } {
+  //   const columns = this.displayedColumnsExtended.filter(
+  //     column => this.displayedColumnIds.includes(column.id) && column.id !== 'actions'
+  //   );
+
+  //   const rows = this.dataSource.filteredData.length
+  //     ? this.dataSource.filteredData
+  //     : this.dataSource.data;
+
+  //   return { columns, rows };
+  // }
+
+
+
   private getExportData(): { columns: ReUsableTableColumn[]; rows: any[] } {
     const columns = this.displayedColumnsExtended.filter(
       column => this.displayedColumnIds.includes(column.id) && column.id !== 'actions'
     );
 
-    const rows = this.dataSource.filteredData.length
-      ? this.dataSource.filteredData
-      : this.dataSource.data;
+    const rows = this.dataSource.filteredData;
 
     return { columns, rows };
   }
 
+
   downloadCSV(): void {
     const { columns, rows } = this.getExportData();
+    if (!this.assertHasRowsToExport(rows)) return;
     this.exportService.exportCsv(columns, rows);
   }
 
   downloadExcel(): void {
     const { columns, rows } = this.getExportData();
+    if (!this.assertHasRowsToExport(rows)) return;
     this.exportService.exportExcel(columns, rows);
   }
 
   downloadPdf(): void {
     const { columns, rows } = this.getExportData();
-
+    if (!this.assertHasRowsToExport(rows)) return;
     this.exportService.exportPdf(columns, rows, this.resolvedConfig.appearance.headingToPrint!, (value, col) =>
       this.getFormatOfValue(value, col)
     );
+  }
+
+  private assertHasRowsToExport(rows: any[]): boolean {
+    if (rows.length === 0) {
+      // pick ONE of the options below
+      alert('No Data Found.');
+      return false;
+    }
+    return true;
   }
 }
