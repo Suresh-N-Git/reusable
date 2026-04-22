@@ -43,7 +43,7 @@ export interface ReusableTableConfig {
     pagination?: {
         enabled?: boolean;
         threshold?: number;
-        defaultPageSize?: number;
+        defaultPageSize?: 5 | 10 | 25 | 100;
     };
     sorting?: {
         enabled?: boolean;
@@ -78,6 +78,7 @@ export declare class ReusableTableComponent implements OnInit, OnChanges, AfterV
     dataSource: MatTableDataSource<any, MatPaginator>;
     selectedRow: any;
     currentFilter: string;
+    headingForCtrlP: string;
     ngOnInit(): void;
     ngOnChanges(_: SimpleChanges): void;
     updateViewMode(): void;
@@ -94,6 +95,8 @@ export declare class ReusableTableComponent implements OnInit, OnChanges, AfterV
     onDelete(row: any): void;
     applyGlobalFilter(event: Event): void;
     highlightSearchedText(value: any): string;
+    private escapeHtml;
+    private escapeRegex;
     getFormatOfValue(value: any, col: ReUsableTableColumn): string;
     printTable(): void;
     private mergeConfig;
@@ -107,6 +110,7 @@ export declare class ReusableTableComponent implements OnInit, OnChanges, AfterV
     downloadCSV(): void;
     downloadExcel(): void;
     downloadPdf(): void;
+    private assertHasRowsToExport;
     static ɵfac: i0.ɵɵFactoryDeclaration<ReusableTableComponent, never>;
     static ɵcmp: i0.ɵɵComponentDeclaration<ReusableTableComponent, "app-reusabletable", never, { "columns": { "alias": "columns"; "required": false; }; "tableConfig": { "alias": "tableConfig"; "required": false; }; "data": { "alias": "data"; "required": false; }; "enableActions": { "alias": "enableActions"; "required": false; }; }, { "rowEdit": "rowEdit"; "rowSelect": "rowSelect"; "rowDelete": "rowDelete"; }, never, never, false, never>;
 }
