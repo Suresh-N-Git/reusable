@@ -55,6 +55,7 @@ export class TableuiComponent {
           "RelativeFilePath": "https://ttapi.ipmsbmc.com/uploads/1/t_task/49_8e707fea-9820-4855-98e9-3510e687dacf_table-export.pdf"
         }
       ]
+
     }
   ];
 
@@ -64,7 +65,7 @@ export class TableuiComponent {
 
     this.reUsableTableColumn = [
 
-      { id: 'id', name: 'Id', width: '5%', type: 'integer', align: 'right' },
+      { id: 'id', name: 'Id', width: '5%', type: 'integer', align: 'right', footer: { type: 'count' } },
 
       {
         id: 'name', name: 'Name', width: '20%',
@@ -81,7 +82,7 @@ export class TableuiComponent {
       //   }
       // },
       {
-        id: 'flow', name: 'Flow', width: '10%', type: 'number', align: 'right', digits: '1.2-2',
+        id: 'flow', name: 'Flow', width: '10%', type: 'number', align: 'right', digits: '1.2-2', footer: { type: 'sum' }
         // style: {
         //   fontFamily: 'monospace',
         //   fontWeight: '600',
@@ -94,10 +95,11 @@ export class TableuiComponent {
         id: 'col4', name: 'Col4', width: '20%',
 
       },
-      { id: 'col5', name: 'Col5', width: '20%', type: 'multiline', displayField: 'TextToDisplay',
+      {
+        id: 'col5', name: 'Col5', width: '20%', type: 'multiline', displayField: 'TextToDisplay',
         exportFormatter: (val: any[]) =>
           val?.map(v => v.TextToDisplay).join(', ') || ''
-       },
+      },
       {
         id: 'col6', name: 'col6', width: '20%', type: 'link', displayField: 'UploadedFileName', linkField: 'RelativeFilePath',
         exportFormatter: (val: any[]) =>
@@ -145,7 +147,8 @@ export class TableuiComponent {
         showExcel: true,
         showPdf: true,
         showPrint: true,
-      }
+      },
+      footer: { enabled: true, sticky: true },
 
     }
 

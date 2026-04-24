@@ -186,12 +186,19 @@
 
       </td>
 
+      <td mat-footer-cell *matFooterCellDef [ngStyle]="getCellStyle(col)">
+        {{ footerValues[col.id] }}
+      </td>
+
     </ng-container>
 
     }
 
     <tr mat-header-row *matHeaderRowDef="displayedColumnIds; sticky: true"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumnIds" [class.row-selected]="row === selectedRow"></tr>
+    @if (resolvedConfig.footer.enabled) {
+    <tr mat-footer-row *matFooterRowDef="displayedColumnIds; sticky: resolvedConfig.footer.sticky"></tr>
+    }
 
   </table>
 </div>

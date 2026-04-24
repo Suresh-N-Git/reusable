@@ -36,6 +36,10 @@ export interface ReUsableTableColumn {
     edit?: { show?: boolean; color?: 'primary' | 'accent' | 'warn' };
     delete?: { show?: boolean; color?: 'primary' | 'accent' | 'warn' };
   };
+  footer?:
+  | { type: 'sum' | 'avg' | 'min' | 'max' | 'count' }
+  | { type: 'text'; value: string }
+  | { type: 'custom'; formatter: (rows: any[]) => string };
 }
 
 export interface ReusableTableConfig {
@@ -62,6 +66,10 @@ export interface ReusableTableConfig {
     showPdf?: boolean;
     showPrint?: boolean;
   };
+  footer?: {
+    enabled?: boolean;
+    sticky?: boolean;
+  };
 }
 
 const DEFAULT_TABLE_CONFIG: Required<ReusableTableConfig> = {
@@ -87,6 +95,10 @@ const DEFAULT_TABLE_CONFIG: Required<ReusableTableConfig> = {
     showExcel: true,
     showPdf: true,
     showPrint: true,
+  },
+  footer: {
+    enabled: false,
+    sticky: false,
   },
 };
 
@@ -121,6 +133,8 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
   selectedRow: any = null;
   currentFilter = '';
   headingForCtrlP: string = "Print Table";
+
+  footerValues: Record<string, string> = {};
 
   ngOnInit(): void {
     this.updateViewMode();
@@ -194,6 +208,7 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
     }
 
     this.updateVisibleColumns();
+    this.computeFooterValues();              
   }
 
   onEdit(row: any): void {
@@ -214,6 +229,7 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
     this.currentFilter = value;
     this.dataSource.filter = value;
     this.dataSource.paginator?.firstPage();
+    this.computeFooterValues();
   }
 
 
@@ -313,6 +329,10 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
         ...DEFAULT_TABLE_CONFIG.toolbar,
         ...(config.toolbar ?? {}),
       },
+      footer: {
+        ...DEFAULT_TABLE_CONFIG.footer,
+        ...(config.footer ?? {}),
+      },
     };
   }
 
@@ -326,6 +346,7 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
 
     this.updateVisibleColumns();
     this.attachMaterialControllers();
+    this.computeFooterValues();    
   }
 
   private buildSearchableText(row: any): string {
@@ -418,7 +439,58 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
     return { columns, rows };
   }
 
+  private computeFooterValues(): void {
+    if (!this.resolvedConfig.footer.enabled) {
+      this.footerValues = {};
+      return;
+    }
 
+    const rows = this.dataSource.filteredData ?? [];
+    const next: Record<string, string> = {};
+
+    for (const col of this.displayedColumnsExtended) {
+      next[col.id] = this.calcFooterValue(col, rows);
+    }
+
+    this.footerValues = next;
+  }
+
+
+  private calcFooterValue(col: ReUsableTableColumn, rows: any[]): string {
+    if (!col.footer) return '';
+
+    switch (col.footer.type) {
+      case 'text':
+        return col.footer.value;
+
+      case 'custom':
+        return col.footer.formatter(rows);
+
+      case 'count':
+        return String(rows.length);
+
+      case 'sum':
+      case 'avg':
+      case 'min':
+      case 'max': {
+        const nums = rows
+          .map(r => Number(r?.[col.id]))
+          .filter(n => Number.isFinite(n));
+
+        if (!nums.length) return '';
+
+        let result: number;
+        switch (col.footer.type) {
+          case 'sum': result = nums.reduce((a, b) => a + b, 0); break;
+          case 'avg': result = nums.reduce((a, b) => a + b, 0) / nums.length; break;
+          case 'min': result = Math.min(...nums); break;
+          case 'max': result = Math.max(...nums); break;
+        }
+
+        return this.getFormatOfValue(result, col);
+      }
+    }
+  }
   downloadCSV(): void {
     const { columns, rows } = this.getExportData();
     if (!this.assertHasRowsToExport(rows)) return;
