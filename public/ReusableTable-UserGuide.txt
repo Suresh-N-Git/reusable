@@ -82,3 +82,50 @@ Component usage:
   (rowSelect)="onSelect($event)">
 </app-reusabletable>
 ```
+
+Footer row (totals, counts, labels):
+
+The table supports an optional footer row for aggregated values, counts,
+or static labels per column. It reacts to the active filter — footer
+values reflect only the rows currently in view.
+
+Enable the footer in the table config:
+```ts
+footer: {
+  enabled: true,
+  sticky: true   // keep footer visible when the table scrolls
+}
+```
+
+Declare footer behavior per column via the `footer` field:
+```ts
+// Sum of numeric values (formatted using the column's digits)
+{ id: 'flow', name: 'Flow', type: 'number', digits: '1.2-2',
+  footer: { type: 'sum' } }
+
+// Count of currently visible rows
+{ id: 'id', name: 'Id', type: 'integer',
+  footer: { type: 'count' } }
+
+// Fixed label
+{ id: 'name', name: 'Name',
+  footer: { type: 'text', value: 'Totals ->' } }
+
+// Custom aggregation
+{ id: 'amount', name: 'Amount',
+  footer: {
+    type: 'custom',
+    formatter: (rows) => `Max: ${Math.max(...rows.map(r => r.amount))}`
+  } }
+```
+
+Footer types:
+- `sum`, `avg`, `min`, `max` - numeric aggregations. Non-numeric values
+  in the column are ignored. If none of the values are numeric, the cell
+  renders empty and a warning is printed to the console in dev.
+- `count` - number of currently visible rows.
+- `text` - renders the provided static string.
+- `custom` - receives the filtered rows array and returns a string.
+
+Columns without a `footer` field render an empty footer cell, keeping the
+footer row aligned with the header and body.

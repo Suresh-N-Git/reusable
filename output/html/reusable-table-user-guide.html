@@ -140,7 +140,7 @@
         <h2>What It Is</h2>
         <p>
           ReusableTable is an Angular library that provides a configurable Material table with search, sorting,
-          pagination, column toggling, export, and row actions.
+          pagination, column toggling, export, row actions, and an optional footer row for totals and counts.
         </p>
       </section>
 
@@ -342,8 +342,57 @@ reUsableTableConfig: ReusableTableConfig = {
     showExcel: true,
     showPdf: true,
     showPrint: true
+  },
+  footer: {
+    enabled: true,
+    sticky: true
   }
 };</pre>
+      </section>
+
+      <section class="card full">
+        <h2>Footer Row</h2>
+        <p>
+          The table supports an optional footer row that can display aggregated values, counts, or static labels per
+          column. Footer values react to the active filter — they reflect only the rows currently in view, so totals
+          update automatically as users search.
+        </p>
+        <p>Enable the footer in the table config:</p>
+        <pre>footer: {
+  enabled: true,
+  sticky: true   // keep footer visible when the table scrolls
+}</pre>
+        <p>Declare per-column footer behavior via the <code>footer</code> field on the column definition:</p>
+        <pre>// Sum of numeric values (formatted using the column's digits)
+{ id: 'flow', name: 'Flow', type: 'number', digits: '1.2-2',
+  footer: { type: 'sum' } }
+
+// Count of currently visible rows
+{ id: 'id', name: 'Id', type: 'integer',
+  footer: { type: 'count' } }
+
+// Fixed label
+{ id: 'name', name: 'Name',
+  footer: { type: 'text', value: 'Totals &rarr;' } }
+
+// Custom aggregation
+{ id: 'amount', name: 'Amount',
+  footer: {
+    type: 'custom',
+    formatter: (rows) =&gt; `Max: ${Math.max(...rows.map(r =&gt; r.amount))}`
+  } }</pre>
+        <p>Available footer types:</p>
+        <ul>
+          <li><code>sum</code>, <code>avg</code>, <code>min</code>, <code>max</code> — numeric aggregations. Non-numeric values are ignored. If no numeric values are found, the cell renders empty and a warning is logged to the console in development.</li>
+          <li><code>count</code> — number of currently visible rows.</li>
+          <li><code>text</code> — renders the provided static string.</li>
+          <li><code>custom</code> — receives the filtered rows array and returns a string.</li>
+        </ul>
+        <p class="note">
+          Columns without a <code>footer</code> field render an empty footer cell, which keeps the footer row aligned
+          with the header and body. Footer values are cached and recomputed only when data, filter, or visible columns
+          change — they do not recalculate on every change detection cycle.
+        </p>
       </section>
 
       <section class="card full">
@@ -359,7 +408,7 @@ reUsableTableConfig: ReusableTableConfig = {
       <section class="card full">
         <h2>Notes</h2>
         <ul>
-          <li>The component supports search, sorting, pagination, column toggle, CSV/Excel/PDF export, and print.</li>
+          <li>The component supports search, sorting, pagination, column toggle, CSV/Excel/PDF export, print, and an optional footer row.</li>
           <li>Regular text columns use the raw field value unless you add a special type or formatter.</li>
           <li>For multiline and link columns, the table expects arrays of objects, not a single string.</li>
           <li>Export behavior in the repo depends on <code>xlsx</code>, <code>jspdf</code>, and <code>jspdf-autotable</code>.</li>

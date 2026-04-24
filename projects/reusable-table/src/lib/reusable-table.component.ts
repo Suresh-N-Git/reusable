@@ -208,7 +208,7 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
     }
 
     this.updateVisibleColumns();
-    this.computeFooterValues();              
+    this.computeFooterValues();
   }
 
   onEdit(row: any): void {
@@ -346,7 +346,7 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
 
     this.updateVisibleColumns();
     this.attachMaterialControllers();
-    this.computeFooterValues();    
+    this.computeFooterValues();
   }
 
   private buildSearchableText(row: any): string {
@@ -477,8 +477,16 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
           .map(r => Number(r?.[col.id]))
           .filter(n => Number.isFinite(n));
 
-        if (!nums.length) return '';
+        // if (!nums.length) return '';
 
+        if (!nums.length) {
+          console.warn(
+            `[ReusableTable] footer type "${col.footer.type}" on column "${col.id}" ` +
+            `found no numeric values — rendering empty. Check if the column holds numeric data.`
+          );
+          return '';
+
+        }
         let result: number;
         switch (col.footer.type) {
           case 'sum': result = nums.reduce((a, b) => a + b, 0); break;

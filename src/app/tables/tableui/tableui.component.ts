@@ -68,7 +68,7 @@ export class TableuiComponent {
       { id: 'id', name: 'Id', width: '5%', type: 'integer', align: 'right', footer: { type: 'count' } },
 
       {
-        id: 'name', name: 'Name', width: '20%',
+        id: 'name', name: 'Name', width: '20%', footer: {type: 'text', value: 'Total'}
       },
 
       // {
