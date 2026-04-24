@@ -31,6 +31,15 @@ export interface ReUsableTableColumn {
             color?: 'primary' | 'accent' | 'warn';
         };
     };
+    footer?: {
+        type: 'sum' | 'avg' | 'min' | 'max' | 'count';
+    } | {
+        type: 'text';
+        value: string;
+    } | {
+        type: 'custom';
+        formatter: (rows: any[]) => string;
+    };
 }
 export interface ReusableTableConfig {
     searchTextMode?: 'displayed' | 'all';
@@ -56,6 +65,10 @@ export interface ReusableTableConfig {
         showPdf?: boolean;
         showPrint?: boolean;
     };
+    footer?: {
+        enabled?: boolean;
+        sticky?: boolean;
+    };
 }
 export declare class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit {
     private readonly exportService;
@@ -79,6 +92,7 @@ export declare class ReusableTableComponent implements OnInit, OnChanges, AfterV
     selectedRow: any;
     currentFilter: string;
     headingForCtrlP: string;
+    footerValues: Record<string, string>;
     ngOnInit(): void;
     ngOnChanges(_: SimpleChanges): void;
     updateViewMode(): void;
@@ -107,6 +121,8 @@ export declare class ReusableTableComponent implements OnInit, OnChanges, AfterV
     private attachMaterialControllers;
     private updateVisibleColumns;
     private getExportData;
+    private computeFooterValues;
+    private calcFooterValue;
     downloadCSV(): void;
     downloadExcel(): void;
     downloadPdf(): void;
