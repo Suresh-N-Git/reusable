@@ -76,7 +76,6 @@ export declare class ReusableTableComponent implements OnInit, OnChanges, AfterV
     columns: ReUsableTableColumn[];
     tableConfig: ReusableTableConfig;
     data: any[];
-    enableActions: boolean;
     paginator?: MatPaginator;
     sort?: MatSort;
     printSection?: ElementRef;
@@ -123,10 +122,11 @@ export declare class ReusableTableComponent implements OnInit, OnChanges, AfterV
     private getExportData;
     private computeFooterValues;
     private calcFooterValue;
+    private getFooterRowForExport;
     downloadCSV(): void;
     downloadExcel(): void;
     downloadPdf(): void;
     private assertHasRowsToExport;
     static ɵfac: i0.ɵɵFactoryDeclaration<ReusableTableComponent, never>;
-    static ɵcmp: i0.ɵɵComponentDeclaration<ReusableTableComponent, "app-reusabletable", never, { "columns": { "alias": "columns"; "required": false; }; "tableConfig": { "alias": "tableConfig"; "required": false; }; "data": { "alias": "data"; "required": false; }; "enableActions": { "alias": "enableActions"; "required": false; }; }, { "rowEdit": "rowEdit"; "rowSelect": "rowSelect"; "rowDelete": "rowDelete"; }, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<ReusableTableComponent, "app-reusabletable", never, { "columns": { "alias": "columns"; "required": false; }; "tableConfig": { "alias": "tableConfig"; "required": false; }; "data": { "alias": "data"; "required": false; }; }, { "rowEdit": "rowEdit"; "rowSelect": "rowSelect"; "rowDelete": "rowDelete"; }, never, never, false, never>;
 }
