@@ -116,7 +116,6 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
   @Input() columns: ReUsableTableColumn[] = [];
   @Input() tableConfig: ReusableTableConfig = {};
   @Input() data: any[] = [];
-  // @Input() enableActions = true;
 
   @ViewChild(MatPaginator) paginator?: MatPaginator;
   @ViewChild(MatSort) sort?: MatSort;
@@ -417,8 +416,9 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
   }
 
   private updateVisibleColumns(): void {
-    if (!this.visibleColumnIds.includes('actions')) {
-      this.visibleColumnIds.push('actions');
+    const actionsCol = this.displayedColumnsExtended.find(col => col.type === 'actions');
+    if (actionsCol && !this.visibleColumnIds.includes(actionsCol.id)) {
+      this.visibleColumnIds.push(actionsCol.id);
     }
 
     this.displayedColumnIds = this.displayedColumnsExtended
@@ -426,23 +426,10 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
       .map(column => column.id);
   }
 
-  // private getExportData(): { columns: ReUsableTableColumn[]; rows: any[] } {
-  //   const columns = this.displayedColumnsExtended.filter(
-  //     column => this.displayedColumnIds.includes(column.id) && column.id !== 'actions'
-  //   );
-
-  //   const rows = this.dataSource.filteredData.length
-  //     ? this.dataSource.filteredData
-  //     : this.dataSource.data;
-
-  //   return { columns, rows };
-  // }
-
-
 
   private getExportData(): { columns: ReUsableTableColumn[]; rows: any[] } {
     const columns = this.displayedColumnsExtended.filter(
-      column => this.displayedColumnIds.includes(column.id) && column.id !== 'actions'
+      column => this.displayedColumnIds.includes(column.id) && column.type !== 'actions'
     );
 
     const rows = this.dataSource.filteredData;
@@ -528,7 +515,7 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
     const { columns, rows } = this.getExportData();
     if (!this.assertHasRowsToExport(rows)) return;
     const footerRow = this.getFooterRowForExport(columns);
-    this.exportService.exportCsv(columns, rows, footerRow);
+    this.exportService.exportExcel(columns, rows, footerRow);
   }
 
   downloadPdf(): void {
@@ -537,9 +524,9 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
     const footerRow = this.getFooterRowForExport(columns);
 
     this.exportService.exportPdf(
-      columns, 
-      rows, 
-      this.resolvedConfig.appearance.headingToPrint!, 
+      columns,
+      rows,
+      this.resolvedConfig.appearance.headingToPrint!,
       (value, col) => this.getFormatOfValue(value, col),
       footerRow
     );
@@ -547,7 +534,6 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
 
   private assertHasRowsToExport(rows: any[]): boolean {
     if (rows.length === 0) {
-      // pick ONE of the options below
       alert('No Data Found.');
       return false;
     }

@@ -56,7 +56,7 @@
     @for (col of displayedColumnsExtended; track col.id) {
     <button mat-menu-item (click)="$event.stopPropagation()">
       <mat-checkbox [checked]="visibleColumnIds.includes(col.id)" (change)="toggleColumn(col.id)"
-        [disabled]="col.id === 'actions'">
+        [disabled]="col.type === 'actions'">
         {{ col.name }}
       </mat-checkbox>
     </button>
@@ -76,7 +76,7 @@
 
     <ng-container [matColumnDef]="col.id">
 
-      @if (col.id !== 'actions') {
+      @if (col.type !== 'actions') {
       <th mat-header-cell *matHeaderCellDef [style.width]="col.width" mat-sort-header
         [disabled]="!resolvedConfig.sorting.enabled" [arrowPosition]="col.align === 'right' ? 'before' : 'after'"
         [ngClass]="{
@@ -94,7 +94,7 @@
 
       <td mat-cell *matCellDef="let row" [attr.data-label]="col.name" [ngStyle]="getCellStyle(col)">
 
-        @if (col.id === 'actions') {
+        @if (col.type === 'actions') {
 
         @if (isMobileView) {
         <span class="cell-label">{{ col.name }}</span>
