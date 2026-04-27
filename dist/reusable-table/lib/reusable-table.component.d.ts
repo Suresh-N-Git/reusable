@@ -1,4 +1,4 @@
-import { AfterViewInit, ElementRef, EventEmitter, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { AfterViewInit, ElementRef, EventEmitter, OnChanges, OnInit, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -51,7 +51,6 @@ export interface ReusableTableConfig {
     };
     pagination?: {
         enabled?: boolean;
-        threshold?: number;
         defaultPageSize?: 5 | 10 | 25 | 100;
     };
     sorting?: {
@@ -72,7 +71,8 @@ export interface ReusableTableConfig {
 }
 export declare class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit {
     private readonly exportService;
-    constructor(exportService: TableExportService);
+    private readonly cdr;
+    constructor(exportService: TableExportService, cdr: ChangeDetectorRef);
     columns: ReUsableTableColumn[];
     tableConfig: ReusableTableConfig;
     data: any[];
