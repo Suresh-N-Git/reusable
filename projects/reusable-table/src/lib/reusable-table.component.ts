@@ -116,7 +116,7 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
   @Input() columns: ReUsableTableColumn[] = [];
   @Input() tableConfig: ReusableTableConfig = {};
   @Input() data: any[] = [];
-  @Input() enableActions = true;
+  // @Input() enableActions = true;
 
   @ViewChild(MatPaginator) paginator?: MatPaginator;
   @ViewChild(MatSort) sort?: MatSort;
@@ -510,23 +510,38 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
       }
     }
   }
+
+  private getFooterRowForExport(columns: ReUsableTableColumn[]): string[] | null {
+    if (!this.resolvedConfig.footer.enabled) return null;
+    return columns.map(col => this.footerValues[col.id] ?? '');
+  }
+
+
   downloadCSV(): void {
     const { columns, rows } = this.getExportData();
     if (!this.assertHasRowsToExport(rows)) return;
-    this.exportService.exportCsv(columns, rows);
+    const footerRow = this.getFooterRowForExport(columns);
+    this.exportService.exportCsv(columns, rows, footerRow);
   }
 
   downloadExcel(): void {
     const { columns, rows } = this.getExportData();
     if (!this.assertHasRowsToExport(rows)) return;
-    this.exportService.exportExcel(columns, rows);
+    const footerRow = this.getFooterRowForExport(columns);
+    this.exportService.exportCsv(columns, rows, footerRow);
   }
 
   downloadPdf(): void {
     const { columns, rows } = this.getExportData();
     if (!this.assertHasRowsToExport(rows)) return;
-    this.exportService.exportPdf(columns, rows, this.resolvedConfig.appearance.headingToPrint!, (value, col) =>
-      this.getFormatOfValue(value, col)
+    const footerRow = this.getFooterRowForExport(columns);
+
+    this.exportService.exportPdf(
+      columns, 
+      rows, 
+      this.resolvedConfig.appearance.headingToPrint!, 
+      (value, col) => this.getFormatOfValue(value, col),
+      footerRow
     );
   }
 

@@ -9,7 +9,12 @@ import autoTable from 'jspdf-autotable';
   providedIn: 'root',
 })
 export class TableExportService {
-  exportCsv(columns: ReUsableTableColumn[], rows: any[]): void {
+
+  exportCsv(
+    columns: ReUsableTableColumn[],
+    rows: any[],
+    footerRow?: string[] | null
+  ): void {
     const header = columns.map(c => `"${c.name}"`).join(',');
 
     const csvRows = rows.map(row =>
@@ -32,7 +37,16 @@ export class TableExportService {
         .join(',')
     );
 
-    const csvContent = [header, ...csvRows].join('\n');
+    const allLines = [header, ...csvRows];
+
+    if (footerRow && footerRow.length) {
+      const footerCsv = footerRow
+        .map(value => `"${(value ?? '').toString().replace(/"/g, '""')}"`)
+        .join(',');
+      allLines.push(footerCsv);
+    }
+
+    const csvContent = allLines.join('\n');
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
 
     const link = document.createElement('a');
@@ -40,8 +54,12 @@ export class TableExportService {
     link.download = 'table-export.csv';
     link.click();
   }
-
-  exportExcel(columns: ReUsableTableColumn[], rows: any[]): void {
+  
+  exportExcel(
+    columns: ReUsableTableColumn[],
+    rows: any[],
+    footerRow?: string[] | null
+  ): void {
     const exportData = rows.map(row => {
       const obj: any = {};
 
@@ -63,6 +81,11 @@ export class TableExportService {
     });
 
     const worksheet = XLSX.utils.json_to_sheet(exportData);
+
+    if (footerRow && footerRow.length) {
+      XLSX.utils.sheet_add_aoa(worksheet, [footerRow], { origin: -1 });
+    }
+
     const workbook = {
       Sheets: { Data: worksheet },
       SheetNames: ['Data'],
@@ -87,7 +110,8 @@ export class TableExportService {
     columns: ReUsableTableColumn[],
     rows: any[],
     headingToPrint: string,
-    formatter?: (value: any, col: ReUsableTableColumn) => string
+    formatter?: (value: any, col: ReUsableTableColumn) => string,
+    footerRow?: string[] | null
   ): void {
     const head = [columns.map(c => c.name)];
 
@@ -128,14 +152,20 @@ export class TableExportService {
     autoTable(doc, {
       head,
       body,
+      foot: footerRow && footerRow.length ? [footerRow] : undefined,
       styles: { fontSize: 9 },
       columnStyles,
       headStyles: {
         fillColor: [41, 128, 185],
       },
+      footStyles: {
+        fillColor: [220, 220, 220],
+        textColor: [0, 0, 0],
+        fontStyle: 'bold',
+      },
       margin: { top: 20 },
       didParseCell: (data: any) => {
-        if (data.section === 'head') {
+        if (data.section === 'head' || data.section === 'foot') {
           const colIndex = data.column.index;
           data.cell.styles.halign = columnStyles[colIndex]?.halign || 'left';
         }
@@ -148,6 +178,73 @@ export class TableExportService {
 
     doc.save('table-export.pdf');
   }
+
+
+  // exportPdf(
+  //   columns: ReUsableTableColumn[],
+  //   rows: any[],
+  //   headingToPrint: string,
+  //   formatter?: (value: any, col: ReUsableTableColumn) => string
+  // ): void {
+  //   const head = [columns.map(c => c.name)];
+
+  //   const body = rows.map(row =>
+  //     columns.map(col => {
+  //       const raw = row[col.id];
+
+  //       let value = raw;
+
+  //       if (col.exportFormatter) {
+  //         value = col.exportFormatter(raw);
+  //       } else if (formatter) {
+  //         value = formatter(raw, col);
+  //       } else if (Array.isArray(raw)) {
+  //         value = raw.join(', ');
+  //       } else if (raw && typeof raw === 'object') {
+  //         value = JSON.stringify(raw);
+  //       } else {
+  //         value = raw ?? '';
+  //       }
+
+  //       return value;
+  //     })
+  //   );
+
+  //   const doc = new jsPDF({
+  //     orientation: columns.length > 6 ? 'landscape' : 'portrait',
+  //   });
+
+  //   const columnStyles: any = {};
+
+  //   columns.forEach((col, index) => {
+  //     columnStyles[index] = {
+  //       halign: col.align || 'left',
+  //     };
+  //   });
+
+  //   autoTable(doc, {
+  //     head,
+  //     body,
+  //     styles: { fontSize: 9 },
+  //     columnStyles,
+  //     headStyles: {
+  //       fillColor: [41, 128, 185],
+  //     },
+  //     margin: { top: 20 },
+  //     didParseCell: (data: any) => {
+  //       if (data.section === 'head') {
+  //         const colIndex = data.column.index;
+  //         data.cell.styles.halign = columnStyles[colIndex]?.halign || 'left';
+  //       }
+  //     },
+  //     didDrawPage: () => {
+  //       doc.setFontSize(12);
+  //       doc.text(headingToPrint, 14, 15);
+  //     },
+  //   });
+
+  //   doc.save('table-export.pdf');
+  // }
 
   printTable(headingToPrint: string, html: string): void {
     const popup = window.open('', '_blank', 'width=1000,height=700');

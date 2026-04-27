@@ -65,10 +65,12 @@ export class TableuiComponent {
 
     this.reUsableTableColumn = [
 
-      { id: 'id', name: 'Id', width: '5%', type: 'integer', align: 'right', footer: { type: 'count' } },
+        { id: 'id', name: 'Id', width: '5%', type: 'integer', align: 'right' },
+      // { id: 'id', name: 'Id', width: '5%', type: 'integer', align: 'right', footer: { type: 'count' } },
 
       {
         id: 'name', name: 'Name', width: '20%', footer: { type: 'text', value: 'Total' }
+          // id: 'name', name: 'Name', width: '20%'
       },
 
       // {
@@ -82,6 +84,7 @@ export class TableuiComponent {
       //   }
       // },
       {
+        //  id: 'flow', name: 'Flow', width: '10%', type: 'number', align: 'right', digits: '1.2-2',
         id: 'flow', name: 'Flow', width: '10%', type: 'number', align: 'right', digits: '1.2-2', footer: { type: 'sum' }
         // style: {
         //   fontFamily: 'monospace',
