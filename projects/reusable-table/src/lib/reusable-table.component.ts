@@ -11,6 +11,7 @@ import {
   Output,
   SimpleChanges,
   ViewChild,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -52,7 +53,6 @@ export interface ReusableTableConfig {
   };
   pagination?: {
     enabled?: boolean;
-    threshold?: number;
     defaultPageSize?: 5 | 10 | 25 | 100;
   };
   sorting?: {
@@ -82,7 +82,6 @@ const DEFAULT_TABLE_CONFIG: Required<ReusableTableConfig> = {
   },
   pagination: {
     enabled: true,
-    threshold: 100,
     defaultPageSize: 25,
   },
   sorting: {
@@ -109,7 +108,10 @@ const DEFAULT_TABLE_CONFIG: Required<ReusableTableConfig> = {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit {
-  constructor(private readonly exportService: TableExportService) { }
+  constructor(
+    private readonly exportService: TableExportService,
+    private readonly cdr: ChangeDetectorRef
+  ) { }
 
   @Input() columns: ReUsableTableColumn[] = [];
   @Input() tableConfig: ReusableTableConfig = {};
@@ -304,7 +306,16 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
     const { rows } = this.getExportData();
     if (!this.assertHasRowsToExport(rows)) return;
 
+    const savedPaginator = this.dataSource.paginator;
+    this.dataSource.paginator = null; // Set it to null so that the whole data source gets printed
+    this.cdr.detectChanges();  // Needed to make the full table data available in the html
+
+
     const html = this.printSection?.nativeElement?.innerHTML;
+
+    this.dataSource.paginator = savedPaginator; // Put back the original state of the paginator
+    this.cdr.detectChanges(); // Change detection then puts back the no of rows originally visible
+
     if (!html) return;
 
     this.exportService.printTable(this.resolvedConfig.appearance.headingToPrint!, html);
@@ -394,9 +405,9 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
       this.dataSource.paginator = this.paginator;
 
       const len = this.dataSource.data.length;
-      const threshold = this.resolvedConfig.pagination.defaultPageSize || 100;
+      const pageSize = this.resolvedConfig.pagination.defaultPageSize ?? 25;
 
-      this.paginator.pageSize = len < threshold ? len || 1 : 25;
+      this.paginator.pageSize = len < pageSize ? (len || 1) : pageSize;
       this.paginator.firstPage();
     }
 

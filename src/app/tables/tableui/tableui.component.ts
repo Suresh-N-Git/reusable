@@ -28,20 +28,20 @@ export class TableuiComponent {
         { "TextToDisplay": "table-export (4).pdf" }
       ]
     },
-    // { id: 6, name: 'Pump F', flow: 130, col4: 'some text', col5: 'more text' },
-    // { id: 1, name: 'Pump, A', flow: 1000, col4: 'some text', col5: 'more text' },
-    // { id: 2, name: 'Pump B', flow: 120, col4: 'some text', col5: 'more text' },
-    // { id: 3, name: 'Pump C', flow: 95, col4: 'some text', col5: 'more text' },
-    // { id: 4, name: 'Pump D', flow: 140, col4: 'some text', col5: 'more text' },
-    // { id: 5, name: 'Pump E', flow: 110, col4: 'some text', col5: 'more text' },
-    // { id: 6, name: 'Pump F', flow: 130, col4: 'some text', col5: 'more text' },
-    // { id: 1, name: 'Pump, A', flow: 1000, col4: 'some text', col5: 'more text' },
-    // { id: 2, name: 'Pump B', flow: 120, col4: 'some text', col5: 'more text' },
-    // { id: 3, name: 'Pump C', flow: 95, col4: 'some text', col5: 'more text' },
-    // { id: 4, name: 'Pump D', flow: 140, col4: 'some text', col5: 'more text' },
-    // { id: 5, name: 'Pump E', flow: 110, col4: 'some text', col5: 'more text' },
+    { id: 6, name: 'Pump F', flow: 130, col4: 'some text', col5: [{ "TextToDisplay": "Plain text" }] },
+    { id: 7, name: 'Pump, A', flow: 1000, col4: 'some text', col5: [{ "TextToDisplay": "Plain text" }] },
+    { id: 8, name: 'Pump B', flow: 120, col4: 'some text', col5: [{ "TextToDisplay": "Plain text" }] },
+    { id: 9, name: 'Pump C', flow: 95, col4: 'some text', col5: [{ "TextToDisplay": "Plain text" }] },
+    { id: 10, name: 'Pump D', flow: 140, col4: 'some text', col5: [{ "TextToDisplay": "Plain text" }] },
+    { id: 11, name: 'Pump E', flow: 110, col4: 'some text', col5: [{ "TextToDisplay": "Plain text" }] },
+    { id: 12, name: 'Pump F', flow: 130, col4: 'some text', col5: [{ "TextToDisplay": "Plain text" }] },
+    { id: 13, name: 'Pump, A', flow: 1000, col4: 'some text', col5: [{ "TextToDisplay": "Plain text" }] },
+    { id: 14, name: 'Pump B', flow: 120, col4: 'some text', col5: [{ "TextToDisplay": "Plain text" }] },
+    { id: 15, name: 'Pump C', flow: 95, col4: 'some text', col5: [{ "TextToDisplay": "Plain text" }] },
+    { id: 16, name: 'Pump D', flow: 140, col4: 'some text', col5: [{ "TextToDisplay": "Plain text" }] },
+    { id: 17, name: 'Pump E', flow: 110, col4: 'some text', col5: [{ "TextToDisplay": "Plain text" }] },
     {
-      id: 10, name: 'New Name', flow: 130, col4: 'some text', "col6": [
+      id: 18, name: 'New Name', flow: 130, col4: 'some text', col5: [{ "TextToDisplay": "Plain text" }], "col6": [
         {
           "UploadedFileName": "table-export (5).pdf",
           "RelativeFilePath": "https://ttapi.ipmsbmc.com/uploads/1/t_task/49_3b95dd0c-0bf4-4f48-93c8-6880ecfee166_table-export (5).pdf"
@@ -68,7 +68,7 @@ export class TableuiComponent {
       { id: 'id', name: 'Id', width: '5%', type: 'integer', align: 'right', footer: { type: 'count' } },
 
       {
-        id: 'name', name: 'Name', width: '20%', footer: {type: 'text', value: 'Total'}
+        id: 'name', name: 'Name', width: '20%', footer: { type: 'text', value: 'Total' }
       },
 
       // {
@@ -132,8 +132,7 @@ export class TableuiComponent {
       },
       pagination: {
         enabled: true,
-        threshold: 100,
-        defaultPageSize: 100,
+        defaultPageSize: 10,
       },
 
       sorting: {
