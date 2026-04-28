@@ -33,9 +33,9 @@ export interface ReUsableTableColumn {
   linkField?: string;
   searchTextMode?: 'displayed' | 'all';
   actions?: {
-    select?: { show?: boolean; color?: 'primary' | 'accent' | 'warn' };
-    edit?: { show?: boolean; color?: 'primary' | 'accent' | 'warn' };
-    delete?: { show?: boolean; color?: 'primary' | 'accent' | 'warn' };
+    select?: { show?: boolean; color?: 'primary' | 'accent' | 'warn'; disableWhen?: { key: string; equals: any } }; // disable on some key value
+    edit?: { show?: boolean; color?: 'primary' | 'accent' | 'warn'; disableWhen?: { key: string; equals: any } };
+    delete?: { show?: boolean; color?: 'primary' | 'accent' | 'warn'; disableWhen?: { key: string; equals: any } };
   };
   footer?:
   | { type: 'sum' | 'avg' | 'min' | 'max' | 'count' }
@@ -107,7 +107,10 @@ const DEFAULT_TABLE_CONFIG: Required<ReusableTableConfig> = {
   styleUrls: ['./reusable-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
+
+
 export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit {
+
   constructor(
     private readonly exportService: TableExportService,
     private readonly cdr: ChangeDetectorRef
@@ -158,6 +161,15 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
 
   setSelectedRow(row: any): void {
     this.selectedRow = row;
+  }
+
+  isActionDisabled(
+    row: any,
+    action?: { disableWhen?: { key: string; equals: any } }
+  ): boolean {
+    const rule = action?.disableWhen;
+    if (!rule) return false;
+    return row[rule.key] === rule.equals;
   }
 
   getCellStyle(col: ReUsableTableColumn): Record<string, any> {

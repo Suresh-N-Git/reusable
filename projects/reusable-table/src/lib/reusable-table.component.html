@@ -102,19 +102,24 @@
 
         <div class="cell-value action-buttons">
           @if (col.actions?.select?.show) {
-          <button mat-icon-button [color]="col.actions?.select?.color" (click)="setSelectedRow(row); onSelect(row)">
+          <button mat-icon-button [color]="col.actions?.select?.color" 
+           [disabled]="isActionDisabled(row, col.actions?.select)"
+           (click)="setSelectedRow(row); onSelect(row)">
             <mat-icon>check_box</mat-icon>
           </button>
           }
 
           @if (col.actions?.edit?.show) {
-          <button mat-icon-button [color]="col.actions?.edit?.color" (click)="setSelectedRow(row); onEdit(row)">
+          <button mat-icon-button [color]="col.actions?.edit?.color" 
+          [disabled]="isActionDisabled(row, col.actions?.edit)"
+          (click)="setSelectedRow(row); onEdit(row)">
             <mat-icon>edit</mat-icon>
           </button>
           }
 
           @if (col.actions?.delete?.show) {
-          <button mat-icon-button [color]="col.actions?.delete?.color" (click)="setSelectedRow(row); onDelete(row)">
+          <button mat-icon-button [color]="col.actions?.delete?.color" 
+           [disabled]="isActionDisabled(row, col.actions?.delete)"(click)="setSelectedRow(row); onDelete(row)">
             <mat-icon>delete</mat-icon>
           </button>
           }

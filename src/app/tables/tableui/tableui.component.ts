@@ -117,12 +117,11 @@ export class TableuiComponent {
         align: 'center',
         actions: {
           select: { show: true, color: 'primary' },
-          edit: { show: true, color: 'accent' },
+          edit: { show: true, color: 'accent', disableWhen: { key: 'id', equals: 1 } },
           delete: { show: true, color: 'warn' }
         }
       }
     ];
-
 
 
     this.reUsableTableConfig = {

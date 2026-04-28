@@ -313,6 +313,45 @@
       </section>
 
       <section class="card full">
+        <h2>Action Button Disable Rules</h2>
+        <p>
+          Each action button (<code>select</code>, <code>edit</code>, <code>delete</code>) supports an optional
+          <code>disableWhen</code> rule. The rule names a key on the row and a value to compare against. When
+          <code>row[key] === equals</code>, the button is rendered but disabled — clicks do not fire the
+          corresponding row event.
+        </p>
+        <pre>{
+  id: 'rowOps',
+  type: 'actions',
+  name: 'Actions',
+  width: '10%',
+  actions: {
+    edit: {
+      show: true,
+      color: 'accent',
+      disableWhen: { key: 'approved', equals: true }
+    },
+    delete: { show: true, color: 'warn' },
+    select: { show: true, color: 'primary' }
+  }
+}</pre>
+        <p>
+          The <code>equals</code> value is matched with strict equality, so the consumer declares the exact value
+          their data uses:
+        </p>
+        <ul>
+          <li><code>equals: true</code> — boolean flags</li>
+          <li><code>equals: 'Y'</code> — Y/N flags</li>
+          <li><code>equals: 'Yes'</code> — Yes/No flags</li>
+          <li><code>equals: 'locked'</code> — status strings</li>
+        </ul>
+        <p class="note">
+          Actions without a <code>disableWhen</code> rule are always enabled. Existing column configs without this
+          field continue to work unchanged.
+        </p>
+      </section>
+
+      <section class="card full">
         <h2>What The Host Component Must Declare</h2>
         <p>
           In the consuming component, users must declare the column definition array and the table config object.
@@ -407,7 +446,7 @@ reUsableTableConfig: ReusableTableConfig = {
       <section class="card full">
         <h2>Notes</h2>
         <ul>
-          <li>The component supports search, sorting, pagination, column toggle, CSV/Excel/PDF export, print, and an optional footer row.</li>
+          <li>The component supports search, sorting, pagination, column toggle, CSV/Excel/PDF export, print, an optional footer row, and per-row action button disable rules.</li>
           <li>Regular text columns use the raw field value unless you add a special type or formatter.</li>
           <li>For multiline and link columns, the table expects arrays of objects, not a single string.</li>
           <li>Export behavior in the repo depends on <code>xlsx</code>, <code>jspdf</code>, and <code>jspdf-autotable</code>.</li>

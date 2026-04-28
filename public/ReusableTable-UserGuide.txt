@@ -83,6 +83,41 @@ Component usage:
 </app-reusabletable>
 ```
 
+Actions column (with optional per-row disable):
+
+Each action button (select / edit / delete) supports an optional
+`disableWhen` rule. The rule names a key on the row and a value to
+compare against. When `row[key] === equals`, the button is rendered
+but disabled — clicks do not fire the corresponding row event.
+
+Example:
+```ts
+{
+  id: 'rowOps',
+  type: 'actions',
+  name: 'Actions',
+  width: '10%',
+  actions: {
+    edit: {
+      show: true,
+      color: 'accent',
+      disableWhen: { key: 'approved', equals: true }
+    },
+    delete: { show: true, color: 'warn' },
+    select: { show: true, color: 'primary' }
+  }
+}
+```
+
+The `equals` value is matched with strict equality, so the consumer
+declares the exact value their data uses:
+- `equals: true`     for boolean flags
+- `equals: 'Y'`      for Y/N flags
+- `equals: 'Yes'`    for Yes/No flags
+- `equals: 'locked'` for status strings
+
+Actions without a `disableWhen` rule are always enabled.
+
 Footer row (totals, counts, labels):
 
 The table supports an optional footer row for aggregated values, counts,
