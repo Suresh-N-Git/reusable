@@ -1,0 +1,548 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ReusableTable User Guide v2</title>
+  <style>
+    :root {
+      --ink: #1f2937;
+      --muted: #5b6472;
+      --line: #d7dde6;
+      --accent: #0f4c81;
+      --bg: #f7f9fc;
+      --code: #eef3f8;
+    }
+
+    @page { size: letter; margin: 0.5in; }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--ink);
+      background: #fff;
+      line-height: 1.4;
+    }
+
+    .page {
+      max-width: 8.5in;
+      margin: 0 auto;
+      padding: 0;
+    }
+
+    .hero {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: linear-gradient(180deg, #fff 0%, var(--bg) 100%);
+      padding: 18px;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      margin: 0 0 6px 0;
+      color: var(--accent);
+      font-size: 26px;
+      line-height: 1.05;
+    }
+
+    .subtitle {
+      margin: 0;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 14px 16px;
+      background: #fff;
+    }
+
+    .full { grid-column: 1 / -1; }
+
+    h2 {
+      margin: 0 0 10px 0;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      color: var(--accent);
+    }
+
+    h3 {
+      margin: 12px 0 6px 0;
+      font-size: 12px;
+      color: var(--ink);
+    }
+
+    p, li {
+      font-size: 12px;
+      margin: 0;
+    }
+
+    p + p { margin-top: 6px; }
+
+    ul, ol {
+      margin: 6px 0 0;
+      padding-left: 20px;
+    }
+
+    li + li { margin-top: 4px; }
+
+    .step {
+      border-left: 3px solid #bfd0e4;
+      padding-left: 12px;
+      margin-bottom: 10px;
+    }
+
+    code, pre {
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 11px;
+    }
+
+    pre {
+      margin: 8px 0 0;
+      padding: 10px 12px;
+      background: var(--code);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      overflow: hidden;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .note {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px dashed var(--line);
+    }
+
+    .label {
+      font-weight: bold;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 1px 8px;
+      border-radius: 999px;
+      background: #e3f2fd;
+      color: var(--accent);
+      font-size: 10.5px;
+      font-weight: bold;
+      letter-spacing: 0.3px;
+    }
+
+    table.api {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+      font-size: 11.5px;
+    }
+
+    table.api th, table.api td {
+      border: 1px solid var(--line);
+      padding: 6px 8px;
+      vertical-align: top;
+      text-align: left;
+    }
+
+    table.api th {
+      background: var(--bg);
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    @media print {
+      body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .card, .hero { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <section class="hero">
+      <h1>ReusableTable User Guide</h1>
+      <p class="subtitle">
+        Configurable Angular Material data table — search, sort, paginate, export, footer aggregations,
+        and per-row action disable rules.
+      </p>
+    </section>
+
+    <div class="grid">
+
+      <section class="card full">
+        <h2>What It Is</h2>
+        <p>
+          ReusableTable is an Angular library wrapping Angular Material&rsquo;s <code>MatTable</code> with a
+          declarative column and config API. A consumer defines columns and a config object, passes a data array,
+          and gets a table with search, sorting, pagination, column toggle, CSV / Excel / PDF export, print, an
+          optional footer row, and per-row action button disable rules.
+        </p>
+        <p>
+          The library is built on Angular 18 and Material 18. The component is <code>OnPush</code>; expensive
+          per-row work (footer aggregations, search filtering) is cached and recomputed only when inputs change.
+        </p>
+      </section>
+
+      <section class="card">
+        <h2>Requirements</h2>
+        <ul>
+          <li>Angular 18 project</li>
+          <li>Node.js and npm</li>
+          <li><code>@angular/material</code> and <code>@angular/cdk</code></li>
+          <li><code>bootstrap</code> for the styling used by the demo app</li>
+          <li><code>xlsx</code>, <code>jspdf</code>, <code>jspdf-autotable</code>, <code>file-saver</code> for exports</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Install</h2>
+        <p>Install from a packed tarball:</p>
+        <pre>npm uninstall reusable-table
+npm install reusable-table-0.0.1.tgz</pre>
+        <p>Import the module in the consuming app:</p>
+        <pre>import { ReusableTableModule } from 'reusable-table';</pre>
+        <p>Optional shared styles:</p>
+        <pre>@import 'reusable-table/styles';</pre>
+      </section>
+
+      <section class="card full">
+        <h2>Quick Start</h2>
+        <p>Three things the host component must declare: columns, config, data.</p>
+        <pre>// component .ts
+reUsableTableColumn: ReUsableTableColumn[] = [
+  { id: 'id',   name: 'Id',   type: 'integer', width: '10%', align: 'right' },
+  { id: 'name', name: 'Name', width: '40%' },
+  { id: 'flow', name: 'Flow', type: 'number', digits: '1.2-2', align: 'right', width: '20%' },
+  {
+    id: 'rowOps', type: 'actions', name: 'Actions', width: '15%',
+    actions: {
+      edit:   { show: true, color: 'accent' },
+      delete: { show: true, color: 'warn' }
+    }
+  }
+];
+
+reUsableTableConfig: ReusableTableConfig = {
+  searchTextMode: 'displayed',
+  pagination: { enabled: true, defaultPageSize: 25 },
+  sorting: { enabled: true },
+  toolbar: { showSearch: true, showColumnToggle: true,
+             showCsv: true, showExcel: true, showPdf: true, showPrint: true }
+};
+
+pumpData = [
+  { id: 1, name: 'Pump A', flow: 1000.99 },
+  { id: 2, name: 'Pump B', flow: 250.50  }
+];</pre>
+        <pre>&lt;!-- component .html --&gt;
+&lt;app-reusabletable
+  [data]="pumpData"
+  [columns]="reUsableTableColumn"
+  [tableConfig]="reUsableTableConfig"
+  (rowEdit)="onEdit($event)"
+  (rowDelete)="onDelete($event)"
+  (rowSelect)="onSelect($event)"&gt;
+&lt;/app-reusabletable&gt;</pre>
+      </section>
+
+      <section class="card full">
+        <h2>Column Definition</h2>
+        <p>Every column shares a base shape. Type-specific fields are listed in the next section.</p>
+        <table class="api">
+          <thead>
+            <tr><th>Field</th><th>Type</th><th>Purpose</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>id</code></td><td><code>string</code></td>
+                <td>Data key on the row object. Required and must be unique within the column array.</td></tr>
+            <tr><td><code>name</code></td><td><code>string</code></td>
+                <td>Header label shown in the table. Required.</td></tr>
+            <tr><td><code>type</code></td><td>see types card</td>
+                <td>Render contract. Defaults to plain text.</td></tr>
+            <tr><td><code>width</code></td><td><code>string</code></td>
+                <td>CSS width hint, e.g. <code>'20%'</code> or <code>'120px'</code>.</td></tr>
+            <tr><td><code>align</code></td><td><code>'left' | 'center' | 'right'</code></td>
+                <td>Cell content alignment. Header and footer align with the cell.</td></tr>
+            <tr><td><code>digits</code></td><td><code>string</code></td>
+                <td>Decimal format for <code>type: 'number'</code>, e.g. <code>'1.2-2'</code>.</td></tr>
+            <tr><td><code>style</code></td><td><code>Record</code></td>
+                <td>Inline style applied to every cell in this column.</td></tr>
+            <tr><td><code>chipStyle</code></td><td><code>Record</code></td>
+                <td>Background and text styling for <code>type: 'chip'</code>.</td></tr>
+            <tr><td><code>displayField</code></td><td><code>string</code></td>
+                <td>Nested key shown to the user for <code>multiline</code> and <code>link</code>.</td></tr>
+            <tr><td><code>linkField</code></td><td><code>string</code></td>
+                <td>Nested key holding the URL for <code>type: 'link'</code>.</td></tr>
+            <tr><td><code>exportFormatter</code></td><td><code>(value) =&gt; string</code></td>
+                <td>Override export-time rendering for this column.</td></tr>
+            <tr><td><code>actions</code></td><td>see Actions card</td>
+                <td>Required for <code>type: 'actions'</code>.</td></tr>
+            <tr><td><code>footer</code></td><td>see Footer card</td>
+                <td>Per-column footer cell behavior.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="card full">
+        <h2>Column Types</h2>
+        <p>The <code>type</code> field controls how a cell renders. Default is plain text.</p>
+        <pre>// 'text'  — default. Renders the field value as a string.
+{ id: 'name', name: 'Name', width: '20%' }
+
+// 'integer' — formatted whole number.
+{ id: 'id', name: 'Id', type: 'integer', align: 'right', width: '5%' }
+
+// 'number' — formatted decimal. Use 'digits' to control places.
+{ id: 'flow', name: 'Flow', type: 'number', digits: '1.2-2', align: 'right' }
+
+// 'currency' — formatted as INR currency.
+{ id: 'price', name: 'Price', type: 'currency', align: 'right' }
+
+// 'date' — formatted as dd-MM-yyyy.
+{ id: 'createdAt', name: 'Created', type: 'date' }
+
+// 'chip' — value rendered inside a styled badge.
+{ id: 'status', name: 'Status', type: 'chip',
+  chipStyle: { backgroundColor: '#3f51b5', color: 'white' } }
+
+// 'multiline' — array of objects, one line per item.
+{ id: 'col5', name: 'Notes', type: 'multiline', displayField: 'TextToDisplay' }
+// data: { col5: [{ TextToDisplay: 'first line' }, { TextToDisplay: 'second line' }] }
+
+// 'link' — array of objects, each rendered as a hyperlink.
+{ id: 'col6', name: 'Files', type: 'link',
+  displayField: 'UploadedFileName', linkField: 'RelativeFilePath' }
+// data: { col6: [{ UploadedFileName: 'a.pdf', RelativeFilePath: 'https://...' }] }
+
+// 'actions' — see Actions card. Renders icon buttons per row.
+{ id: 'rowOps', type: 'actions', name: 'Actions',
+  actions: { edit: { show: true, color: 'accent' } } }</pre>
+        <p class="note">
+          The actions column is identified by <code>type: 'actions'</code>, not by <code>id</code>. The
+          <code>id</code> can be anything you want — <code>'rowOps'</code>, <code>'controls'</code>, etc.
+        </p>
+      </section>
+
+      <section class="card full">
+        <h2>Table Configuration</h2>
+        <p>Pass a <code>ReusableTableConfig</code> object as <code>[tableConfig]</code>. All sections are optional;
+           defaults are applied per missing field.</p>
+        <pre>reUsableTableConfig: ReusableTableConfig = {
+
+  searchTextMode: 'displayed',  // or 'all' — see note below
+
+  appearance: {
+    zebraColor:        '#bfd4f1',
+    hoverColor:        '#e3f2fd',
+    selectedRowColor:  '#ffe0b2',
+    headingToPrint:    'Pump Inventory'
+  },
+
+  pagination: {
+    enabled: true,
+    defaultPageSize: 25         // 5 | 10 | 25 | 100
+  },
+
+  sorting: {
+    enabled: true
+  },
+
+  toolbar: {
+    showSearch:       true,
+    showColumnToggle: true,
+    showCsv:          true,
+    showExcel:        true,
+    showPdf:          true,
+    showPrint:        true
+  },
+
+  footer: {
+    enabled: true,
+    sticky:  true               // keep footer pinned during scroll
+  }
+
+};</pre>
+        <p class="note">
+          <span class="label">searchTextMode:</span> <code>'displayed'</code> matches only the rendered
+          text (what the user sees). <code>'all'</code> also searches hidden fields like
+          <code>linkField</code> for link columns.
+        </p>
+      </section>
+
+      <section class="card full">
+        <h2>Actions Column</h2>
+        <p>
+          Three action types are supported: <code>select</code>, <code>edit</code>, <code>delete</code>. Each is
+          independently shown / hidden, colored, and (optionally) disabled per row by a rule.
+        </p>
+        <pre>{
+  id: 'rowOps',
+  type: 'actions',
+  name: 'Actions',
+  width: '10%',
+  actions: {
+    select: {
+      show: true,
+      color: 'primary'
+    },
+    edit: {
+      show: true,
+      color: 'accent',
+      disableWhen: { key: 'approved', equals: true }
+    },
+    delete: {
+      show: true,
+      color: 'warn',
+      disableWhen: { key: 'status', equals: 'final' }
+    }
+  }
+}</pre>
+        <h3>disableWhen — per-row disable rule <span class="pill">new</span></h3>
+        <p>
+          Each action accepts an optional <code>disableWhen</code> rule that names a key on the row and a value to
+          compare against. When <code>row[key] === equals</code>, the button is rendered but disabled — clicks do
+          not fire the corresponding row event.
+        </p>
+        <p>The <code>equals</code> value is matched with strict equality:</p>
+        <ul>
+          <li><code>equals: true</code> — boolean flags</li>
+          <li><code>equals: 'Y'</code> — Y/N flags</li>
+          <li><code>equals: 'Yes'</code> — Yes/No flags</li>
+          <li><code>equals: 'locked'</code> — status strings</li>
+        </ul>
+        <p class="note">
+          Actions without a <code>disableWhen</code> rule are always enabled. Existing column configs without
+          this field continue to work unchanged.
+        </p>
+      </section>
+
+      <section class="card full">
+        <h2>Footer Row</h2>
+        <p>
+          Optional footer row showing aggregations, counts, or static labels per column. Footer values react to
+          the active filter — they reflect only the rows currently in view, so totals update automatically as
+          users search.
+        </p>
+        <p>Enable in the table config:</p>
+        <pre>footer: { enabled: true, sticky: true }</pre>
+        <p>Declare per-column behavior via the <code>footer</code> field:</p>
+        <pre>// Sum of numeric values, formatted with the column's digits
+{ id: 'flow', type: 'number', digits: '1.2-2',
+  footer: { type: 'sum' } }
+
+// Count of currently visible rows
+{ id: 'id', type: 'integer',
+  footer: { type: 'count' } }
+
+// Fixed label
+{ id: 'name',
+  footer: { type: 'text', value: 'Totals &rarr;' } }
+
+// Custom aggregation
+{ id: 'amount',
+  footer: {
+    type: 'custom',
+    formatter: (rows) =&gt; `Max: ${Math.max(...rows.map(r =&gt; r.amount))}`
+  } }</pre>
+        <p>Available footer types:</p>
+        <ul>
+          <li><code>sum</code>, <code>avg</code>, <code>min</code>, <code>max</code> — numeric aggregations.
+              Non-numeric values are ignored. If no numeric values are found, the cell renders empty and a
+              warning is logged to the console in development.</li>
+          <li><code>count</code> — number of currently visible rows.</li>
+          <li><code>text</code> — renders the provided static string.</li>
+          <li><code>custom</code> — receives the filtered rows array and returns a string.</li>
+        </ul>
+        <p class="note">
+          Columns without a <code>footer</code> field render an empty footer cell. Footer values are cached and
+          recomputed only when data, filter, or visible columns change — not on every change detection cycle.
+        </p>
+      </section>
+
+      <section class="card full">
+        <h2>Print and Export Behavior</h2>
+        <p>
+          Print and exports always include the <em>full filtered set</em>, regardless of the active page size.
+        </p>
+        <ul>
+          <li><span class="label">No filter, any page size:</span> full dataset is exported / printed.</li>
+          <li><span class="label">Filter active:</span> only matching rows are exported / printed.</li>
+          <li><span class="label">Filter matches zero rows:</span> a &ldquo;No Data Found.&rdquo; alert appears
+              and no file is produced.</li>
+          <li><span class="label">Footer enabled:</span> the footer row is included in CSV, Excel, PDF, and
+              print outputs.</li>
+          <li><span class="label">Print:</span> opens a new window with a printable rendering of the table; the
+              window self-closes once the print dialog is dismissed.</li>
+          <li><span class="label">Action column:</span> excluded from CSV / Excel / PDF (kept on screen and in
+              print).</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Events</h2>
+        <p>The component emits three row events:</p>
+        <ul>
+          <li><code>(rowSelect)</code> &mdash; emits the row object when its select button is clicked.</li>
+          <li><code>(rowEdit)</code> &mdash; emits the row object when its edit button is clicked.</li>
+          <li><code>(rowDelete)</code> &mdash; emits the row object when its delete button is clicked.</li>
+        </ul>
+        <p class="note">
+          A button disabled via <code>disableWhen</code> does not fire its event.
+        </p>
+      </section>
+
+      <section class="card">
+        <h2>Defaults</h2>
+        <p>Sensible defaults are applied for any config field the consumer omits.</p>
+        <ul>
+          <li><code>searchTextMode</code>: <code>'all'</code></li>
+          <li><code>pagination.defaultPageSize</code>: <code>25</code></li>
+          <li><code>sorting.enabled</code>: <code>true</code></li>
+          <li><code>toolbar.*</code>: all features visible</li>
+          <li><code>footer.enabled</code>: <code>false</code></li>
+          <li><code>appearance.zebraColor</code>: <code>'#f5f5f5'</code></li>
+        </ul>
+      </section>
+
+      <section class="card full">
+        <h2>Run The Demo App</h2>
+        <ol>
+          <li><code>npm install</code></li>
+          <li><code>npm start</code></li>
+          <li>Open <code>http://localhost:4200/</code></li>
+        </ol>
+        <p class="note">
+          The root route redirects to <code>/tableui</code> in this repo. The demo includes sample data
+          covering every column type and exercises the footer, action disable rules, and exports.
+        </p>
+      </section>
+
+      <section class="card full">
+        <h2>Notes</h2>
+        <ul>
+          <li>The component supports search, sorting, pagination, column toggle, CSV / Excel / PDF export,
+              print, an optional footer row, and per-row action button disable rules.</li>
+          <li>Regular text columns use the raw field value unless you add a special type or formatter.</li>
+          <li>For multiline and link columns, the table expects arrays of objects, not single strings.</li>
+          <li>The actions column is identified by <code>type: 'actions'</code>; its <code>id</code> is free.</li>
+          <li>Print and exports operate on the full filtered set — pagination does not limit them.</li>
+          <li>Search highlighting is applied via safe HTML escaping. User input is escaped before regex use,
+              so special characters in the search box match literally.</li>
+        </ul>
+      </section>
+
+    </div>
+  </div>
+</body>
+</html>
