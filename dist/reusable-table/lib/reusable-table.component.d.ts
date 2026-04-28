@@ -21,14 +21,26 @@ export interface ReUsableTableColumn {
         select?: {
             show?: boolean;
             color?: 'primary' | 'accent' | 'warn';
+            disableWhen?: {
+                key: string;
+                equals: any;
+            };
         };
         edit?: {
             show?: boolean;
             color?: 'primary' | 'accent' | 'warn';
+            disableWhen?: {
+                key: string;
+                equals: any;
+            };
         };
         delete?: {
             show?: boolean;
             color?: 'primary' | 'accent' | 'warn';
+            disableWhen?: {
+                key: string;
+                equals: any;
+            };
         };
     };
     footer?: {
@@ -97,6 +109,12 @@ export declare class ReusableTableComponent implements OnInit, OnChanges, AfterV
     updateViewMode(): void;
     ngAfterViewInit(): void;
     setSelectedRow(row: any): void;
+    isActionDisabled(row: any, action?: {
+        disableWhen?: {
+            key: string;
+            equals: any;
+        };
+    }): boolean;
     getCellStyle(col: ReUsableTableColumn): Record<string, any>;
     getChipContainerStyle(col: ReUsableTableColumn): Record<string, any> | null;
     getChipTextStyle(col: ReUsableTableColumn): Record<string, any> | null;
