@@ -65,12 +65,12 @@ export class TableuiComponent {
 
     this.reUsableTableColumn = [
 
-        { id: 'id', name: 'Id', width: '5%', type: 'integer', align: 'right' },
+      { id: 'id', name: 'Id', width: '5%', type: 'integer', align: 'right' },
       // { id: 'id', name: 'Id', width: '5%', type: 'integer', align: 'right', footer: { type: 'count' } },
 
       {
         id: 'name', name: 'Name', width: '20%', footer: { type: 'text', value: 'Total' }
-          // id: 'name', name: 'Name', width: '20%'
+        // id: 'name', name: 'Name', width: '20%'
       },
 
       // {
@@ -150,6 +150,7 @@ export class TableuiComponent {
         showPrint: true,
       },
       footer: { enabled: true, sticky: true },
+      selection: { multiSelect: false }
 
     }
 
@@ -165,6 +166,10 @@ export class TableuiComponent {
 
   onDelete(row: any) {
     console.log('Delete Clicked', row);
+  }
+
+  onSelectionChange(rows: any[]) {
+    console.log('Selected rows:', rows);
   }
 
 }

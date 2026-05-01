@@ -80,6 +80,9 @@ export interface ReusableTableConfig {
         enabled?: boolean;
         sticky?: boolean;
     };
+    selection?: {
+        multiSelect?: boolean;
+    };
 }
 export declare class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit {
     private readonly exportService;
@@ -101,6 +104,7 @@ export declare class ReusableTableComponent implements OnInit, OnChanges, AfterV
     visibleColumnIds: string[];
     dataSource: MatTableDataSource<any, MatPaginator>;
     selectedRow: any;
+    selectedRows: any[];
     currentFilter: string;
     headingForCtrlP: string;
     footerValues: Record<string, string>;
@@ -109,6 +113,8 @@ export declare class ReusableTableComponent implements OnInit, OnChanges, AfterV
     updateViewMode(): void;
     ngAfterViewInit(): void;
     setSelectedRow(row: any): void;
+    markRow(row: any): void;
+    isRowSelected(row: any): boolean;
     isActionDisabled(row: any, action?: {
         disableWhen?: {
             key: string;

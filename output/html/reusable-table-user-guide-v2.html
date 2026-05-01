@@ -370,6 +370,10 @@ pumpData = [
   footer: {
     enabled: true,
     sticky:  true               // keep footer pinned during scroll
+  },
+
+  selection: {
+    multiSelect: true           // default false — see below
   }
 
 };</pre>
@@ -377,6 +381,38 @@ pumpData = [
           <span class="label">searchTextMode:</span> <code>'displayed'</code> matches only the rendered
           text (what the user sees). <code>'all'</code> also searches hidden fields like
           <code>linkField</code> for link columns.
+        </p>
+
+        <h3>selection &mdash; row selection and highlighting <span class="pill">new</span></h3>
+        <p>
+          Controls how clicked rows are highlighted. Driven entirely by the <code>select</code> action button;
+          edit and delete clicks never modify the highlighted set.
+        </p>
+        <ul>
+          <li>
+            <span class="label">multiSelect: false</span> (default) &mdash; single-row highlight. Clicking
+            <em>any</em> action button (<code>select</code>, <code>edit</code>, <code>delete</code>) highlights
+            the clicked row, replacing whatever was previously highlighted.
+          </li>
+          <li>
+            <span class="label">multiSelect: true</span> &mdash; multi-row highlight. Each click on the
+            <code>select</code> button toggles that row in or out of the highlighted set. Edit and delete clicks
+            fire their events but do not modify the highlighted set.
+          </li>
+        </ul>
+        <p>
+          The library does not emit a separate &ldquo;selection&rdquo; event. The existing <code>(rowSelect)</code>
+          output already carries each clicked row, which is sufficient for the calling component to build and
+          maintain its own list of selected items (with deduplication by primary key, removal, upload, etc.).
+        </p>
+        <p>
+          Selection persists across pagination, sorting, and search filtering &mdash; rows are tracked by
+          object reference, not by index. A row that scrolls out of view due to a filter remains in the
+          highlighted set and reappears highlighted when the filter is cleared.
+        </p>
+        <p class="note">
+          The highlight color comes from <code>appearance.selectedRowColor</code>. Set it explicitly if the
+          default does not contrast enough with your zebra striping.
         </p>
       </section>
 
@@ -511,6 +547,7 @@ pumpData = [
           <li><code>sorting.enabled</code>: <code>true</code></li>
           <li><code>toolbar.*</code>: all features visible</li>
           <li><code>footer.enabled</code>: <code>false</code></li>
+          <li><code>selection.multiSelect</code>: <code>false</code></li>
           <li><code>appearance.zebraColor</code>: <code>'#f5f5f5'</code></li>
         </ul>
       </section>
@@ -532,7 +569,8 @@ pumpData = [
         <h2>Notes</h2>
         <ul>
           <li>The component supports search, sorting, pagination, column toggle, CSV / Excel / PDF export,
-              print, an optional footer row, and per-row action button disable rules.</li>
+              print, an optional footer row, per-row action button disable rules, and single- or multi-row
+              selection highlighting.</li>
           <li>Regular text columns use the raw field value unless you add a special type or formatter.</li>
           <li>For multiline and link columns, the table expects arrays of objects, not single strings.</li>
           <li>The actions column is identified by <code>type: 'actions'</code>; its <code>id</code> is free.</li>
