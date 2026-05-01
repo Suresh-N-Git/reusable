@@ -400,11 +400,52 @@ pumpData = [
             fire their events but do not modify the highlighted set.
           </li>
         </ul>
+
+        <h3>Two-way binding &mdash; the parent owns the array</h3>
         <p>
-          The library does not emit a separate &ldquo;selection&rdquo; event. The existing <code>(rowSelect)</code>
-          output already carries each clicked row, which is sufficient for the calling component to build and
-          maintain its own list of selected items (with deduplication by primary key, removal, upload, etc.).
+          For multi-select usage, the parent component owns the selected-rows array. The library exposes
+          <code>[selectedRows]</code> as an input and <code>(selectedRowsChange)</code> as an output, so two-way
+          binding works out of the box:
         </p>
+        <pre>&lt;app-reusabletable
+  [data]="pumpData"
+  [columns]="reUsableTableColumn"
+  [tableConfig]="reUsableTableConfig"
+  [(selectedRows)]="selectedItems"
+  (rowSelect)="onSelect($event)"
+  (rowEdit)="onEdit($event)"
+  (rowDelete)="onDelete($event)"&gt;
+&lt;/app-reusabletable&gt;</pre>
+        <p>
+          With the binding in place, every parent-side mutation of <code>selectedItems</code> automatically
+          updates the highlights &mdash; no method calls into the library, no <code>@ViewChild</code>, no
+          synchronisation logic:
+        </p>
+        <pre>selectedItems: any[] = [];
+
+removeFromList(item: any): void {
+  this.selectedItems = this.selectedItems.filter(i =&gt; i !== item);
+}
+
+clearAll(): void {
+  this.selectedItems = [];
+  this.pumpData = [...this.pumpData];   // optional data refresh
+}
+
+uploadAll(): void {
+  this.api.uploadMany(this.selectedItems);
+}</pre>
+        <p>
+          The select-button click in the table emits a new array via <code>selectedRowsChange</code>; the
+          parent stores it; the library reads it back via <code>[selectedRows]</code>. Single source of truth,
+          no drift.
+        </p>
+        <p>
+          Single-select consumers (<code>multiSelect: false</code>) do not need to bind <code>[(selectedRows)]</code>
+          at all &mdash; the library handles single-row highlighting internally.
+        </p>
+
+        <h3>Persistence and tracking</h3>
         <p>
           Selection persists across pagination, sorting, and search filtering &mdash; rows are tracked by
           object reference, not by index. A row that scrolls out of view due to a filter remains in the
@@ -527,11 +568,13 @@ pumpData = [
 
       <section class="card">
         <h2>Events</h2>
-        <p>The component emits three row events:</p>
+        <p>The component emits four outputs:</p>
         <ul>
           <li><code>(rowSelect)</code> &mdash; emits the row object when its select button is clicked.</li>
           <li><code>(rowEdit)</code> &mdash; emits the row object when its edit button is clicked.</li>
           <li><code>(rowDelete)</code> &mdash; emits the row object when its delete button is clicked.</li>
+          <li><code>(selectedRowsChange)</code> &mdash; emits the new selected-rows array whenever the
+              select button toggles membership. Pair with <code>[selectedRows]</code> for two-way binding.</li>
         </ul>
         <p class="note">
           A button disabled via <code>disableWhen</code> does not fire its event.

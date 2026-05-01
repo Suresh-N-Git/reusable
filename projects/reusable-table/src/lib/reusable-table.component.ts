@@ -135,6 +135,10 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
   @Output() rowDelete = new EventEmitter<any>();
   // @Output() selectionChange = new EventEmitter<any[]>();
 
+
+  @Input() selectedRows: any[] = [];
+  @Output() selectedRowsChange = new EventEmitter<any[]>();
+
   resolvedConfig: Required<ReusableTableConfig> = DEFAULT_TABLE_CONFIG;
   isMobileView = false;
   displayedColumnIds: string[] = [];
@@ -142,7 +146,7 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
   visibleColumnIds: string[] = [];
   dataSource = new MatTableDataSource<any>([]);
   selectedRow: any = null;  // For Single Row Click
-  selectedRows: any[] = []; // For Multi Row Click
+  // selectedRows: any[] = []; // For Multi Row Click
   currentFilter = '';
   headingForCtrlP: string = "Print Table";
 
@@ -172,28 +176,45 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
   // }
 
   // Select button — manages the multi-select set
+
   setSelectedRow(row: any): void {
     if (this.resolvedConfig.selection?.multiSelect) {
       const idx = this.selectedRows.indexOf(row);
-      if (idx >= 0) {
-        this.selectedRows.splice(idx, 1);
-      } else {
-        this.selectedRows.push(row);
-      }
+      const next = idx >= 0
+        ? this.selectedRows.filter((_, i) => i !== idx)
+        : [...this.selectedRows, row];
+      this.selectedRowsChange.emit(next);       // emit, parent updates its array
     } else {
-      this.selectedRow = row;          // single mode — replaces
+      this.selectedRow = row;                   // single-mode internal highlight
     }
   }
-  // Edit and delete — only update the transient highlight
-  // markRow(row: any): void {
-  //   this.selectedRow = row;
+
+  // setSelectedRow(row: any): void {
+  //   if (this.resolvedConfig.selection?.multiSelect) {
+  //     const idx = this.selectedRows.indexOf(row);
+  //     if (idx >= 0) {
+  //       this.selectedRows.splice(idx, 1);
+  //     } else {
+  //       this.selectedRows.push(row);
+  //     }
+  //   } else {
+  //     this.selectedRow = row;          // single mode — replaces
+  //   }
   // }
+
   markRow(row: any): void {
     if (!this.resolvedConfig.selection?.multiSelect) {
-      this.selectedRow = row;          // single mode only
+      this.selectedRow = row;
     }
-    // In multi mode, edit/delete clicks don't change the highlight
+    // multi-mode: do nothing — edit/delete don't affect the highlight set
   }
+
+  // markRow(row: any): void {
+  //   if (!this.resolvedConfig.selection?.multiSelect) {
+  //     this.selectedRow = row;          // single mode only
+  //   }
+  //   // In multi mode, edit/delete clicks don't change the highlight
+  // }
 
   // setSelectedRow(row: any): void {
   //   if (this.resolvedConfig.selection?.multiSelect) {
@@ -215,12 +236,21 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
   //   return this.selectedRows.includes(row);
   // }
 
+  // isRowSelected(row: any): boolean {
+  //   if (this.resolvedConfig.selection?.multiSelect) {
+  //     return this.selectedRows.includes(row);     // multi mode — only the multi set
+  //   }
+  //   return row === this.selectedRow;              // single mode — only the single field
+  // }
+
   isRowSelected(row: any): boolean {
     if (this.resolvedConfig.selection?.multiSelect) {
-      return this.selectedRows.includes(row);     // multi mode — only the multi set
+      return this.selectedRows.includes(row);   // reads from input
     }
-    return row === this.selectedRow;              // single mode — only the single field
+    return row === this.selectedRow;            // internal single-mode highlight
   }
+
+
 
 
   // isRowSelected(row: any): boolean {

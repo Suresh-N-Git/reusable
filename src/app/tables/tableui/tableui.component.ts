@@ -15,6 +15,8 @@ export class TableuiComponent {
   reUsableTableConfig!: ReusableTableConfig;
   reUsableTableColumn: ReUsableTableColumn[] = [];
 
+  selectedItems: any[] = [];
+
   pumpData = [
     {
       id: 1, name: 'Pump, A', flow: 1000.9999, col4: 'some text', col5: [{ "TextToDisplay": "Plain text" }]
@@ -170,6 +172,17 @@ export class TableuiComponent {
 
   onSelectionChange(rows: any[]) {
     console.log('Selected rows:', rows);
+  }
+
+
+  removeFromList(item: any): void {
+    this.selectedItems = this.selectedItems.filter(i => i !== item);
+  }
+
+  clearAll(): void {
+    this.selectedItems = [];
+    // Optional data refresh — selection stays cleared because you set it to []
+    this.pumpData = [...this.pumpData];
   }
 
 }

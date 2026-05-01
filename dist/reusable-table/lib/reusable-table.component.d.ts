@@ -97,6 +97,8 @@ export declare class ReusableTableComponent implements OnInit, OnChanges, AfterV
     rowEdit: EventEmitter<any>;
     rowSelect: EventEmitter<any>;
     rowDelete: EventEmitter<any>;
+    selectedRows: any[];
+    selectedRowsChange: EventEmitter<any[]>;
     resolvedConfig: Required<ReusableTableConfig>;
     isMobileView: boolean;
     displayedColumnIds: string[];
@@ -104,7 +106,6 @@ export declare class ReusableTableComponent implements OnInit, OnChanges, AfterV
     visibleColumnIds: string[];
     dataSource: MatTableDataSource<any, MatPaginator>;
     selectedRow: any;
-    selectedRows: any[];
     currentFilter: string;
     headingForCtrlP: string;
     footerValues: Record<string, string>;
@@ -152,5 +153,5 @@ export declare class ReusableTableComponent implements OnInit, OnChanges, AfterV
     downloadPdf(): void;
     private assertHasRowsToExport;
     static ɵfac: i0.ɵɵFactoryDeclaration<ReusableTableComponent, never>;
-    static ɵcmp: i0.ɵɵComponentDeclaration<ReusableTableComponent, "app-reusabletable", never, { "columns": { "alias": "columns"; "required": false; }; "tableConfig": { "alias": "tableConfig"; "required": false; }; "data": { "alias": "data"; "required": false; }; }, { "rowEdit": "rowEdit"; "rowSelect": "rowSelect"; "rowDelete": "rowDelete"; }, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<ReusableTableComponent, "app-reusabletable", never, { "columns": { "alias": "columns"; "required": false; }; "tableConfig": { "alias": "tableConfig"; "required": false; }; "data": { "alias": "data"; "required": false; }; "selectedRows": { "alias": "selectedRows"; "required": false; }; }, { "rowEdit": "rowEdit"; "rowSelect": "rowSelect"; "rowDelete": "rowDelete"; "selectedRowsChange": "selectedRowsChange"; }, never, never, false, never>;
 }
