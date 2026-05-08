@@ -144,7 +144,7 @@ export class TableuiComponent {
       },
 
       toolbar: {
-        showSearch: true,
+        showSearch: false,
         showColumnToggle: true,
         showCsv: true,
         showExcel: true,

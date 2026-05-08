@@ -102,9 +102,14 @@ button.mat-icon-button {
   line-height: 14px;
 }
 
-.mat-icon {
-  margin-bottom: -10px;
+.toolbaricons {
+   margin-bottom: -20px;
+    margin-top: -20px;
 }
+// .mat-icon {
+//   margin-bottom: -20px;
+//   margin-top: -20px;
+// }
 
 .action-buttons {
   display: flex;
