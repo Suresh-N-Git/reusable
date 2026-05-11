@@ -58,6 +58,16 @@
   padding-bottom: 0 !important;
 }
 
+.button-container {
+  display: flex;
+  /* Use flexbox layout */
+  justify-content: space-evenly;
+  /* Equal space between and around buttons */
+  align-items: center;
+  /* Vertically center buttons */
+  padding: 20px;
+}
+
 .mdc-data-table__cell,
 .mat-mdc-header-cell {
   padding: 12px 16px;
@@ -103,9 +113,10 @@ button.mat-icon-button {
 }
 
 .toolbaricons {
-   margin-bottom: -20px;
-    margin-top: -20px;
+  margin-bottom: -20px;
+  margin-top: -20px;
 }
+
 // .mat-icon {
 //   margin-bottom: -20px;
 //   margin-top: -20px;
