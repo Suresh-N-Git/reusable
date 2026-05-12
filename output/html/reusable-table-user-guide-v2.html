@@ -346,6 +346,43 @@ pumpData = [
       </section>
 
       <section class="card full">
+        <h2>Multiple Chip Columns With Different Vocabularies</h2>
+        <p>
+          <code>chipStyleFn</code> is per-column. If your consumer code builds columns through a shared loop
+          and assigns the same <code>chipStyleFn</code> to every chip column, the function will only behave
+          correctly when all those columns share the same value vocabulary (e.g. all Yes / No). To support
+          multiple chip columns each with its own vocabulary &mdash; one column is Yes / No, another is
+          Active / Inactive / Pending, another is High / Medium / Low &mdash; keep a lookup table keyed by
+          column id and resolve the function per column.
+        </p>
+        <pre>const GREEN  = { backgroundColor: '#4caf50', color: 'white' };
+const RED    = { backgroundColor: '#f44336', color: 'white' };
+const YELLOW = { backgroundColor: '#ff9800', color: 'white' };
+const GREY   = { backgroundColor: '#9e9e9e', color: 'white' };
+
+const CHIP_STYLES: Record&lt;string, (value: any) =&gt; Record&lt;string, any&gt;&gt; = {
+  approved: (value) =&gt; value === 'Yes' ? GREEN : RED,
+  status:   (value) =&gt; ({ Active: GREEN, Inactive: RED, Pending: YELLOW }[value] ?? GREY),
+  priority: (value) =&gt; ({ High: RED, Medium: YELLOW, Low: GREEN }[value] ?? GREY),
+};
+
+// In the column builder:
+...(isChipColumn &amp;&amp; {
+  align: 'center',
+  chipStyleFn: CHIP_STYLES[col] ?? (() =&gt; GREY)
+})</pre>
+        <p>
+          Each chip column picks up its own value-to-color mapping. Columns not listed in
+          <code>CHIP_STYLES</code> fall back to a sensible default style.
+        </p>
+        <p class="note">
+          This is a consumer-side pattern &mdash; no library change is required. The library already
+          supports per-column <code>chipStyleFn</code>; the lookup table just lets the consumer keep each
+          column&rsquo;s vocabulary isolated and easy to maintain.
+        </p>
+      </section>
+
+      <section class="card full">
         <h2>Table Configuration</h2>
         <p>Pass a <code>ReusableTableConfig</code> object as <code>[tableConfig]</code>. All sections are optional;
            defaults are applied per missing field.</p>
