@@ -279,7 +279,9 @@ pumpData = [
             <tr><td><code>style</code></td><td><code>Record</code></td>
                 <td>Inline style applied to every cell in this column.</td></tr>
             <tr><td><code>chipStyle</code></td><td><code>Record</code></td>
-                <td>Background and text styling for <code>type: 'chip'</code>.</td></tr>
+                <td>Static background and text styling for <code>type: 'chip'</code>. Same style for every value in the column.</td></tr>
+            <tr><td><code>chipStyleFn</code></td><td><code>(value) =&gt; Record</code></td>
+                <td>Value-driven chip style. Wins over <code>chipStyle</code> when both are set.</td></tr>
             <tr><td><code>displayField</code></td><td><code>string</code></td>
                 <td>Nested key shown to the user for <code>multiline</code> and <code>link</code>.</td></tr>
             <tr><td><code>linkField</code></td><td><code>string</code></td>
@@ -313,8 +315,17 @@ pumpData = [
 { id: 'createdAt', name: 'Created', type: 'date' }
 
 // 'chip' — value rendered inside a styled badge.
+// Static style: same color for every chip in the column.
 { id: 'status', name: 'Status', type: 'chip',
   chipStyle: { backgroundColor: '#3f51b5', color: 'white' } }
+
+// Value-driven style: color computed from each cell's value.
+// chipStyleFn receives the value and returns a style object.
+{ id: 'approved', name: 'Approved', type: 'chip',
+  chipStyleFn: (value) =&gt;
+    value === 'Yes'
+      ? { backgroundColor: '#4caf50', color: 'white' }
+      : { backgroundColor: '#f44336', color: 'white' } }
 
 // 'multiline' — array of objects, one line per item.
 { id: 'col5', name: 'Notes', type: 'multiline', displayField: 'TextToDisplay' }
