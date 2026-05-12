@@ -29,6 +29,7 @@ export interface ReUsableTableColumn {
   digits?: string;
   style?: Record<string, any>;
   chipStyle?: Record<string, any>;
+  chipStyleFn?: (value: any) => Record<string, any>;
   displayField?: string;
   linkField?: string;
   searchTextMode?: 'displayed' | 'all';
@@ -274,20 +275,33 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
     };
   }
 
-  getChipContainerStyle(col: ReUsableTableColumn): Record<string, any> | null {
-    if (!col.chipStyle) return null;
+  // getChipContainerStyle(col: ReUsableTableColumn): Record<string, any> | null {
+  //   if (!col.chipStyle) return null;
 
-    return {
-      backgroundColor: col.chipStyle['backgroundColor'],
-    };
+  //   return {
+  //     backgroundColor: col.chipStyle['backgroundColor'],
+  //   };
+  // }
+
+  getChipContainerStyle(col: ReUsableTableColumn, value?: any): Record<string, any> | null {
+    const style = col.chipStyleFn ? col.chipStyleFn(value) : col.chipStyle;
+    if (!style) return null;
+    return { backgroundColor: style['backgroundColor'] };
   }
 
-  getChipTextStyle(col: ReUsableTableColumn): Record<string, any> | null {
-    if (!col.chipStyle) return null;
-
-    const { backgroundColor, ...rest } = col.chipStyle;
+  getChipTextStyle(col: ReUsableTableColumn, value?: any): Record<string, any> | null {
+    const style = col.chipStyleFn ? col.chipStyleFn(value) : col.chipStyle;
+    if (!style) return null;
+    const { backgroundColor, ...rest } = style;
     return rest;
   }
+
+  // getChipTextStyle(col: ReUsableTableColumn): Record<string, any> | null {
+  //   if (!col.chipStyle) return null;
+
+  //   const { backgroundColor, ...rest } = col.chipStyle;
+  //   return rest;
+  // }
 
   getDisplayValue(obj: any, col: ReUsableTableColumn): any {
     if (!obj) return '';
