@@ -34,9 +34,9 @@ export interface ReUsableTableColumn {
   linkField?: string;
   searchTextMode?: 'displayed' | 'all';
   actions?: {
-    select?: { show?: boolean; color?: 'primary' | 'accent' | 'warn'; disableWhen?: { key: string; equals: any } }; // disable on some key value
-    edit?: { show?: boolean; color?: 'primary' | 'accent' | 'warn'; disableWhen?: { key: string; equals: any } };
-    delete?: { show?: boolean; color?: 'primary' | 'accent' | 'warn'; disableWhen?: { key: string; equals: any } };
+    select?: { show?: boolean; displayTip?: string; color?: 'primary' | 'accent' | 'warn';   disableWhen?: { key: string; equals: any } }; // disable on some key value
+    edit?: { show?: boolean; displayTip?: string; color?: 'primary' | 'accent' | 'warn'; disableWhen?: { key: string; equals: any } };
+    delete?: { show?: boolean; displayTip?: string; color?: 'primary' | 'accent' | 'warn'; disableWhen?: { key: string; equals: any } };
   };
   footer?:
   | { type: 'sum' | 'avg' | 'min' | 'max' | 'count' }

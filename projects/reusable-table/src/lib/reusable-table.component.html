@@ -101,21 +101,21 @@
           @if (col.actions?.select?.show) {
           <button mat-icon-button [color]="col.actions?.select?.color"
             [disabled]="isActionDisabled(row, col.actions?.select)" (click)="setSelectedRow(row); onSelect(row)">
-            <mat-icon matTooltip="select">check_circle_outline</mat-icon>
+            <mat-icon [matTooltip]="col.actions?.select?.displayTip ?? 'Select'">check_circle_outline</mat-icon>
           </button>
           }
 
           @if (col.actions?.edit?.show) {
           <button mat-icon-button [color]="col.actions?.edit?.color"
             [disabled]="isActionDisabled(row, col.actions?.edit)" (click)="markRow(row); onEdit(row)">
-            <mat-icon matTooltip="edit">edit</mat-icon>
+            <mat-icon [matTooltip]="col.actions?.edit?.displayTip ?? 'Edit'">edit</mat-icon>
           </button>
           }
 
           @if (col.actions?.delete?.show) {
           <button mat-icon-button [color]="col.actions?.delete?.color"
             [disabled]="isActionDisabled(row, col.actions?.delete)" (click)="markRow(row); onDelete(row)">
-            <mat-icon matTooltip="delete">delete</mat-icon>
+            <mat-icon [matTooltip]="col.actions?.delete?.displayTip ?? 'Delete'">delete</mat-icon>
           </button>
           }
         </div>
