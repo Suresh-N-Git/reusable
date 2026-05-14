@@ -509,7 +509,7 @@ uploadAll(): void {
         <h2>Actions Column</h2>
         <p>
           Three action types are supported: <code>select</code>, <code>edit</code>, <code>delete</code>. Each is
-          independently shown / hidden, colored, and (optionally) disabled per row by a rule.
+          independently shown / hidden, colored, tooltipped, and (optionally) disabled per row by a rule.
         </p>
         <pre>{
   id: 'rowOps',
@@ -519,36 +519,53 @@ uploadAll(): void {
   actions: {
     select: {
       show: true,
-      color: 'primary'
+      color: 'primary',
+      tooltipText: 'Pick for upload'
     },
     edit: {
       show: true,
       color: 'accent',
+      tooltipText: 'Edit this row',
       disableWhen: { key: 'approved', equals: true }
     },
     delete: {
       show: true,
       color: 'warn',
+      tooltipText: 'Remove permanently',
       disableWhen: { key: 'status', equals: 'final' }
     }
   }
 }</pre>
-        <h3>disableWhen — per-row disable rule <span class="pill">new</span></h3>
+        <h3>tooltipText &mdash; per-action tooltip <span class="pill">new</span></h3>
+        <p>
+          Each action accepts an optional <code>tooltipText</code> string that becomes the
+          <code>matTooltip</code> on the button. Useful for clarifying what the action does or for
+          domain-specific labels.
+        </p>
+        <p>Default tooltips when <code>tooltipText</code> is not provided:</p>
+        <ul>
+          <li><code>select</code> &rarr; &ldquo;Select&rdquo;</li>
+          <li><code>edit</code> &rarr; &ldquo;Edit&rdquo;</li>
+          <li><code>delete</code> &rarr; &ldquo;Delete&rdquo;</li>
+        </ul>
+
+        <h3>disableWhen &mdash; per-row disable rule <span class="pill">new</span></h3>
         <p>
           Each action accepts an optional <code>disableWhen</code> rule that names a key on the row and a value to
-          compare against. When <code>row[key] === equals</code>, the button is rendered but disabled — clicks do
-          not fire the corresponding row event.
+          compare against. When <code>row[key] === equals</code>, the button is rendered but disabled &mdash; clicks
+          do not fire the corresponding row event.
         </p>
         <p>The <code>equals</code> value is matched with strict equality:</p>
         <ul>
-          <li><code>equals: true</code> — boolean flags</li>
-          <li><code>equals: 'Y'</code> — Y/N flags</li>
-          <li><code>equals: 'Yes'</code> — Yes/No flags</li>
-          <li><code>equals: 'locked'</code> — status strings</li>
+          <li><code>equals: true</code> &mdash; boolean flags</li>
+          <li><code>equals: 'Y'</code> &mdash; Y/N flags</li>
+          <li><code>equals: 'Yes'</code> &mdash; Yes/No flags</li>
+          <li><code>equals: 'locked'</code> &mdash; status strings</li>
         </ul>
         <p class="note">
-          Actions without a <code>disableWhen</code> rule are always enabled. Existing column configs without
-          this field continue to work unchanged.
+          Actions without a <code>disableWhen</code> rule are always enabled. Actions without a
+          <code>tooltipText</code> get the default label above. Existing column configs without these fields
+          continue to work unchanged.
         </p>
       </section>
 
