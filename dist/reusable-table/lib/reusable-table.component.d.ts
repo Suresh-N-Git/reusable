@@ -21,6 +21,7 @@ export interface ReUsableTableColumn {
     actions?: {
         select?: {
             show?: boolean;
+            tooltipText?: string;
             color?: 'primary' | 'accent' | 'warn';
             disableWhen?: {
                 key: string;
@@ -29,6 +30,7 @@ export interface ReUsableTableColumn {
         };
         edit?: {
             show?: boolean;
+            tooltipText?: string;
             color?: 'primary' | 'accent' | 'warn';
             disableWhen?: {
                 key: string;
@@ -37,6 +39,7 @@ export interface ReUsableTableColumn {
         };
         delete?: {
             show?: boolean;
+            tooltipText?: string;
             color?: 'primary' | 'accent' | 'warn';
             disableWhen?: {
                 key: string;
