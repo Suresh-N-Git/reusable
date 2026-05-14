@@ -172,10 +172,6 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
     this.attachMaterialControllers();
   }
 
-  // setSelectedRow(row: any): void {
-  //   this.selectedRow = row;
-  // }
-
   // Select button — manages the multi-select set
 
   setSelectedRow(row: any): void {
@@ -190,19 +186,6 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
     }
   }
 
-  // setSelectedRow(row: any): void {
-  //   if (this.resolvedConfig.selection?.multiSelect) {
-  //     const idx = this.selectedRows.indexOf(row);
-  //     if (idx >= 0) {
-  //       this.selectedRows.splice(idx, 1);
-  //     } else {
-  //       this.selectedRows.push(row);
-  //     }
-  //   } else {
-  //     this.selectedRow = row;          // single mode — replaces
-  //   }
-  // }
-
   markRow(row: any): void {
     if (!this.resolvedConfig.selection?.multiSelect) {
       this.selectedRow = row;
@@ -210,39 +193,6 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
     // multi-mode: do nothing — edit/delete don't affect the highlight set
   }
 
-  // markRow(row: any): void {
-  //   if (!this.resolvedConfig.selection?.multiSelect) {
-  //     this.selectedRow = row;          // single mode only
-  //   }
-  //   // In multi mode, edit/delete clicks don't change the highlight
-  // }
-
-  // setSelectedRow(row: any): void {
-  //   if (this.resolvedConfig.selection?.multiSelect) {
-  //     // Multi-select — toggle membership
-  //     const idx = this.selectedRows.indexOf(row);
-  //     if (idx >= 0) {
-  //       this.selectedRows.splice(idx, 1);
-  //     } else {
-  //       this.selectedRows.push(row);
-  //     }
-  //   } else {
-  //     // Single-select — replace
-  //     this.selectedRows = [row];
-  //   }
-  //   // this.selectionChange.emit([...this.selectedRows]);
-  // }
-
-  // isRowSelected(row: any): boolean {
-  //   return this.selectedRows.includes(row);
-  // }
-
-  // isRowSelected(row: any): boolean {
-  //   if (this.resolvedConfig.selection?.multiSelect) {
-  //     return this.selectedRows.includes(row);     // multi mode — only the multi set
-  //   }
-  //   return row === this.selectedRow;              // single mode — only the single field
-  // }
 
   isRowSelected(row: any): boolean {
     if (this.resolvedConfig.selection?.multiSelect) {
@@ -250,13 +200,6 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
     }
     return row === this.selectedRow;            // internal single-mode highlight
   }
-
-
-
-
-  // isRowSelected(row: any): boolean {
-  //   return this.selectedRows.includes(row) || row === this.selectedRow;
-  // }
 
   isActionDisabled(
     row: any,
@@ -275,14 +218,6 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
     };
   }
 
-  // getChipContainerStyle(col: ReUsableTableColumn): Record<string, any> | null {
-  //   if (!col.chipStyle) return null;
-
-  //   return {
-  //     backgroundColor: col.chipStyle['backgroundColor'],
-  //   };
-  // }
-
   getChipContainerStyle(col: ReUsableTableColumn, value?: any): Record<string, any> | null {
     const style = col.chipStyleFn ? col.chipStyleFn(value) : col.chipStyle;
     if (!style) return null;
@@ -295,13 +230,6 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
     const { backgroundColor, ...rest } = style;
     return rest;
   }
-
-  // getChipTextStyle(col: ReUsableTableColumn): Record<string, any> | null {
-  //   if (!col.chipStyle) return null;
-
-  //   const { backgroundColor, ...rest } = col.chipStyle;
-  //   return rest;
-  // }
 
   getDisplayValue(obj: any, col: ReUsableTableColumn): any {
     if (!obj) return '';
@@ -386,13 +314,6 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
   private escapeRegex(text: string): string {
     return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
-
-  // highlightSearchedText(value: any): string {
-  //   if (!value || !this.currentFilter) return value;
-
-  //   const regex = new RegExp(`(${this.currentFilter})`, 'gi');
-  //   return String(value).replace(regex, '<mark>$1</mark>');
-  // }
 
   getFormatOfValue(value: any, col: ReUsableTableColumn): string {
     if (value === null || value === undefined) return '';
@@ -628,7 +549,6 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
     if (!this.resolvedConfig.footer.enabled) return null;
     return columns.map(col => this.footerValues[col.id] ?? '');
   }
-
 
   downloadCSV(): void {
     const { columns, rows } = this.getExportData();
