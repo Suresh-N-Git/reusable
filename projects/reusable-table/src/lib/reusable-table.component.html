@@ -98,21 +98,21 @@
         }
 
         <div class="cell-value action-buttons">
-          @if (col.actions?.select?.show) {
-          <button mat-icon-button [color]="col.actions?.select?.color"
+          @if (col.actions?.select?.show && !isActionHide(row, col.actions?.select)) {
+          <button  mat-icon-button [color]="col.actions?.select?.color"
             [disabled]="isActionDisabled(row, col.actions?.select)" (click)="setSelectedRow(row); onSelect(row)">
             <mat-icon [matTooltip]="col.actions?.select?.tooltipText ?? 'Select'">check_circle_outline</mat-icon>
           </button>
           }
 
-          @if (col.actions?.edit?.show) {
+          @if (col.actions?.edit?.show && !isActionHide(row, col.actions?.edit)) {
           <button mat-icon-button [color]="col.actions?.edit?.color"
             [disabled]="isActionDisabled(row, col.actions?.edit)" (click)="markRow(row); onEdit(row)">
             <mat-icon [matTooltip]="col.actions?.edit?.tooltipText ?? 'Edit'">edit</mat-icon>
           </button>
           }
 
-          @if (col.actions?.delete?.show) {
+          @if (col.actions?.delete?.show && !isActionHide(row, col.actions?.delete)) {
           <button mat-icon-button [color]="col.actions?.delete?.color"
             [disabled]="isActionDisabled(row, col.actions?.delete)" (click)="markRow(row); onDelete(row)">
             <mat-icon [matTooltip]="col.actions?.delete?.tooltipText ?? 'Delete'">delete</mat-icon>

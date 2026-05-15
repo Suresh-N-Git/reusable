@@ -509,7 +509,8 @@ uploadAll(): void {
         <h2>Actions Column</h2>
         <p>
           Three action types are supported: <code>select</code>, <code>edit</code>, <code>delete</code>. Each is
-          independently shown / hidden, colored, tooltipped, and (optionally) disabled per row by a rule.
+          independently shown / hidden globally, colored, tooltipped, hidden per row by a rule, and (optionally)
+          disabled per row by a rule.
         </p>
         <pre>{
   id: 'rowOps',
@@ -520,7 +521,8 @@ uploadAll(): void {
     select: {
       show: true,
       color: 'primary',
-      tooltipText: 'Pick for upload'
+      tooltipText: 'Pick for upload',
+      hideWhen: { key: 'id', equals: 1 }
     },
     edit: {
       show: true,
@@ -562,10 +564,32 @@ uploadAll(): void {
           <li><code>equals: 'Yes'</code> &mdash; Yes/No flags</li>
           <li><code>equals: 'locked'</code> &mdash; status strings</li>
         </ul>
+
+        <h3>hideWhen &mdash; per-row hide rule <span class="pill">new</span></h3>
+        <p>
+          Each action accepts an optional <code>hideWhen</code> rule with the same shape as <code>disableWhen</code>.
+          When <code>row[key] === equals</code>, the button is removed from the DOM for that row entirely &mdash;
+          not rendered at all, not just disabled.
+        </p>
+        <p>
+          Use <code>hideWhen</code> when an action genuinely doesn&rsquo;t apply to certain rows (e.g. hide
+          &ldquo;delete&rdquo; on locked records, hide &ldquo;edit&rdquo; on read-only rows). Use
+          <code>disableWhen</code> when the action exists but is temporarily blocked (e.g. user has insufficient
+          permission, row has unsaved changes).
+        </p>
+        <pre>// Hide the select action on row with id === 1
+select: { show: true, hideWhen: { key: 'id', equals: 1 } }
+
+// Hide delete on archived rows
+delete: { show: true, hideWhen: { key: 'status', equals: 'archived' } }
+
+// Combine with disableWhen — read-only rows hide edit, locked rows disable delete
+edit:   { show: true, hideWhen:    { key: 'readOnly', equals: true } }
+delete: { show: true, disableWhen: { key: 'locked',   equals: true } }</pre>
         <p class="note">
           Actions without a <code>disableWhen</code> rule are always enabled. Actions without a
-          <code>tooltipText</code> get the default label above. Existing column configs without these fields
-          continue to work unchanged.
+          <code>hideWhen</code> rule are always rendered. Actions without a <code>tooltipText</code> get the
+          default label above. Existing column configs without these fields continue to work unchanged.
         </p>
       </section>
 

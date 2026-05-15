@@ -118,7 +118,7 @@ export class TableuiComponent {
         type: 'actions',
         align: 'center',
         actions: {
-          select: { show: true, tooltipText: 'Select this row', color: 'primary' },
+          select: { show: true, tooltipText: 'Select this row', color: 'primary', hideWhen: { key: 'id', equals: 4 }} ,
           edit: { show: true, tooltipText: 'Edit this row', color: 'accent', disableWhen: { key: 'id', equals: 1 } },
           delete: { show: true, tooltipText: 'Delete this row', color: 'warn' }
         }

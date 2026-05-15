@@ -34,9 +34,9 @@ export interface ReUsableTableColumn {
   linkField?: string;
   searchTextMode?: 'displayed' | 'all';
   actions?: {
-    select?: { show?: boolean; tooltipText?: string; color?: 'primary' | 'accent' | 'warn';   disableWhen?: { key: string; equals: any } }; // disable on some key value
-    edit?: { show?: boolean; tooltipText?: string; color?: 'primary' | 'accent' | 'warn'; disableWhen?: { key: string; equals: any } };
-    delete?: { show?: boolean; tooltipText?: string; color?: 'primary' | 'accent' | 'warn'; disableWhen?: { key: string; equals: any } };
+    select?: { show?: boolean; tooltipText?: string; color?: 'primary' | 'accent' | 'warn'; disableWhen?: { key: string; equals: any }; hideWhen?: { key: string; equals: any } }; // disable on some key value
+    edit?: { show?: boolean; tooltipText?: string; color?: 'primary' | 'accent' | 'warn'; disableWhen?: { key: string; equals: any }; hideWhen?: { key: string; equals: any } };
+    delete?: { show?: boolean; tooltipText?: string; color?: 'primary' | 'accent' | 'warn'; disableWhen?: { key: string; equals: any }; hideWhen?: { key: string; equals: any } };
   };
   footer?:
   | { type: 'sum' | 'avg' | 'min' | 'max' | 'count' }
@@ -209,6 +209,17 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
     if (!rule) return false;
     return row[rule.key] === rule.equals;
   }
+
+
+  isActionHide(
+    row: any,
+    action?: { hideWhen?: { key: string; equals: any } }
+  ): boolean {
+    const rule = action?.hideWhen;
+    if (!rule) return false;
+    return row[rule.key] === rule.equals;
+  }
+
 
   getCellStyle(col: ReUsableTableColumn): Record<string, any> {
     return {
