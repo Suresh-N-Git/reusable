@@ -27,6 +27,10 @@ export interface ReUsableTableColumn {
                 key: string;
                 equals: any;
             };
+            hideWhen?: {
+                key: string;
+                equals: any;
+            };
         };
         edit?: {
             show?: boolean;
@@ -36,12 +40,20 @@ export interface ReUsableTableColumn {
                 key: string;
                 equals: any;
             };
+            hideWhen?: {
+                key: string;
+                equals: any;
+            };
         };
         delete?: {
             show?: boolean;
             tooltipText?: string;
             color?: 'primary' | 'accent' | 'warn';
             disableWhen?: {
+                key: string;
+                equals: any;
+            };
+            hideWhen?: {
                 key: string;
                 equals: any;
             };
@@ -122,6 +134,12 @@ export declare class ReusableTableComponent implements OnInit, OnChanges, AfterV
     isRowSelected(row: any): boolean;
     isActionDisabled(row: any, action?: {
         disableWhen?: {
+            key: string;
+            equals: any;
+        };
+    }): boolean;
+    isActionHide(row: any, action?: {
+        hideWhen?: {
             key: string;
             equals: any;
         };
