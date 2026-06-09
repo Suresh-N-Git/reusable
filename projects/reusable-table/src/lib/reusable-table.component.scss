@@ -246,3 +246,9 @@ button.mat-icon-button {
     overflow: visible !important;
   }
 }
+
+.table-container .mat-mdc-chip {
+  --mdc-chip-container-height: 22px;
+  --mdc-chip-label-text-size: 11px;
+  --mdc-chip-container-shape-radius: 8px;
+}

@@ -70,21 +70,21 @@ export class TableuiComponent {
       { id: 'id', name: 'Id', width: '5%', type: 'integer', align: 'right' },
       // { id: 'id', name: 'Id', width: '5%', type: 'integer', align: 'right', footer: { type: 'count' } },
 
-      {
-        id: 'name', name: 'Name', width: '20%', footer: { type: 'text', value: 'Total' }
-        // id: 'name', name: 'Name', width: '20%'
-      },
-
       // {
-      //   id: 'name', name: 'Name', width: '20%', type: 'chip',
-      //   chipStyle: {
-      //     fontFamily: 'monospace',
-      //     fontWeight: '800',
-      //     fontSize: '24px',
-      //     color: '#0d47a1',
-      //     backgroundColor: '#fff3cd'
-      //   }
+      //   id: 'name', name: 'Name', width: '20%', footer: { type: 'text', value: 'Total' }
+      //   // id: 'name', name: 'Name', width: '20%'
       // },
+
+      {
+        id: 'name', name: 'Name', width: '20%', type: 'chip',
+        chipStyle: {
+          fontFamily: 'monospace',
+          fontWeight: '600',
+          fontSize: '16px',
+          color: '#0d47a1',
+          backgroundColor: '#fff3cd'
+        }
+      },
       {
         //  id: 'flow', name: 'Flow', width: '10%', type: 'number', align: 'right', digits: '1.2-2',
         id: 'flow', name: 'Flow', width: '10%', type: 'number', align: 'right', digits: '1.2-2', footer: { type: 'sum' }
