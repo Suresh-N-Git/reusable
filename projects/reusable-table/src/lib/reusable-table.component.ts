@@ -159,7 +159,7 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
 
   ngOnChanges(_: SimpleChanges): void {
     this.resolvedConfig = this.mergeConfig(this.tableConfig);
-    document.title = this.resolvedConfig.appearance.headingToPrint ?? this.headingForCtrlP;
+    // document.title = this.resolvedConfig.appearance.headingToPrint ?? this.headingForCtrlP;
     this.initializeTable();
   }
 
