@@ -77,6 +77,10 @@ export interface ReusableTableConfig {
         selectedRowColor?: string;
         headingToPrint?: string;
     };
+    fontSize?: {
+        heading: string;
+        cell: string;
+    };
     pagination?: {
         enabled?: boolean;
         defaultPageSize?: 5 | 10 | 25 | 100;
