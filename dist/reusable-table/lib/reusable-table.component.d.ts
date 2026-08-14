@@ -58,6 +58,19 @@ export interface ReUsableTableColumn {
                 equals: any;
             };
         };
+        settings?: {
+            show?: boolean;
+            tooltipText?: string;
+            color?: 'primary' | 'accent' | 'warn';
+            disableWhen?: {
+                key: string;
+                equals: any;
+            };
+            hideWhen?: {
+                key: string;
+                equals: any;
+            };
+        };
     };
     footer?: {
         type: 'sum' | 'avg' | 'min' | 'max' | 'count';
@@ -77,7 +90,7 @@ export interface ReusableTableConfig {
         selectedRowColor?: string;
         headingToPrint?: string;
     };
-    fontSize?: {
+    typography?: {
         heading: string;
         cell: string;
     };
@@ -117,6 +130,7 @@ export declare class ReusableTableComponent implements OnInit, OnChanges, AfterV
     rowEdit: EventEmitter<any>;
     rowSelect: EventEmitter<any>;
     rowDelete: EventEmitter<any>;
+    rowSettings: EventEmitter<any>;
     selectedRows: any[];
     selectedRowsChange: EventEmitter<any[]>;
     resolvedConfig: Required<ReusableTableConfig>;
@@ -157,6 +171,7 @@ export declare class ReusableTableComponent implements OnInit, OnChanges, AfterV
     onEdit(row: any): void;
     onSelect(row: any): void;
     onDelete(row: any): void;
+    onSettings(row: any): void;
     applyGlobalFilter(event: Event): void;
     highlightSearchedText(value: any): string;
     private escapeHtml;
@@ -179,5 +194,5 @@ export declare class ReusableTableComponent implements OnInit, OnChanges, AfterV
     downloadPdf(): void;
     private assertHasRowsToExport;
     static ɵfac: i0.ɵɵFactoryDeclaration<ReusableTableComponent, never>;
-    static ɵcmp: i0.ɵɵComponentDeclaration<ReusableTableComponent, "app-reusabletable", never, { "columns": { "alias": "columns"; "required": false; }; "tableConfig": { "alias": "tableConfig"; "required": false; }; "data": { "alias": "data"; "required": false; }; "selectedRows": { "alias": "selectedRows"; "required": false; }; }, { "rowEdit": "rowEdit"; "rowSelect": "rowSelect"; "rowDelete": "rowDelete"; "selectedRowsChange": "selectedRowsChange"; }, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<ReusableTableComponent, "app-reusabletable", never, { "columns": { "alias": "columns"; "required": false; }; "tableConfig": { "alias": "tableConfig"; "required": false; }; "data": { "alias": "data"; "required": false; }; "selectedRows": { "alias": "selectedRows"; "required": false; }; }, { "rowEdit": "rowEdit"; "rowSelect": "rowSelect"; "rowDelete": "rowDelete"; "rowSettings": "rowSettings"; "selectedRowsChange": "selectedRowsChange"; }, never, never, false, never>;
 }
