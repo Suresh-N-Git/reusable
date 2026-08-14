@@ -37,6 +37,7 @@ export interface ReUsableTableColumn {
     select?: { show?: boolean; tooltipText?: string; color?: 'primary' | 'accent' | 'warn'; disableWhen?: { key: string; equals: any }; hideWhen?: { key: string; equals: any } }; // disable on some key value
     edit?: { show?: boolean; tooltipText?: string; color?: 'primary' | 'accent' | 'warn'; disableWhen?: { key: string; equals: any }; hideWhen?: { key: string; equals: any } };
     delete?: { show?: boolean; tooltipText?: string; color?: 'primary' | 'accent' | 'warn'; disableWhen?: { key: string; equals: any }; hideWhen?: { key: string; equals: any } };
+    settings?: { show?: boolean; tooltipText?: string; color?: 'primary' | 'accent' | 'warn'; disableWhen?: { key: string; equals: any }; hideWhen?: { key: string; equals: any } };
   };
   footer?:
   | { type: 'sum' | 'avg' | 'min' | 'max' | 'count' }
@@ -51,6 +52,10 @@ export interface ReusableTableConfig {
     hoverColor?: string;
     selectedRowColor?: string;
     headingToPrint?: string;
+  };
+  typography?: {
+    heading: string;
+    cell: string;
   };
   pagination?: {
     enabled?: boolean;
@@ -83,6 +88,10 @@ const DEFAULT_TABLE_CONFIG: Required<ReusableTableConfig> = {
     hoverColor: '#e3f2fd',
     selectedRowColor: '#ffe0b2',
     headingToPrint: 'Print Table'
+  },
+  typography: {
+    heading: '1rem',
+    cell: '1rem',
   },
   pagination: {
     enabled: true,
@@ -134,6 +143,7 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
   @Output() rowEdit = new EventEmitter<any>();
   @Output() rowSelect = new EventEmitter<any>();
   @Output() rowDelete = new EventEmitter<any>();
+  @Output() rowSettings = new EventEmitter<any>();
   // @Output() selectionChange = new EventEmitter<any[]>();
 
 
@@ -283,6 +293,11 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
     this.rowDelete.emit(row);
   }
 
+  onSettings(row: any): void {
+    this.rowSettings.emit(row);
+  }
+
+
   applyGlobalFilter(event: Event): void {
     const value = (event.target as HTMLInputElement).value.trim().toLowerCase();
 
@@ -378,6 +393,10 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
       appearance: {
         ...DEFAULT_TABLE_CONFIG.appearance,
         ...(config.appearance ?? {}),
+      },
+      typography: {
+        ...DEFAULT_TABLE_CONFIG.typography,
+        ...(config.typography ?? {})
       },
       pagination: {
         ...DEFAULT_TABLE_CONFIG.pagination,

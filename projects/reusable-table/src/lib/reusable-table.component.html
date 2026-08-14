@@ -75,8 +75,8 @@
 
       @if (col.type !== 'actions') {
       <th mat-header-cell *matHeaderCellDef [style.width]="col.width" mat-sort-header
-        [disabled]="!resolvedConfig.sorting.enabled" [arrowPosition]="col.align === 'right' ? 'before' : 'after'"
-        [ngClass]="{
+        [style.font-size]="tableConfig.typography?.heading" [disabled]="!resolvedConfig.sorting.enabled"
+        [arrowPosition]="col.align === 'right' ? 'before' : 'after'" [ngClass]="{
           'right-aligned-header': col.align === 'right',
           'center-aligned-header': col.align === 'center',
           'left-aligned-header': !col.align || col.align === 'left'
@@ -84,12 +84,14 @@
         {{ col.name }}
       </th>
       } @else {
-      <th mat-header-cell *matHeaderCellDef [style.width]="col.width" [style.text-align]="col.align || 'left'">
+      <th mat-header-cell *matHeaderCellDef [style.width]="col.width"
+        [style.font-size]="tableConfig.typography?.heading" [style.text-align]="col.align || 'left'">
         {{ col.name }}
       </th>
       }
 
-      <td mat-cell *matCellDef="let row" [attr.data-label]="col.name" [ngStyle]="getCellStyle(col)">
+      <td mat-cell *matCellDef="let row" [attr.data-label]="col.name" [style.font-size]="tableConfig.typography?.cell"
+        [ngStyle]="getCellStyle(col)">
 
         @if (col.type === 'actions') {
 
@@ -99,7 +101,7 @@
 
         <div class="cell-value action-buttons">
           @if (col.actions?.select?.show && !isActionHide(row, col.actions?.select)) {
-          <button  mat-icon-button [color]="col.actions?.select?.color"
+          <button mat-icon-button [color]="col.actions?.select?.color"
             [disabled]="isActionDisabled(row, col.actions?.select)" (click)="setSelectedRow(row); onSelect(row)">
             <mat-icon [matTooltip]="col.actions?.select?.tooltipText ?? 'Select'">check_circle_outline</mat-icon>
           </button>
@@ -116,6 +118,12 @@
           <button mat-icon-button [color]="col.actions?.delete?.color"
             [disabled]="isActionDisabled(row, col.actions?.delete)" (click)="markRow(row); onDelete(row)">
             <mat-icon [matTooltip]="col.actions?.delete?.tooltipText ?? 'Delete'">delete</mat-icon>
+          </button>
+          }
+          @if (col.actions?.settings?.show && !isActionHide(row, col.actions?.settings)) {
+          <button mat-icon-button [color]="col.actions?.select?.color"
+            [disabled]="isActionDisabled(row, col.actions?.settings)" (click)="markRow(row); onSettings(row)">
+            <mat-icon [matTooltip]="col.actions?.settings?.tooltipText ?? 'Settings'">settings</mat-icon>
           </button>
           }
         </div>
