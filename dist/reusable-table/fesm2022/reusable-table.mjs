@@ -315,8 +315,11 @@ class ReusableTableComponent {
     ngOnInit() {
         this.updateViewMode();
     }
-    ngOnChanges(_) {
+    ngOnChanges(changes) {
         this.resolvedConfig = this.mergeConfig(this.tableConfig);
+        if (changes['data']) {
+            this.clearSelection();
+        }
         // document.title = this.resolvedConfig.appearance.headingToPrint ?? this.headingForCtrlP;
         this.initializeTable();
     }
@@ -585,6 +588,15 @@ class ReusableTableComponent {
         this.displayedColumnIds = this.displayedColumnsExtended
             .filter(column => this.visibleColumnIds.includes(column.id))
             .map(column => column.id);
+    }
+    clearSelection() {
+        this.selectedRow = null;
+        if (this.selectedRows.length > 0) {
+            this.selectedRows = [];
+            this.selectedRowsChange.emit([]);
+        }
+        // this.cdr.detectChanges();
+        this.cdr.markForCheck();
     }
     getExportData() {
         const columns = this.displayedColumnsExtended.filter(column => this.displayedColumnIds.includes(column.id) && column.type !== 'actions');

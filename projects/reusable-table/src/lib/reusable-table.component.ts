@@ -19,6 +19,7 @@ import { MatTableDataSource } from '@angular/material/table';
 
 import { TableExportService } from './table-export.service';
 
+
 export interface ReUsableTableColumn {
   id: string;
   name: string;
@@ -167,8 +168,12 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
     this.updateViewMode();
   }
 
-  ngOnChanges(_: SimpleChanges): void {
+  ngOnChanges(changes: SimpleChanges): void {
     this.resolvedConfig = this.mergeConfig(this.tableConfig);
+    if (changes['data']) {
+      this.clearSelection();
+    }
+
     // document.title = this.resolvedConfig.appearance.headingToPrint ?? this.headingForCtrlP;
     this.initializeTable();
   }
@@ -503,6 +508,16 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
       .map(column => column.id);
   }
 
+  public clearSelection(): void {
+    this.selectedRow = null;
+
+    if (this.selectedRows.length > 0) {
+      this.selectedRows = [];
+      this.selectedRowsChange.emit([]);
+    }
+    // this.cdr.detectChanges();
+    this.cdr.markForCheck();
+  }
 
   private getExportData(): { columns: ReUsableTableColumn[]; rows: any[] } {
     const columns = this.displayedColumnsExtended.filter(

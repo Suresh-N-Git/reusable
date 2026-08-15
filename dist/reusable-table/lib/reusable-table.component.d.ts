@@ -144,7 +144,7 @@ export declare class ReusableTableComponent implements OnInit, OnChanges, AfterV
     headingForCtrlP: string;
     footerValues: Record<string, string>;
     ngOnInit(): void;
-    ngOnChanges(_: SimpleChanges): void;
+    ngOnChanges(changes: SimpleChanges): void;
     updateViewMode(): void;
     ngAfterViewInit(): void;
     setSelectedRow(row: any): void;
@@ -185,6 +185,7 @@ export declare class ReusableTableComponent implements OnInit, OnChanges, AfterV
     private getSearchTextForObject;
     private attachMaterialControllers;
     private updateVisibleColumns;
+    clearSelection(): void;
     private getExportData;
     private computeFooterValues;
     private calcFooterValue;
