@@ -229,8 +229,11 @@ button.mat-icon-button {
     display: none !important;
   }
 
-  .no-print,
-  .mat-column-actions {
+  .no-print {
+    display: none !important;
+  }
+
+   .mat-column-actions {
     display: none !important;
   }
 
