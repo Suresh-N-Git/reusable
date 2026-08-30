@@ -12,30 +12,30 @@
   </div> -->
   <div class="col-md-9" style="text-align: right;">
     <button *ngIf="resolvedConfig.toolbar.showColumnToggle !== false" mat-icon-button color="primary"
-      [matMenuTriggerFor]="columnMenu" matTooltip="Show/Hide Columns">
+      [matMenuTriggerFor]="columnMenu" title="Show/Hide Columns">
       <mat-icon class="toolbaricons">view_week</mat-icon>
       <span class="icon-text" style="margin-top: 0px;">shc</span>
     </button>
 
-    <button *ngIf="resolvedConfig.toolbar.showCsv" mat-icon-button color="primary" matTooltip="Download CSV"
+    <button *ngIf="resolvedConfig.toolbar.showCsv" mat-icon-button color="primary" title="Download CSV"
       (click)="downloadCSV()">
       <mat-icon class="toolbaricons">description</mat-icon>
       <span class="icon-text">csv</span>
     </button>
 
     <button *ngIf="resolvedConfig.toolbar.showExcel !== false" mat-icon-button color="primary"
-      matTooltip="Download Excel" (click)="downloadExcel()">
+      title="Download Excel" (click)="downloadExcel()">
       <mat-icon class="toolbaricons">table_view</mat-icon>
       <span class="icon-text">xls</span>
     </button>
 
-    <button *ngIf="resolvedConfig.toolbar.showPdf !== false" mat-icon-button color="primary" matTooltip="Download PDF"
+    <button *ngIf="resolvedConfig.toolbar.showPdf !== false" mat-icon-button color="primary" title="Download PDF"
       (click)="downloadPdf()">
       <mat-icon class="toolbaricons">picture_as_pdf</mat-icon>
       <span class="icon-text">pdf</span>
     </button>
 
-    <button *ngIf="resolvedConfig.toolbar.showPrint" mat-icon-button color="primary" matTooltip="Print Table"
+    <button *ngIf="resolvedConfig.toolbar.showPrint" mat-icon-button color="primary" title="Print Table"
       (click)="printTable()">
       <mat-icon class="toolbaricons">print</mat-icon>
       <span class="icon-text">prn</span>
