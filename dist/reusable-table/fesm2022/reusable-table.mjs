@@ -225,12 +225,14 @@ class TableExportService {
           body { font-family: Arial; margin:20px; }
           table { border-collapse: collapse; width:100%; }
           th, td { border:1px solid #ccc; padding:6px; }
+          .mat-column-rowOps {display: none !important;}
           .mat-column-actions {display: none !important; }
         </style>
       </head>
        <body onload="window.focus(); window.print();">${html}</body>
     </html>
   `);
+        console.log(html);
         popup.document.close();
         popup.onafterprint = () => popup.close();
         // popup.print();
