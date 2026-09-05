@@ -165,8 +165,15 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
 
   footerValues: Record<string, string> = {};
 
+  cellStyles: Record<string, Record<string, any>> = {};
+
   ngOnInit(): void {
     this.updateViewMode();
+  }
+
+  @HostListener('window:resize')
+  updateViewMode(): void {
+    this.isMobileView = window.innerWidth <= 768;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -179,10 +186,67 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
     this.initializeTable();
   }
 
-  @HostListener('window:resize')
-  updateViewMode(): void {
-    this.isMobileView = window.innerWidth <= 768;
+  private initializeTable(): void {
+
+    this.displayedColumnsExtended = [...this.columns];
+    this.displayedColumnIds = this.columns.map(column => column.id);
+    this.visibleColumnIds = [...this.displayedColumnIds];
+
+    this.prepareCellStyles();
+
+    this.dataSource = new MatTableDataSource(this.data ?? []);
+
+    this.dataSource.filterPredicate = (data: any, filter: string) =>
+      this.buildSearchableText(data).includes(filter);
+
+    this.updateVisibleColumns();
+    this.attachMaterialControllers();
+    this.computeFooterValues();
   }
+
+  // private initializeTable(): void {
+  //   this.displayedColumnsExtended = [...this.columns];
+  //   this.displayedColumnIds = this.columns.map(column => column.id);
+  //   this.visibleColumnIds = [...this.displayedColumnIds];
+  //   this.dataSource = new MatTableDataSource(this.data ?? []);
+  //   this.dataSource.filterPredicate = (data: any, filter: string) =>
+  //     this.buildSearchableText(data).includes(filter);
+
+  //   this.updateVisibleColumns();
+  //   this.attachMaterialControllers();
+  //   this.computeFooterValues();
+  // }
+
+  private prepareCellStyles(): void {
+
+    for (const row of this.data ?? []) {
+
+      const styles: Record<string, Record<string, any>> = {};
+
+      for (const col of this.columns) {
+
+        const style: Record<string, any> = {
+          textAlign: col.align || 'left',
+          verticalAlign: 'middle',
+          ...col.style
+        };
+
+        if (row && col.cellColor) {
+          const color = col.cellColor(row[col.id]);
+
+          if (color) {
+            style['color'] = color;
+          }
+        }
+
+        styles[col.id] = style;
+      }
+
+      row.__cellStyles = styles;
+    }
+  }
+
+
 
   ngAfterViewInit(): void {
     this.attachMaterialControllers();
@@ -444,18 +508,7 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
     };
   }
 
-  private initializeTable(): void {
-    this.displayedColumnsExtended = [...this.columns];
-    this.displayedColumnIds = this.columns.map(column => column.id);
-    this.visibleColumnIds = [...this.displayedColumnIds];
-    this.dataSource = new MatTableDataSource(this.data ?? []);
-    this.dataSource.filterPredicate = (data: any, filter: string) =>
-      this.buildSearchableText(data).includes(filter);
 
-    this.updateVisibleColumns();
-    this.attachMaterialControllers();
-    this.computeFooterValues();
-  }
 
   private buildSearchableText(row: any): string {
     return this.displayedColumnsExtended

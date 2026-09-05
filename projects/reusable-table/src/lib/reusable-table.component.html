@@ -7,9 +7,7 @@
     </mat-form-field>
   </div>
 
-  <!-- <div class="col-md-6 col-sm-12">
-    &nbsp;
-  </div> -->
+
   <div class="col-md-9" style="text-align: right;">
     <button *ngIf="resolvedConfig.toolbar.showColumnToggle !== false" mat-icon-button color="primary"
       [matMenuTriggerFor]="columnMenu" title="Show/Hide Columns">
@@ -23,8 +21,8 @@
       <span class="icon-text">csv</span>
     </button>
 
-    <button *ngIf="resolvedConfig.toolbar.showExcel !== false" mat-icon-button color="primary"
-      title="Download Excel" (click)="downloadExcel()">
+    <button *ngIf="resolvedConfig.toolbar.showExcel !== false" mat-icon-button color="primary" title="Download Excel"
+      (click)="downloadExcel()">
       <mat-icon class="toolbaricons">table_view</mat-icon>
       <span class="icon-text">xls</span>
     </button>
@@ -63,7 +61,8 @@
 
 </div>
 
-<div #printSection class="table-container print-area no-print" [style.--zebra-color]="resolvedConfig.appearance.zebraColor"
+<div #printSection class="table-container print-area no-print"
+  [style.--zebra-color]="resolvedConfig.appearance.zebraColor"
   [style.--hover-color]="resolvedConfig.appearance.hoverColor || '#e3f2fd'"
   [style.--selected-row-color]="resolvedConfig.appearance.selectedRowColor || '#ffe0b2'">
 
@@ -91,7 +90,10 @@
       }
 
       <td mat-cell *matCellDef="let row" [attr.data-label]="col.name" [style.font-size]="tableConfig.typography?.cell"
-        [ngStyle]="getCellStyle(col, row)">
+        [ngStyle]="row.__cellStyles?.[col.id]">
+
+        <!-- <td mat-cell *matCellDef="let row" [attr.data-label]="col.name" [style.font-size]="tableConfig.typography?.cell"
+        [ngStyle]="getCellStyle(col, row)"> -->
 
         @if (col.type === 'actions') {
 
