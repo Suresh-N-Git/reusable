@@ -144,9 +144,12 @@ export declare class ReusableTableComponent implements OnInit, OnChanges, AfterV
     currentFilter: string;
     headingForCtrlP: string;
     footerValues: Record<string, string>;
+    cellStyles: Record<string, Record<string, any>>;
     ngOnInit(): void;
-    ngOnChanges(changes: SimpleChanges): void;
     updateViewMode(): void;
+    ngOnChanges(changes: SimpleChanges): void;
+    private initializeTable;
+    private prepareCellStyles;
     ngAfterViewInit(): void;
     setSelectedRow(row: any): void;
     markRow(row: any): void;
@@ -180,7 +183,6 @@ export declare class ReusableTableComponent implements OnInit, OnChanges, AfterV
     getFormatOfValue(value: any, col: ReUsableTableColumn): string;
     printTable(): void;
     private mergeConfig;
-    private initializeTable;
     private buildSearchableText;
     private getSearchableCellText;
     private getSearchTextForObject;
