@@ -364,8 +364,16 @@ class ReusableTableComponent {
                         style['color'] = color;
                     }
                 }
+                if (row && col.cellFontSize) {
+                    const fontSize = col.cellFontSize(row[col.id]);
+                    if (fontSize) {
+                        style['fontSize'] = fontSize;
+                    }
+                }
+                // Store the style for every column
                 styles[col.id] = style;
             }
+            // Store all cell styles for this row
             row.__cellStyles = styles;
         }
     }

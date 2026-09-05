@@ -18,6 +18,7 @@ export interface ReUsableTableColumn {
     displayField?: string;
     linkField?: string;
     cellColor?: (value: any) => string;
+    cellFontSize?: (value: any) => string;
     searchTextMode?: 'displayed' | 'all';
     actions?: {
         select?: {

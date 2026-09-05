@@ -34,6 +34,7 @@ export interface ReUsableTableColumn {
   displayField?: string;
   linkField?: string;
   cellColor?: (value: any) => string;
+  cellFontSize?: (value: any) => string;
   searchTextMode?: 'displayed' | 'all';
   actions?: {
     select?: { show?: boolean; tooltipText?: string; color?: 'primary' | 'accent' | 'warn'; disableWhen?: { key: string; equals: any }; hideWhen?: { key: string; equals: any } }; // disable on some key value
@@ -239,9 +240,19 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
           }
         }
 
+        if (row && col.cellFontSize) {
+          const fontSize = col.cellFontSize(row[col.id]);
+
+          if (fontSize) {
+            style['fontSize'] = fontSize;
+          }
+        }
+
+        // Store the style for every column
         styles[col.id] = style;
       }
 
+      // Store all cell styles for this row
       row.__cellStyles = styles;
     }
   }

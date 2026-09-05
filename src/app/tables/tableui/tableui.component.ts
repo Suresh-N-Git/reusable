@@ -89,11 +89,10 @@ export class TableuiComponent {
         //  id: 'flow', name: 'Flow', width: '10%', type: 'number', align: 'right', digits: '1.2-2',
         id: 'flow', name: 'Flow', width: '10%', type: 'number', align: 'right', digits: '1.2-2',
         cellColor: (value: any) => {
-          console.log('FLOW VALUE =', value);
-          console.log('FLOW TYPE  =', typeof value);
-          console.log('AS STRING  =', String(value));
-
           return Number(value) === 120.88 ? 'red' : 'green';
+        },
+        cellFontSize: (value: any) => {
+          return Number(value) === 120.88 ? '20px' : '16px';
         },
         footer: { type: 'sum' }
         // style: {
