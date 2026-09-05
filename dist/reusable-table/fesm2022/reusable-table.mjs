@@ -372,8 +372,8 @@ class ReusableTableComponent {
             verticalAlign: 'middle',
             ...col.style
         };
-        if (col.cellColor) {
-            const value = row?.[col.id];
+        if (row && col.cellColor) {
+            const value = row[col.id];
             const color = col.cellColor(value);
             if (color) {
                 style['color'] = color;

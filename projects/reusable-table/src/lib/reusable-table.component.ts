@@ -247,8 +247,8 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
       ...col.style
     };
 
-    if (col.cellColor) {
-      const value = row?.[col.id];
+    if (row && col.cellColor) {
+      const value = row[col.id];
       const color = col.cellColor(value);
 
       if (color) {
@@ -258,6 +258,8 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
 
     return style;
   }
+
+
   getChipContainerStyle(col: ReUsableTableColumn, value?: any): Record<string, any> | null {
     const style = col.chipStyleFn ? col.chipStyleFn(value) : col.chipStyle;
     if (!style) return null;
