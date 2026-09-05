@@ -33,6 +33,7 @@ export interface ReUsableTableColumn {
   chipStyleFn?: (value: any) => Record<string, any>;
   displayField?: string;
   linkField?: string;
+  cellColor?: (value: any) => string;
   searchTextMode?: 'displayed' | 'all';
   actions?: {
     select?: { show?: boolean; tooltipText?: string; color?: 'primary' | 'accent' | 'warn'; disableWhen?: { key: string; equals: any }; hideWhen?: { key: string; equals: any } }; // disable on some key value
@@ -235,15 +236,28 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
     return row[rule.key] === rule.equals;
   }
 
+  getCellStyle(
+    col: ReUsableTableColumn,
+    row?: any
+  ): Record<string, any> {
 
-  getCellStyle(col: ReUsableTableColumn): Record<string, any> {
-    return {
+    const style: Record<string, any> = {
       textAlign: col.align || 'left',
       verticalAlign: 'middle',
-      ...col.style,
+      ...col.style
     };
-  }
 
+    if (col.cellColor) {
+      const value = row?.[col.id];
+      const color = col.cellColor(value);
+
+      if (color) {
+        style['color'] = color;
+      }
+    }
+
+    return style;
+  }
   getChipContainerStyle(col: ReUsableTableColumn, value?: any): Record<string, any> | null {
     const style = col.chipStyleFn ? col.chipStyleFn(value) : col.chipStyle;
     if (!style) return null;

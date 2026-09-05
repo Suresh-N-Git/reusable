@@ -17,6 +17,7 @@ export interface ReUsableTableColumn {
     chipStyleFn?: (value: any) => Record<string, any>;
     displayField?: string;
     linkField?: string;
+    cellColor?: (value: any) => string;
     searchTextMode?: 'displayed' | 'all';
     actions?: {
         select?: {
@@ -162,7 +163,7 @@ export declare class ReusableTableComponent implements OnInit, OnChanges, AfterV
             equals: any;
         };
     }): boolean;
-    getCellStyle(col: ReUsableTableColumn): Record<string, any>;
+    getCellStyle(col: ReUsableTableColumn, row?: any): Record<string, any>;
     getChipContainerStyle(col: ReUsableTableColumn, value?: any): Record<string, any> | null;
     getChipTextStyle(col: ReUsableTableColumn, value?: any): Record<string, any> | null;
     getDisplayValue(obj: any, col: ReUsableTableColumn): any;

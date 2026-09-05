@@ -87,7 +87,15 @@ export class TableuiComponent {
       },
       {
         //  id: 'flow', name: 'Flow', width: '10%', type: 'number', align: 'right', digits: '1.2-2',
-        id: 'flow', name: 'Flow', width: '10%', type: 'number', align: 'right', digits: '1.2-2', footer: { type: 'sum' }
+        id: 'flow', name: 'Flow', width: '10%', type: 'number', align: 'right', digits: '1.2-2',
+        cellColor: (value: any) => {
+          console.log('FLOW VALUE =', value);
+          console.log('FLOW TYPE  =', typeof value);
+          console.log('AS STRING  =', String(value));
+
+          return Number(value) === 120.88 ? 'red' : 'green';
+        },
+        footer: { type: 'sum' }
         // style: {
         //   fontFamily: 'monospace',
         //   fontWeight: '600',
@@ -118,7 +126,7 @@ export class TableuiComponent {
         type: 'actions',
         align: 'center',
         actions: {
-          select: { show: true, tooltipText: 'Select this row', color: 'primary', hideWhen: { key: 'id', equals: 4 }} ,
+          select: { show: true, tooltipText: 'Select this row', color: 'primary', hideWhen: { key: 'id', equals: 4 } },
           edit: { show: true, tooltipText: 'Edit this row', color: 'accent', disableWhen: { key: 'id', equals: 1 } },
           delete: { show: true, tooltipText: 'Delete this row', color: 'warn' }
         }
