@@ -183,7 +183,7 @@
 
           @case ('link') {
           <ng-container *ngIf="row[col.id]?.length; else noData">
-            <div *ngFor="let item of row[col.id]">
+            <div *ngFor="let item of row[col.id]" class="file-link-row">
               <a [href]="getLinkValue(item, col)" target="_blank" rel="noopener noreferrer">
                 {{ getDisplayValue(item, col) }}
               </a>

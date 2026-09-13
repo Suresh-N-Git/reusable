@@ -260,3 +260,12 @@ button.mat-icon-button {
   --mdc-chip-label-text-size: 11px;
   --mdc-chip-container-shape-radius: 8px;
 }
+
+// To add a gap between the links to display file names in the cell, we can use the following CSS rule:
+.file-link-row {
+  margin-bottom: 0.3rem;
+}
+
+.file-link-row:last-child {
+  margin-bottom: 0;
+}
