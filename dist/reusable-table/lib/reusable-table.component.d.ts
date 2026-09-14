@@ -5,6 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { TableExportService } from './table-export.service';
 import * as i0 from "@angular/core";
 export interface ReUsableTableColumn {
+    [x: string]: any;
     id: string;
     name: string;
     width?: string;
@@ -146,6 +147,7 @@ export declare class ReusableTableComponent implements OnInit, OnChanges, AfterV
     headingForCtrlP: string;
     footerValues: Record<string, string>;
     cellStyles: Record<string, Record<string, any>>;
+    linkClick?: (item: any, event: Event) => void;
     ngOnInit(): void;
     updateViewMode(): void;
     ngOnChanges(changes: SimpleChanges): void;

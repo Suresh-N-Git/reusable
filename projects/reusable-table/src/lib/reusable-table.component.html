@@ -184,9 +184,16 @@
           @case ('link') {
           <ng-container *ngIf="row[col.id]?.length; else noData">
             <div *ngFor="let item of row[col.id]" class="file-link-row">
-              <a [href]="getLinkValue(item, col)" target="_blank" rel="noopener noreferrer">
+               <a
+                href="#"
+                (click)="col['linkClick']
+                  ? col['linkClick'](item, $event)
+                  : null">
                 {{ getDisplayValue(item, col) }}
               </a>
+              <!-- <a [href]="getLinkValue(item, col)" target="_blank" rel="noopener noreferrer">
+                {{ getDisplayValue(item, col) }}
+              </a> -->
             </div>
           </ng-container>
           <ng-template #noData>-</ng-template>

@@ -21,6 +21,7 @@ import { TableExportService } from './table-export.service';
 
 
 export interface ReUsableTableColumn {
+[x: string]: any;
   id: string;
   name: string;
   width?: string;
@@ -167,6 +168,8 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
   footerValues: Record<string, string> = {};
 
   cellStyles: Record<string, Record<string, any>> = {};
+
+  linkClick?: (item: any, event: Event) => void;
 
   ngOnInit(): void {
     this.updateViewMode();
