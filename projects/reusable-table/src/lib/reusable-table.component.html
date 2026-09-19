@@ -89,17 +89,16 @@
       </th>
       }
 
-      <td mat-cell *matCellDef="let row" [attr.data-label]="col.name" [style.font-size]="tableConfig.typography?.cell"
-        [ngStyle]="row.__cellStyles?.[col.id]">
-
-        <!-- <td mat-cell *matCellDef="let row" [attr.data-label]="col.name" [style.font-size]="tableConfig.typography?.cell"
-        [ngStyle]="getCellStyle(col, row)"> -->
+      <td mat-cell *matCellDef="let row let i=index" [attr.data-label]="col.name"
+        [style.font-size]="tableConfig.typography?.cell" [ngStyle]="row.__cellStyles?.[col.id]">
 
         @if (col.type === 'actions') {
 
         @if (isMobileView) {
         <span class="cell-label">{{ col.name }}</span>
         }
+
+        @if (!(hideActionOnLastRow && i === dataSource.data.length - 1)) {
 
         <div class="cell-value action-buttons">
           @if (col.actions?.select?.show && !isActionHide(row, col.actions?.select)) {
@@ -129,6 +128,7 @@
           </button>
           }
         </div>
+        }
 
         } @else {
 
@@ -184,9 +184,7 @@
           @case ('link') {
           <ng-container *ngIf="row[col.id]?.length; else noData">
             <div *ngFor="let item of row[col.id]" class="file-link-row">
-               <a
-                href="#"
-                (click)="col['linkClick']
+              <a href="#" (click)="col['linkClick']
                   ? col['linkClick'](item, $event)
                   : null">
                 {{ getDisplayValue(item, col) }}
