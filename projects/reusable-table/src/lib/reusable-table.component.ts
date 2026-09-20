@@ -152,6 +152,7 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
   // @Output() selectionChange = new EventEmitter<any[]>();
 // Pass true when you want to hide actions on the last row
   @Input() hideActionOnLastRow: boolean = false;
+  @Input() tableHeight: string = '500px'
 
   @Input() selectedRows: any[] = [];
   @Output() selectedRowsChange = new EventEmitter<any[]>();

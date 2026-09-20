@@ -135,6 +135,7 @@ export declare class ReusableTableComponent implements OnInit, OnChanges, AfterV
     rowDelete: EventEmitter<any>;
     rowSettings: EventEmitter<any>;
     hideActionOnLastRow: boolean;
+    tableHeight: string;
     selectedRows: any[];
     selectedRowsChange: EventEmitter<any[]>;
     resolvedConfig: Required<ReusableTableConfig>;
@@ -202,5 +203,5 @@ export declare class ReusableTableComponent implements OnInit, OnChanges, AfterV
     downloadPdf(): void;
     private assertHasRowsToExport;
     static ɵfac: i0.ɵɵFactoryDeclaration<ReusableTableComponent, never>;
-    static ɵcmp: i0.ɵɵComponentDeclaration<ReusableTableComponent, "app-reusabletable", never, { "columns": { "alias": "columns"; "required": false; }; "tableConfig": { "alias": "tableConfig"; "required": false; }; "data": { "alias": "data"; "required": false; }; "hideActionOnLastRow": { "alias": "hideActionOnLastRow"; "required": false; }; "selectedRows": { "alias": "selectedRows"; "required": false; }; }, { "rowEdit": "rowEdit"; "rowSelect": "rowSelect"; "rowDelete": "rowDelete"; "rowSettings": "rowSettings"; "selectedRowsChange": "selectedRowsChange"; }, never, never, false, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<ReusableTableComponent, "app-reusabletable", never, { "columns": { "alias": "columns"; "required": false; }; "tableConfig": { "alias": "tableConfig"; "required": false; }; "data": { "alias": "data"; "required": false; }; "hideActionOnLastRow": { "alias": "hideActionOnLastRow"; "required": false; }; "tableHeight": { "alias": "tableHeight"; "required": false; }; "selectedRows": { "alias": "selectedRows"; "required": false; }; }, { "rowEdit": "rowEdit"; "rowSelect": "rowSelect"; "rowDelete": "rowDelete"; "rowSettings": "rowSettings"; "selectedRowsChange": "selectedRowsChange"; }, never, never, false, never>;
 }
