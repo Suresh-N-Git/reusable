@@ -21,7 +21,7 @@ import { TableExportService } from './table-export.service';
 
 
 export interface ReUsableTableColumn {
-[x: string]: any;
+  [x: string]: any;
   id: string;
   name: string;
   width?: string;
@@ -37,7 +37,7 @@ export interface ReUsableTableColumn {
   cellColor?: (value: any) => string;
   cellFontSize?: (value: any) => string;
   searchTextMode?: 'displayed' | 'all';
-  
+
   actions?: {
     select?: { show?: boolean; tooltipText?: string; color?: 'primary' | 'accent' | 'warn'; disableWhen?: { key: string; equals: any }; hideWhen?: { key: string; equals: any } }; // disable on some key value
     edit?: { show?: boolean; tooltipText?: string; color?: 'primary' | 'accent' | 'warn'; disableWhen?: { key: string; equals: any }; hideWhen?: { key: string; equals: any } };
@@ -150,9 +150,10 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
   @Output() rowDelete = new EventEmitter<any>();
   @Output() rowSettings = new EventEmitter<any>();
   // @Output() selectionChange = new EventEmitter<any[]>();
-// Pass true when you want to hide actions on the last row
+  // Pass true when you want to hide actions on the last row
   @Input() hideActionOnLastRow: boolean = false;
   @Input() tableHeight: string = '500px'
+  @Input() showPrintrMessage: boolean = false;
 
   @Input() selectedRows: any[] = [];
   @Output() selectedRowsChange = new EventEmitter<any[]>();

@@ -61,7 +61,7 @@
 
 </div>
 
-<div #printSection class="table-container print-area no-print"  [style.height]="tableHeight"
+<div #printSection class="table-container print-area no-print" [style.height]="tableHeight"
   [style.--zebra-color]="resolvedConfig.appearance.zebraColor"
   [style.--hover-color]="resolvedConfig.appearance.hoverColor || '#e3f2fd'"
   [style.--selected-row-color]="resolvedConfig.appearance.selectedRowColor || '#ffe0b2'">
@@ -234,7 +234,9 @@
   <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons></mat-paginator>
 </div>
 
+@if(showPrintrMessage) {
 <div class="print-hint no-print" *ngIf="(displayedColumnIds.length || 0) > 7">
   For reports with more than 7 columns, select
   <b>Landscape</b> in the print dialog.
 </div>
+}
