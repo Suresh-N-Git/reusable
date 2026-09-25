@@ -103,27 +103,27 @@
         <div class="cell-value action-buttons">
           @if (col.actions?.select?.show && !isActionHide(row, col.actions?.select)) {
           <button mat-icon-button [color]="col.actions?.select?.color"
-            [disabled]="isActionDisabled(row, col.actions?.select)" (click)="setSelectedRow(row); onSelect(row)">
+            [disabled]="isActionDisabled(row, col.actions?.select)" (click)="setSelectedRow(row); onSelect(row, i)">
             <mat-icon [title]="col.actions?.select?.tooltipText ?? 'Select'">check_circle_outline</mat-icon>
           </button>
           }
 
           @if (col.actions?.edit?.show && !isActionHide(row, col.actions?.edit)) {
           <button mat-icon-button [color]="col.actions?.edit?.color"
-            [disabled]="isActionDisabled(row, col.actions?.edit)" (click)="markRow(row); onEdit(row)">
+            [disabled]="isActionDisabled(row, col.actions?.edit)" (click)="markRow(row); onEdit(row, i)">
             <mat-icon [title]="col.actions?.edit?.tooltipText ?? 'Edit'">edit</mat-icon>
           </button>
           }
 
           @if (col.actions?.delete?.show && !isActionHide(row, col.actions?.delete)) {
           <button mat-icon-button [color]="col.actions?.delete?.color"
-            [disabled]="isActionDisabled(row, col.actions?.delete)" (click)="markRow(row); onDelete(row)">
+            [disabled]="isActionDisabled(row, col.actions?.delete)" (click)="markRow(row); onDelete(row, i)">
             <mat-icon [title]="col.actions?.delete?.tooltipText ?? 'Delete'">delete</mat-icon>
           </button>
           }
           @if (col.actions?.settings?.show && !isActionHide(row, col.actions?.settings)) {
           <button mat-icon-button [color]="col.actions?.select?.color"
-            [disabled]="isActionDisabled(row, col.actions?.settings)" (click)="markRow(row); onSettings(row)">
+            [disabled]="isActionDisabled(row, col.actions?.settings)" (click)="markRow(row); onSettings(row, i)">
             <mat-icon [title]="col.actions?.settings?.tooltipText ?? 'Settings'">settings</mat-icon>
           </button>
           }
@@ -224,7 +224,8 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumnIds" [class.row-selected]="isRowSelected(row)"></tr>
 
     @if (resolvedConfig.footer.enabled) {
-    <tr mat-footer-row *matFooterRowDef="displayedColumnIds; sticky: resolvedConfig.footer.sticky"></tr>
+    <tr mat-footer-row [style.font-size]="tableConfig.typography?.cell"
+      *matFooterRowDef="displayedColumnIds; sticky: resolvedConfig.footer.sticky"></tr>
     }
 
   </table>

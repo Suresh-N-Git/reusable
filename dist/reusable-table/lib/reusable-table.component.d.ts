@@ -178,10 +178,10 @@ export declare class ReusableTableComponent implements OnInit, OnChanges, AfterV
     getDisplayValue(obj: any, col: ReUsableTableColumn): any;
     getLinkValue(obj: any, col: ReUsableTableColumn): string;
     toggleColumn(columnId: string): void;
-    onEdit(row: any): void;
-    onSelect(row: any): void;
-    onDelete(row: any): void;
-    onSettings(row: any): void;
+    onEdit(row: any, index?: number): void;
+    onSelect(row: any, index?: number): void;
+    onDelete(row: any, index?: number): void;
+    onSettings(row: any, index?: number): void;
     applyGlobalFilter(event: Event): void;
     highlightSearchedText(value: any): string;
     private escapeHtml;

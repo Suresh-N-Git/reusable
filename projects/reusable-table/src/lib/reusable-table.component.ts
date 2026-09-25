@@ -384,22 +384,27 @@ export class ReusableTableComponent implements OnInit, OnChanges, AfterViewInit 
     this.computeFooterValues();
   }
 
-  onEdit(row: any): void {
-    this.rowEdit.emit(row);
+  onEdit(row: any, index?: number): void {
+     // Preserves 'row' as the top-level object, adding 'rowIndex' if provided
+    const payload = index !== undefined ? { ...row, rowIndex: index } : row;
+    this.rowEdit.emit(payload);
   }
 
-  onSelect(row: any): void {
-    this.rowSelect.emit(row);
+  onSelect(row: any, index?: number): void {
+     const payload = index !== undefined ? { ...row, rowIndex: index } : row;
+    this.rowSelect.emit(payload);
   }
 
-  onDelete(row: any): void {
-    this.rowDelete.emit(row);
+  onDelete(row: any, index?: number): void {
+    // Preserves 'row' as the top-level object, adding 'rowIndex' if provided
+    const payload = index !== undefined ? { ...row, rowIndex: index } : row;
+    this.rowDelete.emit(payload);
   }
 
-  onSettings(row: any): void {
-    this.rowSettings.emit(row);
+  onSettings(row: any, index?: number): void {
+     const payload = index !== undefined ? { ...row, rowIndex: index } : row;
+    this.rowSettings.emit(payload);
   }
-
 
   applyGlobalFilter(event: Event): void {
     const value = (event.target as HTMLInputElement).value.trim().toLowerCase();
