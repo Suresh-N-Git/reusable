@@ -475,21 +475,43 @@ class ReusableTableComponent {
         this.computeFooterValues();
     }
     onEdit(row, index) {
+        if (!row)
+            return;
+        // remove the __cellStyles property from the row object before emitting the event
+        const { __cellStyles, ...cleanRow } = row;
         // Preserves 'row' as the top-level object, adding 'rowIndex' if provided
-        const payload = index !== undefined ? { ...row, rowIndex: index } : row;
+        const payload = index !== undefined ? { ...cleanRow, rowIndex: index } : cleanRow;
+        // const payload = index !== undefined ? { ...row, rowIndex: index } : row;
         this.rowEdit.emit(payload);
     }
     onSelect(row, index) {
-        const payload = index !== undefined ? { ...row, rowIndex: index } : row;
+        if (!row)
+            return;
+        // remove the __cellStyles property from the row object before emitting the event
+        const { __cellStyles, ...cleanRow } = row;
+        // Preserves 'row' as the top-level object, adding 'rowIndex' if provided
+        const payload = index !== undefined ? { ...cleanRow, rowIndex: index } : cleanRow;
+        //  const payload = index !== undefined ? { ...row, rowIndex: index } : row;
         this.rowSelect.emit(payload);
     }
     onDelete(row, index) {
+        if (!row)
+            return;
+        // remove the __cellStyles property from the row object before emitting the event
+        const { __cellStyles, ...cleanRow } = row;
         // Preserves 'row' as the top-level object, adding 'rowIndex' if provided
-        const payload = index !== undefined ? { ...row, rowIndex: index } : row;
+        const payload = index !== undefined ? { ...cleanRow, rowIndex: index } : cleanRow;
+        // const payload = index !== undefined ? { ...row, rowIndex: index } : row;
         this.rowDelete.emit(payload);
     }
     onSettings(row, index) {
-        const payload = index !== undefined ? { ...row, rowIndex: index } : row;
+        if (!row)
+            return;
+        // remove the __cellStyles property from the row object before emitting the event
+        const { __cellStyles, ...cleanRow } = row;
+        // Preserves 'row' as the top-level object, adding 'rowIndex' if provided
+        const payload = index !== undefined ? { ...cleanRow, rowIndex: index } : cleanRow;
+        // const payload = index !== undefined ? { ...row, rowIndex: index } : row;
         this.rowSettings.emit(payload);
     }
     applyGlobalFilter(event) {
